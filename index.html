@@ -1475,7 +1475,7 @@
             const apiKey = document.getElementById('apiKey').value.trim();
 
             if (!apiKey){
-                showNotification('Please enter a valid API key.')
+                showNotification('Please enter a valid API key.', 'error');
                 return;
             }
             
@@ -1495,6 +1495,7 @@
         function initializeApp() {
             loadJerryState();
             appState.chatHistory = getFromLocalStorage('hush_chat_history', []);
+            appSTate.apiKey = localStorage.getItem('hush_api_key') || '';
             
             updateJerryUI();
             updateAffirmationBanner('jerry');
