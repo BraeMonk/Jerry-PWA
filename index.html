@@ -1103,7 +1103,9 @@
         }
 
         async function getAIResponse(message) {
-            const apiKey = localStorage.getItem('hush_api_key');
+            const apiInput = document.getElementById('apiKey');
+            const apiKey = apiInput ? apiInput.value.trim() : '';
+            
             if (!apiKey){
                 addMessageToChat('Jerry', "Please enter your API key in Settings first.", 'jerry');
                 return null;
@@ -1135,6 +1137,9 @@
             
             const data = await response.json();
             return data.choices[0].message.content.trim();
+        } catch (err) {
+            addMessageToChat('Jerry', `Error: ${err.message}`, 'jerry');
+            return null
         }
 
         function getFallbackResponse(message) {
