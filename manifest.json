@@ -10,12 +10,12 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/icons/jerry-192.png",
+      "src": "/JerryIcon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icons/jerry-512.png",
+      "src": "/JerryIcon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
