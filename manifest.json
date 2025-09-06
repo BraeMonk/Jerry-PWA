@@ -1,0 +1,23 @@
+{
+  "name": "Jerry",
+  "short_name": "Jerry",
+  "description": "Your AI companion, Jerry, always there to help.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1a202c",
+  "theme_color": "#1a202c",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/jerry-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/jerry-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
