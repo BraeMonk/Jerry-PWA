@@ -1444,7 +1444,7 @@
 
         // Settings Functions
         function loadSettings() {
-            document.getElementById('apiKey').value = appState.apiKey;
+            document.getElementById('apiKey').value = appState.apiKey || '';
         }
 
         function saveSettings() {
