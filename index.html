@@ -1103,10 +1103,10 @@
         }
 
         async function getAIResponse(message) {
-            const apiKey = appState.apiKey || localStorage.getItem('hush_api_key');
+            const apiKey = localStorage.getItem('hush_api_key');
             if (!apiKey){
                 addMessageToChat('Jerry', "Please enter your API key in Settings first.", 'jerry');
-                return "No API key configured";
+                return null;
             }
             
             const messages = [
