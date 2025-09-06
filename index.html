@@ -1103,12 +1103,11 @@
         }
 
         async function getAIResponse(message) {
-            const apiInput = document.getElementById('apiKey');
-            const apiKey = apiInput ? apiInput.value.trim() : '';
+
+            const apiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
             
-            if (!apiKey){
-                addMessageToChat('Jerry', "Please enter your API key in Settings first.", 'jerry');
-                return null;
+            if (!appState.apiKey) {
+                throw new Error('No API key configured');
             }
             
             const messages = [
@@ -1137,9 +1136,6 @@
             
             const data = await response.json();
             return data.choices[0].message.content.trim();
-        } catch (err) {
-            addMessageToChat('Jerry', `Error: ${err.message}`, 'jerry');
-            return null
         }
 
         function getFallbackResponse(message) {
