@@ -1492,6 +1492,13 @@
                     updateAffirmationBanner(appState.currentTab);
                 }
             }, 10000);
+
+            const apiInput = document.getElementById('apiKey');
+            if (apiInput){
+                apiInput.addEventListener('input', (e) => {
+                    appState.apiKey = e.target.value.trim();
+                });
+            }
         }
 
         // Register Service Worker for PWA
