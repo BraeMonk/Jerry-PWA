@@ -21,11 +21,24 @@
             box-sizing: border-box;
         }
 
+        #jerrySprite {
+            position: relative;
+            width: 160px; /* 16 pixels * 10 per pixel */
+            height: 160px;
+            transform-origin: center bottom;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #jerrySprite.bounce {
+            transform: scale(1.1);
+        }
+
+
         /* Light Theme Overrides */
         body.light-theme {
             background: linear-gradient(135deg, #fdf6f0 0%, #f7ede5 100%);
             color: #3e3e3e;
-    }
+        }
 
         body.light-theme .app-container {
             background: #f7ede5;
@@ -1298,6 +1311,12 @@
             switchTab('jerry');
         }
 
+        function animateJerry() {
+            const container = document.getElementById('jerrySprite');
+            container.classList.add('bounce');
+            setTimeout(() => container.classList.remove('bounce'), 300); // reset
+        }
+
         // Timer Functions
         function toggleTimer() {
             if (!appState.timer.active) {
@@ -1486,6 +1505,7 @@
             // Animate Jerry sprite
             setInterval(() => {
                 updateJerrySprite();
+                animateJerry();
             }, 2000);
             
             // Auto-update affirmations every 10 seconds on Jerry/checkin screens
