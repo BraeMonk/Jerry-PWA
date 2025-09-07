@@ -1108,7 +1108,7 @@
                     lastMessage.remove();
                 }
                 
-                addMessageToChat('Jerry', getFallbackResponse(message), 'jerry');
+                addMessageToChat(appState.botName'Jerry', getFallbackResponse(message), 'jerry');
             }
         }
 
@@ -1130,7 +1130,7 @@
             }
             
             const messages = [
-                { role: 'system', content: 'You are Jerry, a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.' },
+                { role: 'system', content: 'You are a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.' },
                 ...appState.chatHistory.slice(-10), // Last 10 messages for context
                 { role: 'user', content: message }
             ];
