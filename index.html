@@ -509,6 +509,12 @@
             height: 160px;            /* same as above */
             background-color: transparent;
         }
+
+        #spritePreview .pixel {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1564,7 +1570,7 @@
                 appState.spriteTheme = spriteThemeSelect.value;
                 saveSettings(); // save to appState
                 renderJerrySprite(); // re-render sprite immediately
-                updateSpritePreviewData();
+                updateSpritePreview();
                 renderSpritePreview();
             });
         }
@@ -1593,7 +1599,7 @@
             showNotification('Theme updated!');
 
             renderJerrySprite();
-            updateSpritePreviewData();
+            updateSpritePreview();
             renderSpritePreview();
         }
 
