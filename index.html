@@ -1014,8 +1014,15 @@
         function renderJerrySprite(spriteData) {
             const container = document.getElementById('jerrySprite');
             container.innerHTML = '';
-            
-            const colors = {
+
+            const isLightMode = document.body.classList.contains('light-theme');
+            const colors = isLightMode ? {
+                0: 'transparent',
+                1: '#e3b88d',
+                2: '#3e3e3e',
+                3: '#c27c48',
+                4: '#f0c9a2'
+            } : {
                 0: 'transparent',
                 1: '#4a90e2', // body
                 2: '#ffffff', // eyes
@@ -1464,6 +1471,8 @@
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
             showNotification('Theme updated!');
+
+            updateJerrySprite();
         }
 
         // Initialization
