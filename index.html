@@ -1540,8 +1540,8 @@
             spriteThemeSelect.addEventListener('change', () => {
                 appState.spriteTheme = spriteThemeSelect.value;
                 saveSettings(); // save to appState
-                renderJerrySprite(appState.spriteData); // re-render sprite immediately
-                renderSpritePreview(appState.spriteData);
+                renderJerrySprite(jerrySprite); // re-render sprite immediately
+                renderSpritePreview(jerrySprite);
             });
         }
 
@@ -1567,11 +1567,12 @@
 
             showNotification('Theme updated!');
 
-            renderJerrySprite(appState.spriteData);
-            renderSpritePreview(appState.spriteData);
+            renderJerrySprite(jerrySprite);
+            renderSpritePreview(jerrySprite);
         }
 
-        // Initialization function initializeApp() {
+        // Initialization function 
+        initializeApp() {
             const savedTheme = localStorage.getItem('hush_theme');
             if (savedTheme === 'light') {
                 document.body.classList.add('light-theme');
