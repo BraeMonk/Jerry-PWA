@@ -1102,7 +1102,7 @@
         function renderSpritePreview() {
             const spriteData = appState.spriteData || jerrySprites.content;
             
-            if (!appState.spriteData) return; // nothing to show yet
+            if (!spriteData) return; // nothing to show yet
             const previewContainer = document.getElementById('spritePreview');
             previewContainer.innerHTML = ''; // clear previous pixels
 
