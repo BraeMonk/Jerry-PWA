@@ -905,6 +905,8 @@
             ]
         };
 
+        appState.spriteData = jerrySprites.content;
+
         const affirmations = [
             "Your feelings are valid, even the difficult ones.",
             "Be kind and patient with yourself today.",
@@ -1582,7 +1584,7 @@
                 saveSettings(); // save to appState
                 renderJerrySprite(); // re-render sprite immediately
                 updateSpritePreview();
-                renderSpritePreview();
+                renderSpritePreview(appState.spriteData);
             });
         }
 
@@ -1611,7 +1613,7 @@
 
             renderJerrySprite();
             updateSpritePreview();
-            renderSpritePreview();
+            renderSpritePreview(appState.spriteData);
         }
 
         // Initialization function 
