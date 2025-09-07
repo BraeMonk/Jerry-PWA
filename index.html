@@ -312,6 +312,12 @@
             color: #e2e8f0;
             outline: none;
             font-size: 14px;
+            -webkit-appearance: none;
+        }
+
+        .chat-input:focus {
+            -webkit-user-select: text;
+            user-select: text;
         }
         
         .send-button {
@@ -1098,12 +1104,10 @@
             const message = input.value.trim();
             if (!message) return;
 
+            const chatInput = input;
+
             addMessageToChat('You', message, 'user');
             input.value = '';
-            setTimeout(() => {
-                let liveInput = document.getElementById('chatInput');
-                if (liveInput) liveInput.focus();
-            }, 50);
 
             // Add to chat history
             appState.chatHistory.push({ role: 'user', content: message });
@@ -1152,6 +1156,16 @@
 
                 addMessageToChat('Jerry', getFallbackResponse(message), 'jerry');
             }
+
+            // Use a longer timeout and ensure the element still exists
+            setTimeout(() => {
+                const currentInput = document.getElementById('chatInput');
+                if (currentInput && document.activeElement !== currentInput) {
+                    // Try to focus and trigger keyboard
+                    currentInput.focus();
+                    currentInput.click(); // Sometimes needed on mobile
+                }
+            }, 100);
         }
 
         function addMessageToChat(speaker, message, className) {
