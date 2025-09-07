@@ -200,83 +200,18 @@
             margin: 20px 0;
         }
         
-        #jerrySprite {
+        .jerry-sprite {
             width: 160px;
             height: 160px;
             margin: 0 auto 20px;
             position: relative;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s ease-out;
-            transform-origin: center center;
         }
-
-        #jerrySprite:hover {
-            transform: scale(1.05);
-            transition: transform 0.2s ease-out;
-        }
+        
         .pixel {
             width: 10px;
             height: 10px;
             position: absolute;
             border-radius: 1px;
-            transition: background-color 0.3s ease;
-        }
-
-        .breathing {
-            animation: breathe 4s ease-in-out infinite;
-
-        @keyframes tap-shrink {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.8); }
-            100% { transform: scale(1); }
-        }
-
-        .tap-animation {
-            animation: tap-shrink 0.3s ease-out;
-        }
-
-        /* Breathing animation keyframes (alternative to JavaScript-controlled) */
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            25% { transform: scale(1.05); }
-            50% { transform: scale(1.1); }
-            75% { transform: scale(1.05); }
-        }
-
-        /* Blink transition */
-        .blinking .pixel[style*="ffffff"] {
-            background-color: #6bb6ff !important;
-        }
-
-        /* Add subtle glow effect during interactions */
-        #jerrySprite.interacting {
-            filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.3));
-            transition: filter 0.3s ease;
-        }
-
-        /* Responsive scaling for smaller screens */
-        @media (max-width: 480px) {
-            #jerrySprite {
-                width: 120px;
-                height: 120px;
-            }
-    
-            .pixel {
-                width: 7.5px;
-                height: 7.5px;
-            }
-        }
-
-        /* Loading state for sprite */
-        #jerrySprite.loading {
-            opacity: 0.7;
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
         }
         
         .jerry-stats {
@@ -571,6 +506,16 @@
         @media (max-width: 480px) {
             .app-container {
                 max-width: 100%;
+            }
+            
+            .jerry-sprite {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .pixel {
+                width: 7.5px;
+                height: 7.5px;
             }
             
             .timer-display {
@@ -872,7 +817,6 @@
         };
 
         // Jerry Sprite Data
-        // Enhanced Jerry Sprite Data with Blinking
         const jerrySprites = {
             content: [
                 [0,0,0,0,3,3,3,3,3,3,3,3,0,0,0,0],
@@ -881,24 +825,6 @@
                 [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
                 [3,1,1,1,1,2,2,1,1,1,2,2,1,1,1,3],
                 [3,1,1,1,1,2,2,1,1,1,2,2,1,1,1,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,0,3,3,1,1,1,1,1,1,1,1,3,3,0,0],
-                [0,0,0,0,3,3,3,3,3,3,3,3,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            ],
-            contentBlink: [
-                [0,0,0,0,3,3,3,3,3,3,3,3,0,0,0,0],
-                [0,0,3,3,1,1,1,1,1,1,1,1,3,3,0,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [3,1,1,1,1,3,3,1,1,1,3,3,1,1,1,3],
                 [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
                 [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
                 [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
@@ -928,48 +854,12 @@
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             ],
-            lowInsightBlink: [
-                [0,0,0,0,3,3,3,3,3,3,3,3,0,0,0,0],
-                [0,0,3,3,1,1,1,1,1,1,1,1,3,3,0,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [3,1,1,1,3,3,3,1,1,3,3,3,1,1,1,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [3,1,1,1,1,1,1,4,4,1,1,1,1,1,1,3],
-                [3,1,1,1,1,1,4,1,1,4,1,1,1,1,1,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,0,3,3,1,1,1,1,1,1,1,1,3,3,0,0],
-                [0,0,0,0,3,3,3,3,3,3,3,3,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            ],
             lowCalm: [
                 [0,0,0,3,3,3,3,3,3,3,3,3,0,0,0,0],
                 [0,0,3,1,1,1,1,1,1,1,1,1,3,0,0,0],
                 [0,3,1,1,1,1,1,1,1,1,1,1,1,3,0,0],
                 [3,1,1,1,4,4,1,1,1,4,4,1,1,1,3,0],
                 [3,1,1,1,4,4,1,1,1,4,4,1,1,1,3,3],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,3,0,0],
-                [0,0,3,1,1,1,1,1,1,1,1,1,3,0,0,0],
-                [0,0,0,3,3,3,3,3,3,3,3,3,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            ],
-            lowCalmBlink: [
-                [0,0,0,3,3,3,3,3,3,3,3,3,0,0,0,0],
-                [0,0,3,1,1,1,1,1,1,1,1,1,3,0,0,0],
-                [0,3,1,1,1,1,1,1,1,1,1,1,1,3,0,0],
-                [3,1,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
-                [3,1,1,1,3,3,1,1,1,3,3,1,1,1,3,3],
                 [3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
                 [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
                 [0,3,1,1,1,1,1,1,1,1,1,1,1,1,3,0],
@@ -1104,21 +994,10 @@
             updateJerrySprite();
         }
 
-        // Animation state
-        const animationState = {
-            isBreathing: true,
-            breathingPhase: 0, // 0-100, controls breathing cycle
-            breathingDirection: 1, // 1 for growing, -1 for shrinking
-            isBlinking: false,
-            isTapAnimating: false,
-            breathingSpeed: 0.5 // Adjust for slower/faster breathing
-        };
-
-        // Enhanced Jerry Functions
         function updateJerrySprite() {
             const needs = appState.jerry.needs;
             let spriteType = 'content';
-    
+            
             // Determine sprite based on lowest need
             const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
             if (minNeed < 50) {
@@ -1128,19 +1007,14 @@
                     spriteType = 'lowCalm';
                 }
             }
-    
-            // Add blink suffix if blinking
-            if (animationState.isBlinking) {
-                spriteType += 'Blink';
-            }
-    
+            
             renderJerrySprite(jerrySprites[spriteType]);
         }
 
         function renderJerrySprite(spriteData) {
             const container = document.getElementById('jerrySprite');
             container.innerHTML = '';
-    
+            
             const colors = {
                 0: 'transparent',
                 1: '#4a90e2', // body
@@ -1148,24 +1022,7 @@
                 3: '#6bb6ff', // outline
                 4: '#9cc7f0'  // features
             };
-    
-            // Calculate breathing scale
-            let scale = 1;
-            if (animationState.isBreathing && !animationState.isTapAnimating) {
-                // Create smooth breathing effect (sine wave)
-                const breathingFactor = Math.sin(animationState.breathingPhase * Math.PI / 50) * 0.1 + 1;
-                scale = breathingFactor;
-            }
-    
-            // Apply tap animation scale
-            if (animationState.isTapAnimating) {
-                scale = 0.8; // Shrink during tap
-            }
-    
-            // Apply scale to container
-            container.style.transform = `scale(${scale})`;
-            container.style.transformOrigin = 'center center';
-    
+            
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
                     if (pixel > 0) {
@@ -1178,132 +1035,6 @@
                     }
                 });
             });
-        }
-
-        // Breathing animation loop
-        function updateBreathingAnimation() {
-            if (animationState.isBreathing && !animationState.isTapAnimating) {
-                animationState.breathingPhase += animationState.breathingSpeed;
-        
-                if (animationState.breathingPhase >= 100) {
-                    animationState.breathingPhase = 0;
-                }
-        
-                updateJerrySprite();
-            }
-    
-            requestAnimationFrame(updateBreathingAnimation);
-        }
-
-        // Blink animation
-        function triggerBlink() {
-            if (animationState.isBlinking || animationState.isTapAnimating) return;
-    
-            animationState.isBlinking = true;
-            updateJerrySprite();
-            
-            setTimeout(() => {
-                animationState.isBlinking = false;
-                updateJerrySprite();
-            }, 150);
-        }
-
-        // Random blinking
-        function startRandomBlinking() {
-            setInterval(() => {
-                if (Math.random() < 0.3 && !animationState.isTapAnimating) { // 30% chance every interval
-                    triggerBlink();
-                }
-            }, 3000); // Check every 3 seconds
-        }
-
-        // Tap animation
-        function handleJerryTap() {
-            if (animationState.isTapAnimating) return;
-    
-            animationState.isTapAnimating = true;
-    
-            // Trigger blink and shrink
-            animationState.isBlinking = true;
-            updateJerrySprite();
-    
-            // After 200ms, remove blink but keep shrink
-            setTimeout(() => {
-                animationState.isBlinking = false;
-                updateJerrySprite();
-            }, 200);
-    
-            // After 300ms total, return to normal
-            setTimeout(() => {
-                animationState.isTapAnimating = false;
-                updateJerrySprite();
-            }, 300);
-    
-            // Add some feedback for the user
-            showNotification("Jerry says hello! 👋", 'success');
-    
-            // Give Jerry a tiny bit of happiness (all needs)
-            Object.keys(appState.jerry.needs).forEach(need => {
-                appState.jerry.needs[need] = Math.min(100, appState.jerry.needs[need] + 2);
-            });
-    
-            saveJerryState();
-            updateJerryUI();
-        }
-
-        // Initialize Jerry tap listener
-        function initializeJerryInteractions() {
-            const jerryContainer = document.getElementById('jerrySprite');
-    
-            // Make Jerry clickable/tappable
-            jerryContainer.style.cursor = 'pointer';
-            jerryContainer.style.userSelect = 'none';
-    
-            // Add event listeners for tap/click
-            jerryContainer.addEventListener('click', handleJerryTap);
-            jerryContainer.addEventListener('touchstart', (e) => {
-                e.preventDefault(); // Prevent default touch behavior
-                handleJerryTap();
-            });
-    
-            // Add hover effect for desktop
-            jerryContainer.addEventListener('mouseenter', () => {
-                if (!animationState.isTapAnimating) {
-                    jerryContainer.style.transform = jerryContainer.style.transform.replace(/scale\([^)]*\)/, '') + ' scale(1.05)';
-                }
-            });
-    
-            jerryContainer.addEventListener('mouseleave', () => {
-                if (!animationState.isTapAnimating) {
-                    jerryContainer.style.transform = jerryContainer.style.transform.replace(/scale\([^)]*\)/, '');
-                }
-            });
-        }
-
-        // Enhanced initialization
-        function initializeJerryAnimations() {
-            // Start breathing animation
-            updateBreathingAnimation();
-    
-            // Start random blinking
-            startRandomBlinking();
-    
-            // Initialize interactions
-            initializeJerryInteractions();
-    
-            // Initial sprite render
-            updateJerrySprite();
-        }
-
-        // Breathing control functions (optional - for user control)
-        function toggleBreathing() {
-            animationState.isBreathing = !animationState.isBreathing;
-            showNotification(animationState.isBreathing ? 'Breathing resumed' : 'Breathing paused');
-        }
-
-        function setBreathingSpeed(speed) {
-            animationState.breathingSpeed = speed;
-            showNotification(`Breathing speed set to ${speed}x`);
         }
 
         function saveJerryState() {
@@ -1757,12 +1488,6 @@
                     updateAffirmationBanner(appState.currentTab);
                 }
             }, 10000);
-            
-            // Call this after the original initializeApp function
-            document.addEventListener('DOMContentLoaded', () => {
-                // Wait a bit for the original app to initialize
-                setTimeout(initializeJerryAnimations, 100);
-            });
         }
 
         // Register Service Worker for PWA
