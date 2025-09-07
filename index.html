@@ -786,6 +786,13 @@
                 <input type="text" class="form-input" id="apiKey" placeholder="Enter your API key here.">
             </div>
             <button class="btn" onclick="saveSettings()">Save Settings</button>
+
+            <label for="spriteTheme">Sprite Theme:</label>
+            <select id="spriteTheme">
+                <option value="default">Default</option>
+                <option value="chaotic">Chaotic</option>
+                <option value="neutral">Neutral</option>
+            </select>
             
             <div style="margin-top: 30px;">
                 <h3 style="margin-bottom: 15px;">Theme</h3>
@@ -1028,20 +1035,22 @@
             container.innerHTML = '';
 
             const isLightMode = document.body.classList.contains('light-theme');
-            const colors = isLightMode ? {
-                0: 'transparent',
-                1: '#000000',
-                2: '#e3b88d',
-                3: '#3e3e3e',
-                4: '#f0c9a2'
-            } : {
-                0: 'transparent',
-                1: '#4a90e2', // body
-                2: '#ffffff', // eyes
-                3: '#6bb6ff', // outline
-                4: '#9cc7f0'  // features
+            const spriteTheme = appState.spriteTheme || 'default';
+
+            const colorSets = {
+                default: isLightMode
+                    ? {0: 'transparent', 1: '#000000', 2: '#e3b88d', 3: '#3e3e3e', 4: '#f0c9a2'}
+                    : {0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#6bb6ff', 4: '#9cc7f0'},
+                chaotic: isLightMode
+                    ? {0: 'transparent', 1: '#000000', 2: '#ff0000', 3: '#000000', 4: '#ff0000'}
+                    : {0: 'transparent', 1: '#ff0000', 2: '#000000', 3: '#ff0000', 4: '#000000'},
+                neutral: isLightMode
+                    ? {0: 'transparent', 1: '#4b0082', 2: '#e6e6fa', 3: '#4b0082', 4: '#e6e6fa'}
+                    : {0: 'transparent', 1: '#e6e6fa', 2: '#4b0082', 3: '#e6e6fa', 4: '#4b0082'}
             };
-            
+
+            const colors = colorSets[spriteTheme];
+
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
                     if (pixel > 0) {
@@ -1473,9 +1482,20 @@
         function loadSettings() {
             document.getElementById('apiKey').value = appState.apiKey;
             document.getElementById('botName').value = appState.botName || 'Jerry';
+            document.getElementById('spriteTheme').value = appState.spriteTheme || 'default';
+
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+
+            spriteThemeSelect.addEventListener('change', () => {
+                appState.spriteTheme = spriteThemeSelect.value;
+                saveSettings(); // save to appState
+                renderJerrySprite(appState.spriteData); // re-render sprite immediately
+            });
         }
 
         function saveSettings() {
+            appState.spriteTheme = document.getElementById('spriteTheme').value;
+            
             const apiKey = document.getElementById('apiKey').value.trim();
             appState.apiKey = apiKey;
             localStorage.setItem('hush_api_key', apiKey);
@@ -1495,7 +1515,7 @@
 
             showNotification('Theme updated!');
 
-            updateJerrySprite();
+            renderJerrySprite(appState.spriteData);
         }
 
         // Initialization
