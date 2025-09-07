@@ -1071,7 +1071,10 @@
 
             addMessageToChat('You', message, 'user');
             input.value = '';
-            input.focus();
+            setTimeout(() => {
+                let liveInput = document.getElementById('chatInput');
+                if (liveInput) liveInput.focus();
+            }, 50);
 
             // Add to chat history
             appState.chatHistory.push({ role: 'user', content: message });
