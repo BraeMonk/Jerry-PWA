@@ -1134,8 +1134,6 @@
         // Chat function
         async function sendMessage() {
             const input = document.getElementById('chatInput');
-            if (!input) return;
-
             const message = input.value.trim();
             if (!message) return;
 
@@ -1144,7 +1142,8 @@
 
             // Add to history
             appState.chatHistory.push({ role: 'user', content: message });
-
+            localStorage.setItem('hush_chat_history', JSON.stringify(appState.chatHistory));
+            
             // Show thinking
             addMessageToChat('Jerry', 'Thinking...', 'jerry thinking');
 
@@ -1159,13 +1158,7 @@
                 // Add Jerry's reply
                 addMessageToChat('Jerry', response, 'jerry');
                 appState.chatHistory.push({ role: 'assistant', content: response });
-
-                // Keep session history <= 20
-                if (appState.chatHistory.length > 20) {
-                    appState.chatHistory = appState.chatHistory.slice(-20);
-                }
-
-                localStorage.setItem('hush_chat_history', JSON.stringify(appState.chatHistory));
+                localStorage.setItem('hush_conversations', JSON.stringify(appState.conversationHistory));
 
                 if (appState.chatHistory.length > 1) {
                     appState.conversationHistory.push([...appState.chatHistory]);
@@ -1176,24 +1169,10 @@
                 renderHistory();
 
             } catch (err) {
-                const chatLog = document.getElementById('chatLog');
-                const lastMessage = chatLog.lastElementChild;
                 if (lastMessage && lastMessage.classList.contains('thinking')) lastMessage.remove();
-
                 addMessageToChat('Jerry', getFallbackResponse(message), 'jerry');
             }
-
-            // Mobile-friendly focus after sending
-            setTimeout(() => {
-                const currentInput = document.getElementById('chatInput');
-                if (currentInput) currentInput.focus();
-            }, 100);
         }
-
-        // Call this once on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            setupChatInput();
-        });
 
         function addMessageToChat(speaker, message, className) {
             const chatLog = document.getElementById('chatLog');
