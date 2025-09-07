@@ -502,6 +502,13 @@
             line-height: 1.4;
             font-size: 14px;
         }
+
+        #spritePreview {
+            position: relative;       /* so child .pixel divs can be absolutely positioned */
+            width: 160px;             /* 16 pixels * 10px per pixel */
+            height: 160px;            /* same as above */
+            background-color: transparent;
+        }
         
         @media (max-width: 480px) {
             .app-container {
