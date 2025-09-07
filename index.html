@@ -553,13 +553,13 @@
         
         <div class="tab-container">
             <button class="tab active" onclick="switchTab('jerry')">Jerry</button>
-            <button class="tab" onclick="switchTab('checkin')">Check-in</button>
-            <button class="tab" onclick="switchTab('cbt')">CBT</button>
-            <button class="tab" onclick="switchTab('dbt')">DBT</button>
-            <button class="tab" onclick="switchTab('hush')">Hush</button>
-            <button class="tab" onclick="switchTab('entries')">Entries</button>
-            <button class="tab" onclick="switchTab('history')">History</button>
-            <button class="tab" onclick="switchTab('settings')">Settings</button>
+            <button class="tab" onclick="switchTab('checkin', event)">Check-in</button>
+            <button class="tab" onclick="switchTab('cbt', event)">CBT</button>
+            <button class="tab" onclick="switchTab('dbt', event)">DBT</button>
+            <button class="tab" onclick="switchTab('hush', event)">Hush</button>
+            <button class="tab" onclick="switchTab('entries', event)">Entries</button>
+            <button class="tab" onclick="switchTab('history', event)">History</button>
+            <button class="tab" onclick="switchTab('settings', event)">Settings</button>
         </div>
         
         <!-- Jerry Screen -->
@@ -924,10 +924,12 @@
         }
 
         // Tab Management
-        function switchTab(tabName) {
+        function switchTab(tabName, event) {
             // Update tab buttons
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
 
             // Update screens
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
@@ -945,6 +947,16 @@
                 loadHistory();
             } else if (tabName === 'settings') {
                 loadSettings();
+            }
+
+            if (tabName === 'jerry') {
+                setTimeout(() => {
+                    const input = document.getElementById('chatInput');
+                    if (input) {
+                        input.focus();
+                        input.click(); // sometimes needed on iOS
+                    }
+                }, 200);
             }
         }
 
