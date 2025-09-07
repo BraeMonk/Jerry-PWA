@@ -1042,21 +1042,20 @@
             renderJerrySprite(jerrySprites[spriteType]);
         }
 
-        function updateSpritePreviewData() {
+        function updateSpritePreview() {
             const needs = appState.jerry.needs;
-            const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
+            let spriteType = 'content';
 
+            const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
             if (minNeed < 50) {
                 if (needs.insight === minNeed) {
-                    appState.spriteData = jerrySprites.lowInsight;
+                    spriteType = 'lowInsight';
                 } else if (needs.calm === minNeed) {
-                    appState.spriteData = jerrySprites.lowCalm;
-                } else {
-                    appState.spriteData = jerrySprites.content;
+                    spriteType = 'lowCalm';
                 }
-            } else {
-                appState.spriteData = jerrySprites.content;
             }
+
+            renderSpritePreview(jerrySprites[spriteType]);
         }
 
         function renderJerrySprite(spriteData) {
@@ -1099,8 +1098,7 @@
             });
         }
 
-        function renderSpritePreview() {
-            const spriteData = appState.spriteData || jerrySprites.content;
+        function renderSpritePreview(spriteData) {
             
             if (!spriteData) return; // nothing to show yet
             const previewContainer = document.getElementById('spritePreview');
