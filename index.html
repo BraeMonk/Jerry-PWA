@@ -1128,13 +1128,23 @@
 
             const colors = colorSets[spriteTheme];
 
+            // Auto-size the container based on sprite dimensions
+            const rows = spriteData.length;
+            const cols = spriteData[0].length;
+            previewContainer.style.position = 'relative';
+            previewContainer.style.width = `${cols * 10}px`;
+            previewContainer.style.height = `${rows * 10}px`;
+            previewContainer.style.background = 'transparent';
+
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
                     if (pixel > 0) {
                         const pixelDiv = document.createElement('div');
                         pixelDiv.className = 'pixel';
-                        pixelDiv.style.backgroundColor = colors[pixel];
                         pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.backgroundColor = colors[pixel];
                         pixelDiv.style.left = `${x * 10}px`;
                         pixelDiv.style.top = `${y * 10}px`;
                         previewContainer.appendChild(pixelDiv);
@@ -1560,7 +1570,8 @@
         function loadSettings() {
             document.getElementById('apiKey').value = appState.apiKey;
             document.getElementById('botName').value = appState.botName || 'Jerry';
-            appState.spriteTheme = localStorage.getItem('spriteTheme') || 'default';
+            const storedTheme = localStorage.getItem('spriteTheme') || 'default';
+            appState.spriteTheme = storedTheme;
             document.getElementById('spriteTheme').value = appState.spriteTheme;
             
 
