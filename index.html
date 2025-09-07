@@ -1419,7 +1419,7 @@
             const historyList = document.getElementById('historyList');
             historyList.innerHTML = '';
             
-            if (appState.conversationHistory.length === 0) {
+            if (appState.chatHistory.length === 0) {
                 historyList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No conversation history yet. Chat with Jerry to see your conversations here!</p>';
                 return;
             }
