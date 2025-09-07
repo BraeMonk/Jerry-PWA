@@ -1567,11 +1567,10 @@
             showNotification('Theme updated!');
 
             renderJerrySprite(appState.spriteData);
-            renderSpritePreview();
+            renderSpritePreview(appState.spriteData);
         }
 
-        // Initialization
-        function initializeApp() {
+        // Initialization function initializeApp() {
             const savedTheme = localStorage.getItem('hush_theme');
             if (savedTheme === 'light') {
                 document.body.classList.add('light-theme');
