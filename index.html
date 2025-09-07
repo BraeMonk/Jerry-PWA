@@ -1470,6 +1470,10 @@
 
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
+
+            const isLightMode = document.body.classList.contains('light-theme');
+            localStorage.setItem('hush_theme', isLightMode ? 'light' : 'dark');
+
             showNotification('Theme updated!');
 
             updateJerrySprite();
@@ -1477,6 +1481,11 @@
 
         // Initialization
         function initializeApp() {
+            const savedTheme = localStorage.getItem('hush_theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+            }
+            
             loadJerryState();
             appState.chatHistory = getFromLocalStorage('hush_chat_history', []);
             
