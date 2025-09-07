@@ -212,6 +212,16 @@
             height: 10px;
             position: absolute;
         }
+
+        /* Ensure Jerry sprite pixels are full like the preview */
+        .jerry-sprite .pixel {
+            width: 10px;        /* same as sprite pixel size */
+            height: 10px;
+            position: absolute;
+            border-radius: 0;   /* remove subtle rounding */
+            margin: 0;
+            padding: 0;
+        }
         
         .jerry-stats {
             width: 100%;
