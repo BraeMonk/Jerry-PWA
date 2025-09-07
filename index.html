@@ -832,7 +832,6 @@
                 remaining: 180,
                 interval: null
             },
-            spriteTheme: 'default'
         };
 
         // Jerry Sprite Data
@@ -1540,8 +1539,8 @@
             spriteThemeSelect.addEventListener('change', () => {
                 appState.spriteTheme = spriteThemeSelect.value;
                 saveSettings(); // save to appState
-                renderJerrySprite(jerrySprite); // re-render sprite immediately
-                renderSpritePreview(jerrySprite);
+                renderJerrySprite(); // re-render sprite immediately
+                renderSpritePreview();
             });
         }
 
@@ -1567,8 +1566,8 @@
 
             showNotification('Theme updated!');
 
-            renderJerrySprite(jerrySprite);
-            renderSpritePreview(jerrySprite);
+            renderJerrySprite();
+            renderSpritePreview();
         }
 
         // Initialization function 
