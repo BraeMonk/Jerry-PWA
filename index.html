@@ -1634,7 +1634,8 @@
                 localStorage.setItem('botName', appState.botName);
               });
             }
-  
+            // --- Load saved sprite theme ---
+            appState.spriteTheme = localStorage.getItem('spriteTheme') || 'default';
             
             loadJerryState();
             //appState.chatHistory = getFromLocalStorage('hush_chat_history', []);
