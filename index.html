@@ -786,7 +786,10 @@
                 <input type="text" class="form-input" id="apiKey" placeholder="Enter your API key here.">
             </div>
             <button class="btn" onclick="saveSettings()">Save Settings</button>
-
+            <div class="form-group" style="margin-top: 20px;">
+                <label class="form-label">Sprite Preview</label>
+                <div id="spritePreview" style="width: 100px; height: 100px; position: relative; background: #f0f0f0; border: 1px solid #ccc;"></div>
+            </div>
             <div class="form-group">
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
                 <select class="form-input" id="spriteTheme">
@@ -1040,15 +1043,20 @@
             const spriteTheme = appState.spriteTheme || 'default';
 
             const colorSets = {
+                // DEFAULT: Warm, bright, defined in light mode, blue-based in dark mode
                 default: isLightMode
-                    ? {0: 'transparent', 1: '#000000', 2: '#e3b88d', 3: '#3e3e3e', 4: '#f0c9a2'}
-                    : {0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#6bb6ff', 4: '#9cc7f0'},
+                    ? {0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88'} // brown body, cream eyes, darker brown outline, lighter features
+                    : {0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0'}, // defined blue body, white eyes, dark blue outline, light features
+
+                // CHAOTIC: Aggressive, high contrast, stands out on both themes
                 chaotic: isLightMode
-                    ? {0: 'transparent', 1: '#000000', 2: '#ff0000', 3: '#000000', 4: '#ff0000'}
-                    : {0: 'transparent', 1: '#ff0000', 2: '#000000', 3: '#ff0000', 4: '#000000'},
+                    ? {0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347'} // dark red body, bright orange eyes, dark outline, vivid features
+                    : {0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000'}, // bright orange body, dark red eyes, vivid features, dark outline
+
+                // NEUTRAL: Calm, balanced, slightly muted but defined
                 neutral: isLightMode
-                    ? {0: 'transparent', 1: '#4b0082', 2: '#e6e6fa', 3: '#4b0082', 4: '#e6e6fa'}
-                    : {0: 'transparent', 1: '#e6e6fa', 2: '#4b0082', 3: '#e6e6fa', 4: '#4b0082'}
+                    ? {0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF'} // deep purple body, lavender eyes, darker outline, soft features
+                    : {0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082'} // lavender body, deep purple eyes, soft features, darker outline
             };
 
             const colors = colorSets[spriteTheme];
@@ -1062,6 +1070,46 @@
                         pixelDiv.style.left = `${x * 10}px`;
                         pixelDiv.style.top = `${y * 10}px`;
                         container.appendChild(pixelDiv);
+                    }
+                });
+            });
+        }
+
+        function renderSpritePreview() {
+            if (!appState.spriteData) return; // nothing to show yet
+            const previewContainer = document.getElementById('spritePreview');
+            previewContainer.innerHTML = ''; // clear previous pixels
+
+            // Use the same render logic as your main sprite
+            const isLightMode = document.body.classList.contains('light-theme');
+            const spriteTheme = appState.spriteTheme || 'default';
+
+            const colorSets = {
+                default: isLightMode
+                    ? {0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88'}
+                    : {0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0'},
+                chaotic: isLightMode
+                    ? {0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347'}
+                    : {0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000'},
+                neutral: isLightMode
+                    ? {0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF'}
+                    : {0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082'}
+            };
+
+            const colors = colorSets[spriteTheme];
+
+            appState.spriteData.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                    if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        previewContainer.appendChild(pixelDiv);
                     }
                 });
             });
@@ -1492,6 +1540,7 @@
                 appState.spriteTheme = spriteThemeSelect.value;
                 saveSettings(); // save to appState
                 renderJerrySprite(appState.spriteData); // re-render sprite immediately
+                renderSpritePreview();
             });
         }
 
@@ -1518,6 +1567,7 @@
             showNotification('Theme updated!');
 
             renderJerrySprite(appState.spriteData);
+            renderSpritePreview();
         }
 
         // Initialization
