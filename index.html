@@ -1035,6 +1035,23 @@
             renderJerrySprite(jerrySprites[spriteType]);
         }
 
+        function updateSpritePreviewData() {
+            const needs = appState.jerry.needs;
+            const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
+
+            if (minNeed < 50) {
+                if (needs.insight === minNeed) {
+                    appState.spriteData = jerrySprites.lowInsight;
+                } else if (needs.calm === minNeed) {
+                    appState.spriteData = jerrySprites.lowCalm;
+                } else {
+                    appState.spriteData = jerrySprites.content;
+                }
+            } else {
+                appState.spriteData = jerrySprites.content;
+            }
+        }
+
         function renderJerrySprite(spriteData) {
             const container = document.getElementById('jerrySprite');
             container.innerHTML = '';
@@ -1076,6 +1093,8 @@
         }
 
         function renderSpritePreview() {
+            const spriteData = appState.spriteData || jerrySprites.content;
+            
             if (!appState.spriteData) return; // nothing to show yet
             const previewContainer = document.getElementById('spritePreview');
             previewContainer.innerHTML = ''; // clear previous pixels
@@ -1540,6 +1559,7 @@
                 appState.spriteTheme = spriteThemeSelect.value;
                 saveSettings(); // save to appState
                 renderJerrySprite(); // re-render sprite immediately
+                updateSpritePreviewData();
                 renderSpritePreview();
             });
         }
@@ -1567,11 +1587,12 @@
             showNotification('Theme updated!');
 
             renderJerrySprite();
+            updateSpritePreviewData();
             renderSpritePreview();
         }
 
         // Initialization function 
-        initializeApp() {
+        function initializeApp() {
             const savedTheme = localStorage.getItem('hush_theme');
             if (savedTheme === 'light') {
                 document.body.classList.add('light-theme');
