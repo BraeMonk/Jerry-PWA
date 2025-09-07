@@ -1099,7 +1099,7 @@
                     appState.chatHistory = appState.chatHistory.slice(-20);
                 }
                 
-                saveToLocalStorage('hush_chat_history', appState.chatHistory);
+                //saveToLocalStorage('hush_chat_history', appState.chatHistory);
             } catch (error) {
                 // Remove thinking indicator
                 const chatLog = document.getElementById('chatLog');
@@ -1116,7 +1116,7 @@
             const chatLog = document.getElementById('chatLog');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${className}`;
-            messageDiv.innerHTML = `<strong>${speaker === 'assistant' ? appState.botName : 'You'}:</strong> ${message}`;
+            messageDiv.innerHTML = `<strong>${speaker === 'assistant' ? appState.botName : ''}:</strong> ${message}`;
             chatLog.appendChild(messageDiv);
             chatLog.scrollTop = chatLog.scrollHeight;
         }
