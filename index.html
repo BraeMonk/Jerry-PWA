@@ -1189,7 +1189,7 @@
             appState.chatHistory.push({ role: 'user', content: message });
             
             // Show thinking indicator
-            addMessageToChat(appState.botName, 'Thinking...', 'jerry thinking');
+            addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
             
             try {
                 const response = await getAIResponse(message);
@@ -1200,7 +1200,7 @@
                     lastMessage.remove();
                 }
                 
-                addMessageToChat(appState.botName, response, 'jerry');
+                addMessageToChat('assistant', response, 'jerry');
                 appState.chatHistory.push({ role: 'assistant', content: response });
                 
                 // Limit chat history
