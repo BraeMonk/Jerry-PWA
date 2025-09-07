@@ -1081,8 +1081,27 @@
             }
         }
 
+        // Utility to ensure input always works
+        function setupChatInput() {
+            const input = document.getElementById('chatInput');
+            if (!input) return;
+
+            // Remove old listener if it exists
+            input.removeEventListener('click', focusInput);
+            input.addEventListener('click', focusInput);
+
+            function focusInput() {
+                input.focus();
+                // On some mobile devices, clicking also triggers keyboard
+                input.click();
+            }
+        }
+
+        // Render history safely
         function renderHistory() {
-            const historyList = document.getElementById('historyList'); // make sure you have a <div id="historyList">
+            const historyList = document.getElementById('historyList');
+            if (!historyList) return;
+
             historyList.innerHTML = '';
 
             if (appState.conversationHistory.length === 0) {
@@ -1107,24 +1126,26 @@
 
                 historyList.appendChild(convoDiv);
             });
+
+            // Ensure input works after re-render
+            setupChatInput();
         }
 
-
-        // Chat Functions
+        // Chat function
         async function sendMessage() {
             const input = document.getElementById('chatInput');
+            if (!input) return;
+
             const message = input.value.trim();
             if (!message) return;
-
-            const chatInput = input;
 
             addMessageToChat('You', message, 'user');
             input.value = '';
 
-            // Add to chat history
+            // Add to history
             appState.chatHistory.push({ role: 'user', content: message });
 
-            // Show thinking indicator
+            // Show thinking
             addMessageToChat('Jerry', 'Thinking...', 'jerry thinking');
 
             try {
@@ -1133,52 +1154,46 @@
                 // Remove thinking indicator
                 const chatLog = document.getElementById('chatLog');
                 const lastMessage = chatLog.lastElementChild;
-                if (lastMessage && lastMessage.classList.contains('thinking')) {
-                    lastMessage.remove();
-                }
+                if (lastMessage && lastMessage.classList.contains('thinking')) lastMessage.remove();
 
                 // Add Jerry's reply
                 addMessageToChat('Jerry', response, 'jerry');
                 appState.chatHistory.push({ role: 'assistant', content: response });
 
-                // Limit chat history (current session)
+                // Keep session history <= 20
                 if (appState.chatHistory.length > 20) {
                     appState.chatHistory = appState.chatHistory.slice(-20);
                 }
 
-                // Save current session
                 localStorage.setItem('hush_chat_history', JSON.stringify(appState.chatHistory));
 
-                // 🔹 Also save to global conversation history
                 if (appState.chatHistory.length > 1) {
                     appState.conversationHistory.push([...appState.chatHistory]);
                     localStorage.setItem('hush_conversations', JSON.stringify(appState.conversationHistory));
                 }
 
-                // Refresh history tab if user visits it
+                // Refresh history
                 renderHistory();
 
-            } catch (error) {
-                // Remove thinking indicator
+            } catch (err) {
                 const chatLog = document.getElementById('chatLog');
                 const lastMessage = chatLog.lastElementChild;
-                if (lastMessage && lastMessage.classList.contains('thinking')) {
-                    lastMessage.remove();
-                }
+                if (lastMessage && lastMessage.classList.contains('thinking')) lastMessage.remove();
 
                 addMessageToChat('Jerry', getFallbackResponse(message), 'jerry');
             }
 
-            // Use a longer timeout and ensure the element still exists
+            // Mobile-friendly focus after sending
             setTimeout(() => {
                 const currentInput = document.getElementById('chatInput');
-                if (currentInput && document.activeElement !== currentInput) {
-                    // Try to focus and trigger keyboard
-                    currentInput.focus();
-                    currentInput.click(); // Sometimes needed on mobile
-                }
+                if (currentInput) currentInput.focus();
             }, 100);
         }
+
+        // Call this once on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setupChatInput();
+        });
 
         function addMessageToChat(speaker, message, className) {
             const chatLog = document.getElementById('chatLog');
