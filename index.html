@@ -1063,6 +1063,35 @@
             }
         }
 
+        function renderHistory() {
+            const historyList = document.getElementById('historyList'); // make sure you have a <div id="historyList">
+            historyList.innerHTML = '';
+
+            if (appState.conversationHistory.length === 0) {
+                historyList.innerHTML = '<p>No past conversations yet.</p>';
+                return;
+            }
+
+            appState.conversationHistory.forEach((conversation, index) => {
+                const convoDiv = document.createElement('div');
+                convoDiv.className = 'conversation';
+
+                const header = document.createElement('h4');
+                header.textContent = `Conversation ${index + 1}`;
+                convoDiv.appendChild(header);
+
+                conversation.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `message ${msg.role}`;
+                    msgDiv.innerHTML = `<strong>${msg.role === 'user' ? 'You' : 'Jerry'}:</strong> ${msg.content}`;
+                    convoDiv.appendChild(msgDiv);
+                });
+
+                historyList.appendChild(convoDiv);
+            });
+        }
+
+
         // Chat Functions
         async function sendMessage() {
             const input = document.getElementById('chatInput');
@@ -1105,8 +1134,10 @@
                 localStorage.setItem('hush_chat_history', JSON.stringify(appState.chatHistory));
 
                 // 🔹 Also save to global conversation history
-                appState.conversationHistory.push([...appState.chatHistory]);
-                localStorage.setItem('hush_conversations', JSON.stringify(appState.conversationHistory));
+                if (appState.chatHistory.length > 1) {
+                    appState.conversationHistory.push([...appState.chatHistory]);
+                    localStorage.setItem('hush_conversations', JSON.stringify(appState.conversationHistory));
+                }
 
                 // Refresh history tab if user visits it
                 renderHistory();
