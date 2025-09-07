@@ -1116,7 +1116,8 @@
             const chatLog = document.getElementById('chatLog');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${className}`;
-            messageDiv.innerHTML = `<strong>${speaker === 'assistant' ? appState.botName : speaker}:</strong> ${message}`;
+            const displayName = speaker === 'assistant' ? appState.botName : 'You';
+            messageDiv.innerHTML = `<strong>${displayName}:</strong> ${message}`;
             chatLog.appendChild(messageDiv);
             chatLog.scrollTop = chatLog.scrollHeight;
         }
