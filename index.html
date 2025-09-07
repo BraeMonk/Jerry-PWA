@@ -831,7 +831,8 @@
                 active: false,
                 remaining: 180,
                 interval: null
-            }
+            },
+            spriteTheme: 'default'
         };
 
         // Jerry Sprite Data
@@ -1540,7 +1541,7 @@
                 appState.spriteTheme = spriteThemeSelect.value;
                 saveSettings(); // save to appState
                 renderJerrySprite(appState.spriteData); // re-render sprite immediately
-                renderSpritePreview();
+                renderSpritePreview(appState.spriteData);
             });
         }
 
