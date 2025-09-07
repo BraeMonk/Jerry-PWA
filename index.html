@@ -1554,7 +1554,9 @@
         function loadSettings() {
             document.getElementById('apiKey').value = appState.apiKey;
             document.getElementById('botName').value = appState.botName || 'Jerry';
-            document.getElementById('spriteTheme').value = appState.spriteTheme || 'default';
+            appState.spriteTheme = localStorage.getItem('spriteTheme') || 'default';
+            document.getElementById('spriteTheme').value = appState.spriteTheme;
+            
 
             const spriteThemeSelect = document.getElementById('spriteTheme');
 
@@ -1569,6 +1571,7 @@
 
         function saveSettings() {
             appState.spriteTheme = document.getElementById('spriteTheme').value;
+            localStorage.setItem('spriteTheme', appState.spriteTheme);
             
             const apiKey = document.getElementById('apiKey').value.trim();
             appState.apiKey = apiKey;
