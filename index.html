@@ -1080,7 +1080,7 @@
             appState.chatHistory.push({ role: 'user', content: message });
             
             // Show thinking indicator
-            addMessageToChat('Jerry', 'Thinking...', 'jerry thinking');
+            addMessageToChat(appState.botName, 'Thinking...', 'jerry thinking');
             
             try {
                 const response = await getAIResponse(message);
@@ -1091,7 +1091,7 @@
                     lastMessage.remove();
                 }
                 
-                addMessageToChat('Jerry', response, 'jerry');
+                addMessageToChat(appState.botName, response, 'jerry');
                 appState.chatHistory.push({ role: 'assistant', content: response });
                 
                 // Limit chat history
@@ -1108,7 +1108,7 @@
                     lastMessage.remove();
                 }
                 
-                addMessageToChat(appState.botName'Jerry', getFallbackResponse(message), 'jerry');
+                addMessageToChat(appState.botName, getFallbackResponse(message), 'jerry');
             }
         }
 
@@ -1427,46 +1427,46 @@
             });
         }
 
-        function loadHistory() {
-            const historyList = document.getElementById('historyList');
-            historyList.innerHTML = '';
+        //function loadHistory() {
+            //const historyList = document.getElementById('historyList');
+            //historyList.innerHTML = '';
             
-            if (appState.chatHistory.length === 0) {
-                historyList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No conversation history yet. Chat with Jerry to see your conversations here!</p>';
-                return;
-            }
+            //if (appState.chatHistory.length === 0) {
+                //historyList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No conversation history yet. Chat with Jerry to see your conversations here!</p>';
+                //return;
+            //}
             
             // Group conversations by session (this is a simplified approach)
-            const sessions = [];
-            let currentSession = [];
+            //const sessions = [];
+            //let currentSession = [];
             
-            appState.chatHistory.forEach(message => {
-                currentSession.push(message);
-            });
+            //appState.chatHistory.forEach(message => {
+                //currentSession.push(message);
+            //});
             
-            if (currentSession.length > 0) {
-                sessions.push({
-                    timestamp: new Date().toISOString(),
-                    conversation: currentSession
-                });
-            }
+            //if (currentSession.length > 0) {
+                //sessions.push({
+                    //timestamp: new Date().toISOString(),
+                    //conversation: currentSession
+                //});
+            //}
             
-            sessions.forEach(session => {
-                const sessionDiv = document.createElement('div');
-                sessionDiv.className = 'entry-item';
+            //sessions.forEach(session => {
+                //const sessionDiv = document.createElement('div');
+                //sessionDiv.className = 'entry-item';
                 
-                const date = new Date(session.timestamp).toLocaleDateString();
-                const time = new Date(session.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                const messageCount = session.conversation.length;
+                //const date = new Date(session.timestamp).toLocaleDateString();
+                //const time = new Date(session.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                //const messageCount = session.conversation.length;
                 
-                sessionDiv.innerHTML = `
-                    <div class="entry-date">${date} at ${time}</div>
-                    <div class="entry-content">Conversation with ${messageCount} messages</div>
-                `;
+                //sessionDiv.innerHTML = `
+                    //<div class="entry-date">${date} at ${time}</div>
+                    //<div class="entry-content">Conversation with ${messageCount} messages</div>
+                //`;
                 
-                historyList.appendChild(sessionDiv);
-            });
-        }
+                //historyList.appendChild(sessionDiv);
+            //});
+        //}
 
         // Settings Functions
         function loadSettings() {
@@ -1504,8 +1504,21 @@
                 document.body.classList.add('light-theme');
             }
             
+            // Load saved name and wire live updates
+            appState.botName = localStorage.getItem('botName') || 'Jerry';
+            const nameInput = document.getElementById('botName');
+            if (nameInput) {
+              nameInput.value = appState.botName;
+              nameInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                appState.botName = val || 'Jerry';
+                localStorage.setItem('botName', appState.botName);
+              });
+            }
+  
+            
             loadJerryState();
-            appState.chatHistory = getFromLocalStorage('hush_chat_history', []);
+            //appState.chatHistory = getFromLocalStorage('hush_chat_history', []);
             
             updateJerryUI();
             updateAffirmationBanner('jerry');
