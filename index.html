@@ -1513,11 +1513,16 @@
         // Initialization
         function initializeApp() {
             loadJerryState();
-            appState.chatHistory = getFromLocalStorage('hush_chat_history', []);
+            appState.chatHistory = [];
+            localStorage.removeItem('hush_chat_history');
             appState.apiKey = localStorage.getItem('hush_api_key') || '';
+
+            // 🔹 Load saved conversation history
+            appState.conversationHistory = JSON.parse(localStorage.getItem('hush_conversations') || '[]');
             
             updateJerryUI();
             updateAffirmationBanner('jerry');
+            renderHistory();
             
             // Update Jerry's needs every minute
             setInterval(updateJerryNeeds, 60000);
