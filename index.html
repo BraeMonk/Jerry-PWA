@@ -1124,7 +1124,7 @@
 
             const colors = colorSets[spriteTheme];
 
-            appState.spriteData.forEach((row, y) => {
+            spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
                     if (pixel > 0) {
                         const pixelDiv = document.createElement('div');
