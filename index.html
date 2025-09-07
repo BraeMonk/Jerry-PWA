@@ -1068,34 +1068,46 @@
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message) return;
-            
+
             addMessageToChat('You', message, 'user');
             input.value = '';
-            
+            input.focus();
+
             // Add to chat history
             appState.chatHistory.push({ role: 'user', content: message });
-            
+
             // Show thinking indicator
             addMessageToChat('Jerry', 'Thinking...', 'jerry thinking');
-            
+
             try {
                 const response = await getAIResponse(message);
+
                 // Remove thinking indicator
                 const chatLog = document.getElementById('chatLog');
                 const lastMessage = chatLog.lastElementChild;
                 if (lastMessage && lastMessage.classList.contains('thinking')) {
                     lastMessage.remove();
                 }
-                
+
+                // Add Jerry's reply
                 addMessageToChat('Jerry', response, 'jerry');
                 appState.chatHistory.push({ role: 'assistant', content: response });
-                
-                // Limit chat history
+
+                // Limit chat history (current session)
                 if (appState.chatHistory.length > 20) {
                     appState.chatHistory = appState.chatHistory.slice(-20);
                 }
-                
-                saveToLocalStorage('hush_chat_history', appState.chatHistory);
+
+                // Save current session
+                localStorage.setItem('hush_chat_history', JSON.stringify(appState.chatHistory));
+
+                // 🔹 Also save to global conversation history
+                appState.conversationHistory.push([...appState.chatHistory]);
+                localStorage.setItem('hush_conversations', JSON.stringify(appState.conversationHistory));
+
+                // Refresh history tab if user visits it
+                renderHistory();
+
             } catch (error) {
                 // Remove thinking indicator
                 const chatLog = document.getElementById('chatLog');
@@ -1103,7 +1115,7 @@
                 if (lastMessage && lastMessage.classList.contains('thinking')) {
                     lastMessage.remove();
                 }
-                
+
                 addMessageToChat('Jerry', getFallbackResponse(message), 'jerry');
             }
         }
