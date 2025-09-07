@@ -776,6 +776,11 @@
         <!-- Settings Screen -->
         <div class="screen" id="settings">
             <h2 style="margin-bottom: 20px;">Settings</h2>
+            <!-- Bot Name Input -->
+            <div class="form-group">
+                <label class="form-label" for="botName">Companion Name</label>
+                <input type="text" class="form-input" id="botName" placeholder="Enter a name for your companion.">
+            </div>
             <div class="form-group">
                 <label class="form-label" for="apiKey">Google API Key</label>
                 <input type="text" class="form-input" id="apiKey" placeholder="Enter your API key here.">
@@ -809,6 +814,7 @@
             chatHistory: [],
             entries: JSON.parse(localStorage.getItem('hush_entries') || '[]'),
             conversationHistory: JSON.parse(localStorage.getItem('hush_conversations') || '[]'),
+            botName: localStorage.getItem('botName') || 'Jerry', // default
             timer: {
                 active: false,
                 remaining: 180,
@@ -934,6 +940,12 @@
             } else {
                 banner.textContent = '';
             }
+        }
+
+        // Function to update bot name
+        function setBotName(newName) {
+            appState.botName = newName.trim() || 'Jerry';
+            localStorage.setItem('botName', appState.botName);
         }
 
         // Jerry Companion Functions
@@ -1104,7 +1116,7 @@
             const chatLog = document.getElementById('chatLog');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${className}`;
-            messageDiv.innerHTML = `<strong>${speaker}:</strong> ${message}`;
+            messageDiv.innerHTML = `<strong>${speaker === 'assistant' ? appState.botName : 'You'}:</strong> ${message}`;
             chatLog.appendChild(messageDiv);
             chatLog.scrollTop = chatLog.scrollHeight;
         }
@@ -1459,12 +1471,18 @@
         // Settings Functions
         function loadSettings() {
             document.getElementById('apiKey').value = appState.apiKey;
+            document.getElementById('botName').value = appState.botName || 'Jerry';
         }
 
         function saveSettings() {
             const apiKey = document.getElementById('apiKey').value.trim();
             appState.apiKey = apiKey;
             localStorage.setItem('hush_api_key', apiKey);
+           
+            // Save Companion Name
+            const botName = document.getElementById('botName').value.trim() || 'Jerry';
+            appState.botName = botName;
+            localStorage.setItem('botName', botName);
             showNotification('Settings saved successfully!');
         }
 
