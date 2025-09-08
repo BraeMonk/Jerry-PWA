@@ -1173,13 +1173,16 @@
         // Grab Jerry container
         const jerryContainer = document.getElementById('jerrySprite');
 
+        // === Persistent base sprite (includes evolutions/mood) ===
+        let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
+
         // === Helper Functions ===
         function getCurrentSprite() {
-            return jerrySprites[currentMood];
+            return baseSprite;
         }
 
-        // Redraw Jerry sprite (reuse your render logic)
-        function drawJerry(spriteData) {
+        // Redraw Jerry sprite
+        function drawJerry(spriteData = baseSprite) {
             jerryContainer.innerHTML = '';
             const isLightMode = document.body.classList.contains('light-theme');
             const spriteTheme = appState.spriteTheme || 'default';
@@ -1219,10 +1222,10 @@
 
         // Blinking
         function blinkJerry() {
-            if (Math.random() < 0.005 && !jerryTalking) {
+            if (Math.random() < 0.003 && !jerryTalking) {
                 const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
                 let eyes;
-                let bodyColor = 1;
+                const bodyColor = 1; // blink = body color
                 switch (currentMood) {
                     case 'content': eyes = [[4,5],[4,10]]; break;
                     case 'lowInsight': eyes = [[4,4],[4,11]]; break;
@@ -1232,16 +1235,16 @@
                     sprite[r][c] = bodyColor;
                     sprite[r+1][c] = bodyColor;
                 });
-                
                 drawJerry(sprite);
-                setTimeout(() => drawJerry(getCurrentSprite()), 150);
+                setTimeout(() => drawJerry(getCurrentSprite()), 200);
             }
         }
 
-        // Breathing (brightness pulse)
+        // Breathing (brightness + scale)
         function breatheJerry() {
             breathTime += 0.05;
-            const brightness = 1 + 0.1 * Math.sin(breathTime); // 5% pulse
+            const brightness = 1 + 0.1 * Math.sin(breathTime); // noticeable pulse
+            const scale = 1 + 0.02 * Math.sin(breathTime);
             jerryContainer.style.filter = `brightness(${brightness})`;
             jerryContainer.style.transform = `scale(${scale})`;
         }
@@ -1250,10 +1253,12 @@
         function setMood(mood) {
             if (jerrySprites[mood]) {
                 currentMood = mood;
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[mood]));
                 drawJerry(getCurrentSprite());
             }
         }
 
+        // Talking animation
         async function jerryTalk(text) {
             jerryTalking = true;
             let frame = 0;
@@ -1270,18 +1275,18 @@
                 drawJerry(sprite);
             }, 200);
 
-            await renderText(text);
+            await renderText(text); // your existing text rendering
             clearInterval(talkInterval);
             jerryTalking = false;
             drawJerry(getCurrentSprite());
         }
 
-        // Evolution overlay example
+        // Evolution overlay
         function evolveJerry(level) {
-            const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-            if (level >= 5) sprite[2][7] = 4; // glowing eye
-            if (level >= 10) sprite[0][6] = 2; // halo
-            drawJerry(sprite);
+            baseSprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+            if (level >= 5) baseSprite[2][7] = 4; // glowing eye
+            if (level >= 10) baseSprite[0][6] = 2; // halo
+            drawJerry(getCurrentSprite());
         }
 
         // === Main Update Loop ===
@@ -1294,6 +1299,7 @@
         }
 
         // Start animation
+        drawJerry(); // initial draw
         updateJerry();
 
         function saveJerryState() {
