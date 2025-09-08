@@ -1165,6 +1165,131 @@
             });
         }
 
+        // === Jerry Animation Controller ===
+        let currentMood = "content";
+        let jerryTalking = false;
+        let breathTime = 0;
+
+        // Grab Jerry container
+        const jerryContainer = document.getElementById('jerrySprite');
+
+        // === Helper Functions ===
+        function getCurrentSprite() {
+            return jerrySprites[currentMood];
+        }
+
+        // Redraw Jerry sprite (reuse your render logic)
+        function drawJerry(spriteData) {
+            jerryContainer.innerHTML = '';
+            const isLightMode = document.body.classList.contains('light-theme');
+            const spriteTheme = appState.spriteTheme || 'default';
+
+            const colorSets = {
+                default: isLightMode
+                    ? {0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88'}
+                    : {0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0'},
+                chaotic: isLightMode
+                    ? {0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347'}
+                    : {0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000'},
+                neutral: isLightMode
+                    ? {0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF'}
+                    : {0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082'}
+            };
+
+            const colors = colorSets[spriteTheme];
+
+            spriteData.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                    if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        jerryContainer.appendChild(pixelDiv);
+                    }
+                });
+            });
+        }
+
+        // === Animations ===
+
+        // Blinking
+        function blinkJerry() {
+            if (Math.random() < 0.005 && !jerryTalking) {
+                const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+                let eyes;
+                switch (currentMood) {
+                    case 'content': eyes = [[4,5],[4,10]]; break;
+                    case 'lowInsight': eyes = [[4,4],[4,11]]; break;
+                    case 'lowCalm': eyes = [[3,4],[3,11]]; break;
+                }
+                eyes.forEach(([r,c]) => sprite[r][c] = 0);
+                drawJerry(sprite);
+                setTimeout(() => drawJerry(getCurrentSprite()), 150);
+            }
+        }
+
+        // Breathing (brightness pulse)
+        function breatheJerry() {
+            breathTime += 0.05;
+            const brightness = 1 + 0.05 * Math.sin(breathTime); // 5% pulse
+            jerryContainer.style.filter = `brightness(${brightness})`;
+        }
+
+        // Mood switching
+        function setMood(mood) {
+            if (jerrySprites[mood]) {
+                currentMood = mood;
+                drawJerry(getCurrentSprite());
+            }
+        }
+
+        async function jerryTalk(text) {
+            jerryTalking = true;
+            let frame = 0;
+            const talkInterval = setInterval(() => {
+                frame = 1 - frame;
+                const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+                let mouth;
+                switch (currentMood) {
+                    case 'content': mouth = [[6,7],[6,8]]; break;
+                    case 'lowInsight': mouth = [[5,6],[5,9]]; break;
+                    case 'lowCalm': mouth = [[4,6],[4,9]]; break;
+                }
+                mouth.forEach(([r,c]) => sprite[r][c] = frame ? 0 : 1);
+                drawJerry(sprite);
+            }, 200);
+
+            await renderText(text);
+            clearInterval(talkInterval);
+            jerryTalking = false;
+            drawJerry(getCurrentSprite());
+        }
+
+        // Evolution overlay example
+        function evolveJerry(level) {
+            const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+            if (level >= 5) sprite[2][7] = 4; // glowing eye
+            if (level >= 10) sprite[0][6] = 2; // halo
+            drawJerry(sprite);
+        }
+
+        // === Main Update Loop ===
+        function updateJerry() {
+            if (!jerryTalking) {
+                blinkJerry();
+                breatheJerry();
+            }
+            requestAnimationFrame(updateJerry);
+        }
+
+        // Start animation
+        updateJerry();
+
         function saveJerryState() {
             saveToLocalStorage('hush_jerry_state', appState.jerry);
         }
