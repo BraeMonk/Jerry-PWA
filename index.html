@@ -933,1285 +933,1283 @@
 
     <script>
         // Application State
-const appState = {
-    jerry: {
-        needs: { clarity: 100, insight: 100, calm: 100 },
-        lastFed: { clarity: Date.now(), insight: Date.now(), calm: Date.now() },
-        level: 1,
-        xp: 0,
-        xpToNext: 100
-    },
-    apiKey: localStorage.getItem('hush_api_key') || '',
-    currentTab: 'jerry',
-    checkinData: {},
-    cbtData: {},
-    dbtData: {},
-    chatHistory: [],
-    entries: JSON.parse(localStorage.getItem('hush_entries') || '[]'),
-    conversationHistory: JSON.parse(localStorage.getItem('hush_conversations') || '[]'),
-    botName: localStorage.getItem('botName') || 'Jerry', // default
-    timer: {
-        active: false,
-        remaining: 180,
-        interval: null
-    },
-    spriteTheme: localStorage.getItem('spriteTheme') || 'default',
-};
-const subscriptionState = {
-    isSubscribed: localStorage.getItem('jerry_subscription_active') === 'true',
-    subscriptionId: localStorage.getItem('jerry_subscription_id') || null,
-    messageCount: parseInt(localStorage.getItem('jerry_message_count') || '0'),
-    billingCycle: localStorage.getItem('jerry_billing_cycle') || null,
-    apiOption: localStorage.getItem('jerry_api_option') || 'own'
-};
-
-const PREMIUM_API_KEY = 'GITHUB_SECRET_PREMIUM_API_KEY';
-
-// Jerry Sprite Data
-const jerrySprites = {
-    content: [
-        [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
-        [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [3, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
-        [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ],
-    lowInsight: [
-        [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
-        [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [3, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 4, 4, 1, 1, 4, 4, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 1, 1, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
-        [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ],
-    lowCalm: [
-        [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
-        [0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0],
-        [3, 1, 1, 1, 4, 4, 1, 1, 1, 4, 4, 1, 1, 1, 3, 0],
-        [3, 1, 1, 1, 4, 4, 1, 1, 1, 4, 4, 1, 1, 1, 3, 3],
-        [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
-        [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0],
-        [0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0],
-        [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ]
-};
-
-const affirmations = [
-    "Your feelings are valid, even the difficult ones.",
-    "Be kind and patient with yourself today.",
-    "Each breath is a new, gentle beginning.",
-    "It's okay to rest; you are doing enough.",
-    "You are resilient, and you can get through this moment.",
-    "Allow yourself to simply be, without judgment."
-];
-
-// Utility Functions
-function showNotification(message, type = 'success') {
-    const notification = document.getElementById('notification');
-    notification.textContent = message;
-    notification.className = `notification show ${type}`;
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 3000);
-}
-
-function saveToLocalStorage(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-}
-
-function getFromLocalStorage(key, defaultValue = null) {
-    const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : defaultValue;
-}
-
-// Tab Management
-function switchTab(tabName) {
-    // Update tab buttons
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    event.target.classList.add('active');
-
-    // Update screens
-    document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
-    document.getElementById(tabName).classList.add('active');
-
-    appState.currentTab = tabName;
-
-    // Update affirmation banner
-    updateAffirmationBanner(tabName);
-
-    // Load screen-specific data
-    if (tabName === 'entries') {
-        loadEntries();
-    } else if (tabName === 'history') {
-        loadHistory();
-    } else if (tabName === 'settings') {
-        loadSettings();
-    }
-}
-
-function updateAffirmationBanner(screenName) {
-    const banner = document.getElementById('affirmationBanner');
-    if (screenName === 'jerry' || screenName === 'checkin') {
-        banner.textContent = affirmations[Math.floor(Math.random() * affirmations.length)];
-    } else {
-        banner.textContent = '';
-    }
-}
-
-// Function to update bot name
-function setBotName(newName) {
-    appState.botName = newName.trim() || 'Jerry';
-    localStorage.setItem('botName', appState.botName);
-}
-
-// Jerry Companion Functions
-function updateJerryNeeds() {
-    const now = Date.now();
-    const decayRates = { clarity: 24, insight: 48, calm: 12 }; // hours
-
-    Object.keys(appState.jerry.needs).forEach(need => {
-        const hoursSinceLastFed = (now - appState.jerry.lastFed[need]) / (1000 * 60 * 60);
-        const decayAmount = (hoursSinceLastFed / decayRates[need]) * 100;
-        appState.jerry.needs[need] = Math.max(0, 100 - decayAmount);
-    });
-
-    updateJerryUI();
-    saveJerryState();
-}
-
-function feedJerry(need, amount = 50) {
-    appState.jerry.needs[need] = Math.min(100, appState.jerry.needs[need] + amount);
-    appState.jerry.lastFed[need] = Date.now();
-    addXP(10);
-    saveJerryState();
-    updateJerryUI();
-}
-
-function addXP(amount) {
-    appState.jerry.xp += amount;
-    if (appState.jerry.xp >= appState.jerry.xpToNext) {
-        levelUp();
-    }
-    saveJerryState();
-    updateJerryUI();
-}
-
-function levelUp() {
-    appState.jerry.level++;
-    appState.jerry.xp -= appState.jerry.xpToNext;
-    appState.jerry.xpToNext = Math.floor(appState.jerry.xpToNext * 1.5);
-    showNotification(`Jerry leveled up! Now level ${appState.jerry.level}!`);
-}
-
-function updateJerryUI() {
-    // Update progress bars
-    document.getElementById('clarityBar').style.width = `${appState.jerry.needs.clarity}%`;
-    document.getElementById('insightBar').style.width = `${appState.jerry.needs.insight}%`;
-    document.getElementById('calmBar').style.width = `${appState.jerry.needs.calm}%`;
-
-    // Update text values
-    document.getElementById('clarityValue').textContent = `${Math.round(appState.jerry.needs.clarity)}%`;
-    document.getElementById('insightValue').textContent = `${Math.round(appState.jerry.needs.insight)}%`;
-    document.getElementById('calmValue').textContent = `${Math.round(appState.jerry.needs.calm)}%`;
-
-    // Update level and XP
-    document.getElementById('levelLabel').textContent = `Level ${appState.jerry.level}`;
-    document.getElementById('xpLabel').textContent = `XP: ${appState.jerry.xp} / ${appState.jerry.xpToNext}`;
-
-    // Update Jerry sprite based on needs
-    updateJerrySprite();
-}
-
-// Replaced updateJerrySprite with a single, reliable update function
-function updateJerrySprite() {
-    const needs = appState.jerry.needs;
-    let spriteType = 'content';
-
-    const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
-    if (minNeed < 50) {
-        if (needs.insight === minNeed) {
-            spriteType = 'lowInsight';
-        } else if (needs.calm === minNeed) {
-            spriteType = 'lowCalm';
-        }
-    }
-    
-    // Pass the correct data to the rendering functions
-    const spriteData = jerrySprites[spriteType];
-    const spriteTheme = appState.spriteTheme;
-
-    renderJerrySprite(spriteData, spriteTheme);
-    renderSpritePreview(spriteData, spriteTheme);
-}
-
-// Fixed rendering functions to accept and use parameters
-function renderJerrySprite(spriteData, spriteTheme) {
-    const container = document.getElementById('jerrySprite');
-    container.innerHTML = '';
-
-    const isLightMode = document.body.classList.contains('light-theme');
-
-    const colorSets = {
-        // DEFAULT: Warm, bright, defined in light mode, blue-based in dark mode
-        default: isLightMode
-            ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' } // brown body, cream eyes, darker brown outline, lighter features
-            : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' }, // defined blue body, white eyes, dark blue outline, light features
-
-        // CHAOTIC: Aggressive, high contrast, stands out on both themes
-        chaotic: isLightMode
-            ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' } // dark red body, bright orange eyes, dark outline, vivid features
-            : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' }, // bright orange body, dark red eyes, vivid features, dark outline
-
-        // NEUTRAL: Calm, balanced, slightly muted but defined
-        neutral: isLightMode
-            ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' } // deep purple body, lavender eyes, darker outline, soft features
-            : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' } // lavender body, deep purple eyes, soft features, darker outline
-    };
-
-    const colors = colorSets[spriteTheme || 'default'];
-
-    spriteData.forEach((row, y) => {
-        row.forEach((pixel, x) => {
-            if (pixel > 0) {
-                const pixelDiv = document.createElement('div');
-                pixelDiv.className = 'pixel';
-                pixelDiv.style.backgroundColor = colors[pixel];
-                pixelDiv.style.left = `${x * 10}px`;
-                pixelDiv.style.top = `${y * 10}px`;
-                container.appendChild(pixelDiv);
-            }
-        });
-    });
-}
-
-function renderSpritePreview(spriteData, spriteTheme) {
-    const previewContainer = document.getElementById('spritePreview');
-    previewContainer.innerHTML = ''; // clear previous pixels
-    if (!spriteData) return;
-
-    const isLightMode = document.body.classList.contains('light-theme');
-    const colorSets = {
-        default: isLightMode
-            ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
-            : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
-        chaotic: isLightMode
-            ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
-            : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
-        neutral: isLightMode
-            ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
-            : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }
-    };
-    const colors = colorSets[spriteTheme || 'default'];
-
-    // Auto-size the container based on sprite dimensions
-    const rows = spriteData.length;
-    const cols = spriteData[0].length;
-    previewContainer.style.position = 'relative';
-    previewContainer.style.width = `${cols * 10}px`;
-    previewContainer.style.height = `${rows * 10}px`;
-    previewContainer.style.background = 'transparent';
-
-    spriteData.forEach((row, y) => {
-        row.forEach((pixel, x) => {
-            if (pixel > 0) {
-                const pixelDiv = document.createElement('div');
-                pixelDiv.className = 'pixel';
-                pixelDiv.style.position = 'absolute';
-                pixelDiv.style.width = '10px';
-                pixelDiv.style.height = '10px';
-                pixelDiv.style.backgroundColor = colors[pixel];
-                pixelDiv.style.left = `${x * 10}px`;
-                pixelDiv.style.top = `${y * 10}px`;
-                previewContainer.appendChild(pixelDiv);
-            }
-        });
-    });
-}
-
-// === Jerry Animation Controller ===
-let currentMood = "content";
-let jerryTalking = false;
-let breathTime = 0;
-
-// Grab Jerry container
-const jerryContainer = document.getElementById('jerrySprite');
-
-// === Persistent base sprite (includes evolutions/mood) ===
-let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
-
-// === Helper Functions ===
-function getCurrentSprite() {
-    return baseSprite;
-}
-
-// Redraw Jerry sprite
-function drawJerry(spriteData = baseSprite) {
-    jerryContainer.innerHTML = '';
-    const isLightMode = document.body.classList.contains('light-theme');
-    const spriteTheme = appState.spriteTheme || 'default';
-
-    const colorSets = {
-        default: isLightMode
-            ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
-            : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
-        chaotic: isLightMode
-            ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
-            : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
-        neutral: isLightMode
-            ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
-            : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }
-    };
-
-    const colors = colorSets[spriteTheme];
-
-    spriteData.forEach((row, y) => {
-        row.forEach((pixel, x) => {
-            if (pixel > 0) {
-                const pixelDiv = document.createElement('div');
-                pixelDiv.className = 'pixel';
-                pixelDiv.style.position = 'absolute';
-                pixelDiv.style.width = '10px';
-                pixelDiv.style.height = '10px';
-                pixelDiv.style.backgroundColor = colors[pixel];
-                pixelDiv.style.left = `${x * 10}px`;
-                pixelDiv.style.top = `${y * 10}px`;
-                jerryContainer.appendChild(pixelDiv);
-            }
-        });
-    });
-}
-
-// === Animations ===
-
-// Blinking
-function blinkJerry() {
-    if (Math.random() < 0.003 && !jerryTalking) {
-        const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-        let eyes;
-        const bodyColor = 1; // blink = body color
-        switch (currentMood) {
-            case 'content': eyes = [[4, 5], [4, 10]]; break;
-            case 'lowInsight': eyes = [[4, 4], [4, 11]]; break;
-            case 'lowCalm': eyes = [[3, 4], [3, 11]]; break;
-        }
-        eyes.forEach(([r, c]) => {
-            sprite[r][c] = bodyColor;
-            sprite[r + 1][c] = bodyColor;
-        });
-        drawJerry(sprite);
-        setTimeout(() => drawJerry(getCurrentSprite()), 200);
-    }
-}
-
-// Breathing (brightness + scale)
-function breatheJerry() {
-    breathTime += 0.05;
-    const brightness = 1 + 0.1 * Math.sin(breathTime); // noticeable pulse
-    const scale = 1 + 0.02 * Math.sin(breathTime);
-    jerryContainer.style.filter = `brightness(${brightness})`;
-    jerryContainer.style.transform = `scale(${scale})`;
-}
-
-// Mood switching
-function setMood(mood) {
-    if (jerrySprites[mood]) {
-        currentMood = mood;
-        baseSprite = JSON.parse(JSON.stringify(jerrySprites[mood]));
-        drawJerry(getCurrentSprite());
-    }
-}
-
-// Talking animation
-async function jerryTalk(text) {
-    jerryTalking = true;
-    let frame = 0;
-    const talkInterval = setInterval(() => {
-        frame = 1 - frame;
-        const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-        let mouth;
-        switch (currentMood) {
-            case 'content': mouth = [[6, 7], [6, 8]]; break;
-            case 'lowInsight': mouth = [[5, 6], [5, 9]]; break;
-            case 'lowCalm': mouth = [[4, 6], [4, 9]]; break;
-        }
-        mouth.forEach(([r, c]) => sprite[r][c] = frame ? 0 : 1);
-        drawJerry(sprite);
-    }, 200);
-
-    await renderText(text); // your existing text rendering
-    clearInterval(talkInterval);
-    jerryTalking = false;
-    drawJerry(getCurrentSprite());
-}
-
-// Evolution overlay
-function evolveJerry(level) {
-    baseSprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-    if (level >= 5) baseSprite[2][7] = 4; // glowing eye
-    if (level >= 10) baseSprite[0][6] = 2; // halo
-    drawJerry(getCurrentSprite());
-}
-
-// === Main Update Loop ===
-function updateJerry() {
-    if (!jerryTalking) {
-        blinkJerry();
-        breatheJerry();
-    }
-    requestAnimationFrame(updateJerry);
-}
-
-// Start animation
-drawJerry(); // initial draw
-updateJerry();
-
-function saveJerryState() {
-    saveToLocalStorage('hush_jerry_state', appState.jerry);
-}
-
-function loadJerryState() {
-    const saved = getFromLocalStorage('hush_jerry_state');
-    if (saved) {
-        Object.assign(appState.jerry, saved);
-    }
-}
-
-// Chat Functions
-async function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const message = input.value.trim();
-    if (!message) return;
-
-    addMessageToChat('You', message, 'user');
-    input.value = '';
-
-    // Add to chat history
-    appState.chatHistory.push({ role: 'user', content: message });
-
-    // Show thinking indicator
-    addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
-
-    try {
-        const response = await getAIResponse(message);
-        // Remove thinking indicator
-        const chatLog = document.getElementById('chatLog');
-        const lastMessage = chatLog.lastElementChild;
-        if (lastMessage && lastMessage.classList.contains('thinking')) {
-            lastMessage.remove();
-        }
-
-        addMessageToChat('assistant', response, 'jerry');
-        appState.chatHistory.push({ role: 'assistant', content: response });
-
-        // Limit chat history
-        if (appState.chatHistory.length > 20) {
-            appState.chatHistory = appState.chatHistory.slice(-20);
-        }
-
-        //saveToLocalStorage('hush_chat_history', appState.chatHistory);
-    } catch (error) {
-        // Remove thinking indicator
-        const chatLog = document.getElementById('chatLog');
-        const lastMessage = chatLog.lastElementChild;
-        if (lastMessage && lastMessage.classList.contains('thinking')) {
-            lastMessage.remove();
-        }
-
-        addMessageToChat('assistant', getFallbackResponse(message), 'jerry');
-    }
-}
-
-function addMessageToChat(speaker, message, className) {
-    const chatLog = document.getElementById('chatLog');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${className}`;
-    // Determine display name
-    let displayName;
-    if (speaker === 'assistant') {
-        displayName = appState.botName || 'Jerry'; // use saved name
-    } else {
-        displayName = 'You';
-    }
-    messageDiv.innerHTML = `<strong>${displayName}:</strong> ${message}`;
-    chatLog.appendChild(messageDiv);
-    chatLog.scrollTop = chatLog.scrollHeight;
-}
-
-async function getAIResponse(message) {
-    const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
-
-    let apiKey;
-    if (apiOption === 'premium') {
-        if (!subscriptionState.isSubscribed) {
-            throw new Error('Premium subscription required');
-        }
-
-        // Check usage limits
-        if (subscriptionState.messageCount >= 1000) {
-            throw new Error('Monthly message limit reached. Please wait for next billing cycle.');
-        }
-
-        apiKey = PREMIUM_API_KEY;
-
-        // Increment usage counter
-        subscriptionState.messageCount++;
-        localStorage.setItem('jerry_message_count', subscriptionState.messageCount.toString());
-        updateUsageDisplay();
-
-    } else {
-        apiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
-        if (!apiKey) {
-            throw new Error('Please enter your API key or subscribe to Premium');
-        }
-    }
-
-    const messages = [
-        { role: 'system', content: 'You are a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.' },
-        ...appState.chatHistory.slice(-10),
-        { role: 'user', content: message }
-    ];
-
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+        const appState = {
+        jerry: {
+                needs: { clarity: 100, insight: 100, calm: 100 },
+                lastFed: { clarity: Date.now(), insight: Date.now(), calm: Date.now() },
+                level: 1,
+                xp: 0,
+                xpToNext: 100
         },
-        body: JSON.stringify({
-            contents: [
-                { role: 'user', parts: [{ text: `You are Jerry, a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.\n\nUser: ${message}` }] }
-            ],
-            generationConfig: {
-                maxOutputTokens: 150,
-                temperature: 0.7,
-                topK: 40,
-                topP: 0.95,
-            }
-        })
-    });
+        apiKey: localStorage.getItem('hush_api_key') || '',
+        currentTab: 'jerry',
+        checkinData: {},
+        cbtData: {},
+        dbtData: {},
+        chatHistory: [],
+        entries: JSON.parse(localStorage.getItem('hush_entries') || '[]'),
+        conversationHistory: JSON.parse(localStorage.getItem('hush_conversations') || '[]'),
+        botName: localStorage.getItem('botName') || 'Jerry', // default
+        timer: {
+                active: false,
+                remaining: 180,
+                interval: null
+        },
+        spriteTheme: localStorage.getItem('spriteTheme') || 'default',
+        };
+        const subscriptionState = {
+        isSubscribed: localStorage.getItem('jerry_subscription_active') === 'true',
+        subscriptionId: localStorage.getItem('jerry_subscription_id') || null,
+        messageCount: parseInt(localStorage.getItem('jerry_message_count') || '0'),
+        billingCycle: localStorage.getItem('jerry_billing_cycle') || null,
+        apiOption: localStorage.getItem('jerry_api_option') || 'own'
+        };
 
-    if (!response.ok) {
-        throw new Error('API request failed');
-    }
+        const PREMIUM_API_KEY = 'GITHUB_SECRET_PREMIUM_API_KEY';
 
-    const data = await response.json();
-    return data.candidates[0].content.parts[0].text.trim();
-}
+        // Jerry Sprite Data
+        const jerrySprites = {
+        content: [
+                [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+                [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [3, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
+                [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ],
+        lowInsight: [
+                [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+                [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [3, 1, 1, 1, 4, 4, 1, 1, 1, 1, 4, 4, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 4, 4, 1, 1, 4, 4, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 4, 1, 1, 4, 1, 1, 1, 1, 1, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 0, 3, 3, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 0, 0],
+                [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ],
+        lowCalm: [
+                [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+                [0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0],
+                [3, 1, 1, 1, 4, 4, 1, 1, 1, 4, 4, 1, 1, 1, 3, 0],
+                [3, 1, 1, 1, 4, 4, 1, 1, 1, 4, 4, 1, 1, 1, 3, 3],
+                [3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
+                [0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0],
+                [0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0],
+                [0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        };
 
-// API option switching
-function setupApiOptionHandlers() {
-    const ownApiRadio = document.getElementById('useOwnApi');
-    const premiumRadio = document.getElementById('usePremium');
-    const ownApiSection = document.getElementById('ownApiSection');
-    const premiumSection = document.getElementById('premiumSection');
+        const affirmations = [
+        "Your feelings are valid, even the difficult ones.",
+        "Be kind and patient with yourself today.",
+        "Each breath is a new, gentle beginning.",
+        "It's okay to rest; you are doing enough.",
+        "You are resilient, and you can get through this moment.",
+        "Allow yourself to simply be, without judgment."
+        ];
 
-    function switchApiOption() {
-        const selectedOption = document.querySelector('input[name="apiOption"]:checked')?.value;
+        // Utility Functions
+        function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = `notification show ${type}`;
+        setTimeout(() => {
+                notification.classList.remove('show');
+        }, 3000);
+        }
 
-        if (selectedOption === 'premium') {
-            ownApiSection.style.display = 'none';
-            premiumSection.style.display = 'block';
-            setupPayPalButton();
+        function saveToLocalStorage(key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function getFromLocalStorage(key, defaultValue = null) {
+        const stored = localStorage.getItem(key);
+        return stored ? JSON.parse(stored) : defaultValue;
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Update screens
+        document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+
+        appState.currentTab = tabName;
+
+        // Update affirmation banner
+        updateAffirmationBanner(tabName);
+
+        // Load screen-specific data
+        if (tabName === 'entries') {
+                loadEntries();
+        } else if (tabName === 'history') {
+                loadHistory();
+        } else if (tabName === 'settings') {
+                loadSettings();
+        }
+        }
+
+        function updateAffirmationBanner(screenName) {
+        const banner = document.getElementById('affirmationBanner');
+        if (screenName === 'jerry' || screenName === 'checkin') {
+                banner.textContent = affirmations[Math.floor(Math.random() * affirmations.length)];
         } else {
-            ownApiSection.style.display = 'block';
-            premiumSection.style.display = 'none';
+                banner.textContent = '';
+        }
         }
 
-        localStorage.setItem('jerry_api_option', selectedOption);
-        updateChatInterface();
-    }
-
-    ownApiRadio?.addEventListener('change', switchApiOption);
-    premiumRadio?.addEventListener('change', switchApiOption);
-}
-
-// PayPal integration
-function setupPayPalButton() {
-    const container = document.getElementById('paypal-button-container');
-    if (!container) return;
-
-    container.innerHTML = ''; // Clear existing buttons
-
-    if (subscriptionState.isSubscribed) {
-        container.style.display = 'none'; // Hide if already subscribed
-        return;
-    } else {
-        container.style.display = 'block'; // Show if not subscribed
-    }
-
-    paypal.Buttons({
-        style: {
-            shape: 'pill',
-            color: 'gold',
-            layout: 'vertical',
-            label: 'subscribe'
-        },
-
-        createSubscription: function(data, actions) {
-            return actions.subscription.create({
-                'plan_id': 'P-7LR41432T4749780UNC7UVBY', // Replace with your actual PayPal plan ID
-                'custom_id': 'jerry_premium_' + Date.now()
-            });
-        },
-
-        onApprove: function(data, actions) {
-            subscriptionState.isSubscribed = true;
-            subscriptionState.subscriptionId = data.subscriptionID;
-            subscriptionState.messageCount = 0; // Reset counter
-            subscriptionState.billingCycle = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days from now
-
-            // Save to localStorage
-            localStorage.setItem('jerry_subscription_active', 'true');
-            localStorage.setItem('jerry_subscription_id', data.subscriptionID);
-            localStorage.setItem('jerry_message_count', '0');
-            localStorage.setItem('jerry_billing_cycle', subscriptionState.billingCycle);
-
-            showNotification('🌟 Premium subscription activated! Welcome to Jerry Premium!');
-            updateSubscriptionDisplay();
-            updateChatInterface();
-
-            container.style.display = 'none';
-        },
-
-        onError: function(err) {
-            console.error('PayPal error:', err);
-            showNotification('Subscription failed. Please try again.', 'error');
-        }
-    }).render('#paypal-button-container');
-}
-
-
-// Update subscription display
-function updateSubscriptionDisplay() {
-    const statusDisplay = document.getElementById('subscriptionStatusDisplay');
-    const subscribeSection = document.getElementById('paypalSubscribeSection');
-    const messageUsageDisplay = document.getElementById('messageUsageDisplay');
-    const nextBillingDate = document.getElementById('nextBillingDate');
-
-    if (subscriptionState.isSubscribed) {
-        statusDisplay.style.display = 'block';
-        subscribeSection.style.display = 'none';
-
-        if (messageUsageDisplay) {
-            messageUsageDisplay.textContent = `${subscriptionState.messageCount} / 1000`;
+        // Function to update bot name
+        function setBotName(newName) {
+        appState.botName = newName.trim() || 'Jerry';
+        localStorage.setItem('botName', appState.botName);
         }
 
-        if (nextBillingDate && subscriptionState.billingCycle) {
-            const date = new Date(subscriptionState.billingCycle);
-            nextBillingDate.textContent = date.toLocaleDateString();
-        }
-    } else {
-        statusDisplay.style.display = 'none';
-        subscribeSection.style.display = 'block';
-    }
-}
+        // Jerry Companion Functions
+        function updateJerryNeeds() {
+        const now = Date.now();
+        const decayRates = { clarity: 24, insight: 48, calm: 12 }; // hours
 
-// Update usage display in Jerry screen
-function updateUsageDisplay() {
-    const messageCountEl = document.getElementById('messageCount');
-    const usageFillEl = document.getElementById('usageFill');
-    const subscriptionStatusEl = document.getElementById('subscriptionStatus');
+        Object.keys(appState.jerry.needs).forEach(need => {
+                const hoursSinceLastFed = (now - appState.jerry.lastFed[need]) / (1000 * 60 * 60);
+                const decayAmount = (hoursSinceLastFed / decayRates[need]) * 100;
+                appState.jerry.needs[need] = Math.max(0, 100 - decayAmount);
+        });
 
-    if (subscriptionState.isSubscribed && subscriptionStatusEl) {
-        subscriptionStatusEl.style.display = 'block';
-
-        if (messageCountEl) {
-            messageCountEl.textContent = subscriptionState.messageCount;
+        updateJerryUI();
+        saveJerryState();
         }
 
-        if (usageFillEl) {
-            const percentage = (subscriptionState.messageCount / 1000) * 100;
-            usageFillEl.style.width = `${percentage}%`;
+        function feedJerry(need, amount = 50) {
+        appState.jerry.needs[need] = Math.min(100, appState.jerry.needs[need] + amount);
+        appState.jerry.lastFed[need] = Date.now();
+        addXP(10);
+        saveJerryState();
+        updateJerryUI();
         }
-    } else if (subscriptionStatusEl) {
-        subscriptionStatusEl.style.display = 'none';
-    }
-}
 
-// Update chat interface based on API option
-function updateChatInterface() {
-    const chatInput = document.getElementById('chatInput');
-    const sendButton = document.getElementById('sendButton');
-    const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+        function addXP(amount) {
+        appState.jerry.xp += amount;
+        if (appState.jerry.xp >= appState.jerry.xpToNext) {
+                levelUp();
+        }
+        saveJerryState();
+        updateJerryUI();
+        }
 
-    if (apiOption === 'premium') {
+        function levelUp() {
+        appState.jerry.level++;
+        appState.jerry.xp -= appState.jerry.xpToNext;
+        appState.jerry.xpToNext = Math.floor(appState.jerry.xpToNext * 1.5);
+        showNotification(`Jerry leveled up! Now level ${appState.jerry.level}!`);
+        }
+
+        function updateJerryUI() {
+        // Update progress bars
+        document.getElementById('clarityBar').style.width = `${appState.jerry.needs.clarity}%`;
+        document.getElementById('insightBar').style.width = `${appState.jerry.needs.insight}%`;
+        document.getElementById('calmBar').style.width = `${appState.jerry.needs.calm}%`;
+
+        // Update text values
+        document.getElementById('clarityValue').textContent = `${Math.round(appState.jerry.needs.clarity)}%`;
+        document.getElementById('insightValue').textContent = `${Math.round(appState.jerry.needs.insight)}%`;
+        document.getElementById('calmValue').textContent = `${Math.round(appState.jerry.needs.calm)}%`;
+
+        // Update level and XP
+        document.getElementById('levelLabel').textContent = `Level ${appState.jerry.level}`;
+        document.getElementById('xpLabel').textContent = `XP: ${appState.jerry.xp} / ${appState.jerry.xpToNext}`;
+
+        // Update Jerry sprite based on needs
+        updateJerrySprite();
+        }
+
+        // Replaced updateJerrySprite with a single, reliable update function
+        function updateJerrySprite() {
+        const needs = appState.jerry.needs;
+        let spriteType = 'content';
+
+        const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
+        if (minNeed < 50) {
+                if (needs.insight === minNeed) {
+                spriteType = 'lowInsight';
+                } else if (needs.calm === minNeed) {
+                spriteType = 'lowCalm';
+                }
+        }
+        
+        // Pass the correct data to the rendering functions
+        const spriteData = jerrySprites[spriteType];
+        const spriteTheme = appState.spriteTheme;
+
+        renderJerrySprite(spriteData, spriteTheme);
+        renderSpritePreview(spriteData, spriteTheme);
+        }
+
+        // Fixed rendering functions to accept and use parameters
+        function renderJerrySprite(spriteData, spriteTheme) {
+        const container = document.getElementById('jerrySprite');
+        container.innerHTML = '';
+
+        const isLightMode = document.body.classList.contains('light-theme');
+
+        const colorSets = {
+                // DEFAULT: Warm, bright, defined in light mode, blue-based in dark mode
+                default: isLightMode
+                ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' } // brown body, cream eyes, darker brown outline, lighter features
+                : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' }, // defined blue body, white eyes, dark blue outline, light features
+
+                // CHAOTIC: Aggressive, high contrast, stands out on both themes
+                chaotic: isLightMode
+                ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' } // dark red body, bright orange eyes, dark outline, vivid features
+                : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' }, // bright orange body, dark red eyes, vivid features, dark outline
+
+                // NEUTRAL: Calm, balanced, slightly muted but defined
+                neutral: isLightMode
+                ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' } // deep purple body, lavender eyes, darker outline, soft features
+                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' } // lavender body, deep purple eyes, soft features, darker outline
+        };
+
+        const colors = colorSets[spriteTheme || 'default'];
+
+        spriteData.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        container.appendChild(pixelDiv);
+                }
+                });
+        });
+        }
+
+        function renderSpritePreview(spriteData, spriteTheme) {
+        const previewContainer = document.getElementById('spritePreview');
+        previewContainer.innerHTML = ''; // clear previous pixels
+        if (!spriteData) return;
+
+        const isLightMode = document.body.classList.contains('light-theme');
+        const colorSets = {
+                default: isLightMode
+                ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
+                : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
+                chaotic: isLightMode
+                ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
+                : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
+                neutral: isLightMode
+                ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
+                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }
+        };
+        const colors = colorSets[spriteTheme || 'default'];
+
+        // Auto-size the container based on sprite dimensions
+        const rows = spriteData.length;
+        const cols = spriteData[0].length;
+        previewContainer.style.position = 'relative';
+        previewContainer.style.width = `${cols * 10}px`;
+        previewContainer.style.height = `${rows * 10}px`;
+        previewContainer.style.background = 'transparent';
+
+        spriteData.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        previewContainer.appendChild(pixelDiv);
+                }
+                });
+        });
+        }
+
+        // === Jerry Animation Controller ===
+        let currentMood = "content";
+        let jerryTalking = false;
+        let breathTime = 0;
+
+        // Grab Jerry container
+        const jerryContainer = document.getElementById('jerrySprite');
+
+        // === Persistent base sprite (includes evolutions/mood) ===
+        let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
+
+        // === Helper Functions ===
+        function getCurrentSprite() {
+        return baseSprite;
+        }
+
+        // Redraw Jerry sprite
+        function drawJerry(spriteData = baseSprite) {
+        jerryContainer.innerHTML = '';
+        const isLightMode = document.body.classList.contains('light-theme');
+        const spriteTheme = appState.spriteTheme || 'default';
+
+        const colorSets = {
+                default: isLightMode
+                ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
+                : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
+                chaotic: isLightMode
+                ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
+                : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
+                neutral: isLightMode
+                ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
+                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }
+        };
+
+        const colors = colorSets[spriteTheme];
+
+        spriteData.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        jerryContainer.appendChild(pixelDiv);
+                }
+                });
+        });
+        }
+
+        // === Animations ===
+
+        // Blinking
+        function blinkJerry() {
+        if (Math.random() < 0.003 && !jerryTalking) {
+                const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+                let eyes;
+                const bodyColor = 1; // blink = body color
+                switch (currentMood) {
+                case 'content': eyes = [[4, 5], [4, 10]]; break;
+                case 'lowInsight': eyes = [[4, 4], [4, 11]]; break;
+                case 'lowCalm': eyes = [[3, 4], [3, 11]]; break;
+                }
+                eyes.forEach(([r, c]) => {
+                sprite[r][c] = bodyColor;
+                sprite[r + 1][c] = bodyColor;
+                });
+                drawJerry(sprite);
+                setTimeout(() => drawJerry(getCurrentSprite()), 200);
+        }
+        }
+
+        // Breathing (brightness + scale)
+        function breatheJerry() {
+        breathTime += 0.05;
+        const brightness = 1 + 0.1 * Math.sin(breathTime); // noticeable pulse
+        const scale = 1 + 0.02 * Math.sin(breathTime);
+        jerryContainer.style.filter = `brightness(${brightness})`;
+        jerryContainer.style.transform = `scale(${scale})`;
+        }
+
+        // Mood switching
+        function setMood(mood) {
+        if (jerrySprites[mood]) {
+                currentMood = mood;
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[mood]));
+                drawJerry(getCurrentSprite());
+        }
+        }
+
+        // Talking animation
+        async function jerryTalk(text) {
+        jerryTalking = true;
+        let frame = 0;
+        const talkInterval = setInterval(() => {
+                frame = 1 - frame;
+                const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+                let mouth;
+                switch (currentMood) {
+                case 'content': mouth = [[6, 7], [6, 8]]; break;
+                case 'lowInsight': mouth = [[5, 6], [5, 9]]; break;
+                case 'lowCalm': mouth = [[4, 6], [4, 9]]; break;
+                }
+                mouth.forEach(([r, c]) => sprite[r][c] = frame ? 0 : 1);
+                drawJerry(sprite);
+        }, 200);
+
+        await renderText(text); // your existing text rendering
+        clearInterval(talkInterval);
+        jerryTalking = false;
+        drawJerry(getCurrentSprite());
+        }
+
+        // Evolution overlay
+        function evolveJerry(level) {
+        baseSprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+        if (level >= 5) baseSprite[2][7] = 4; // glowing eye
+        if (level >= 10) baseSprite[0][6] = 2; // halo
+        drawJerry(getCurrentSprite());
+        }
+
+        // === Main Update Loop ===
+        function updateJerry() {
+        if (!jerryTalking) {
+                blinkJerry();
+                breatheJerry();
+        }
+        requestAnimationFrame(updateJerry);
+        }
+
+        // Start animation
+        drawJerry(); // initial draw
+        updateJerry();
+
+        function saveJerryState() {
+        saveToLocalStorage('hush_jerry_state', appState.jerry);
+        }
+
+        function loadJerryState() {
+        const saved = getFromLocalStorage('hush_jerry_state');
+        if (saved) {
+                Object.assign(appState.jerry, saved);
+        }
+        }
+
+        // Chat Functions
+        async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if (!message) return;
+
+        addMessageToChat('You', message, 'user');
+        input.value = '';
+
+        // Add to chat history
+        appState.chatHistory.push({ role: 'user', content: message });
+
+        // Show thinking indicator
+        addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
+
+        try {
+                const response = await getAIResponse(message);
+                // Remove thinking indicator
+                const chatLog = document.getElementById('chatLog');
+                const lastMessage = chatLog.lastElementChild;
+                if (lastMessage && lastMessage.classList.contains('thinking')) {
+                lastMessage.remove();
+                }
+
+                addMessageToChat('assistant', response, 'jerry');
+                appState.chatHistory.push({ role: 'assistant', content: response });
+
+                // Limit chat history
+                if (appState.chatHistory.length > 20) {
+                appState.chatHistory = appState.chatHistory.slice(-20);
+                }
+
+                //saveToLocalStorage('hush_chat_history', appState.chatHistory);
+        } catch (error) {
+                // Remove thinking indicator
+                const chatLog = document.getElementById('chatLog');
+                const lastMessage = chatLog.lastElementChild;
+                if (lastMessage && lastMessage.classList.contains('thinking')) {
+                lastMessage.remove();
+                }
+
+                addMessageToChat('assistant', getFallbackResponse(message), 'jerry');
+        }
+        }
+
+        function addMessageToChat(speaker, message, className) {
+        const chatLog = document.getElementById('chatLog');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${className}`;
+        // Determine display name
+        let displayName;
+        if (speaker === 'assistant') {
+                displayName = appState.botName || 'Jerry'; // use saved name
+        } else {
+                displayName = 'You';
+        }
+        messageDiv.innerHTML = `<strong>${displayName}:</strong> ${message}`;
+        chatLog.appendChild(messageDiv);
+        chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        async function getAIResponse(message) {
+        const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+
+        let apiKey;
+        if (apiOption === 'premium') {
+                if (!subscriptionState.isSubscribed) {
+                throw new Error('Premium subscription required');
+                }
+
+                // Check usage limits
+                if (subscriptionState.messageCount >= 1000) {
+                throw new Error('Monthly message limit reached. Please wait for next billing cycle.');
+                }
+
+                apiKey = PREMIUM_API_KEY;
+
+                // Increment usage counter
+                subscriptionState.messageCount++;
+                localStorage.setItem('jerry_message_count', subscriptionState.messageCount.toString());
+                updateUsageDisplay();
+
+        } else {
+                apiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
+                if (!apiKey) {
+                throw new Error('Please enter your API key or subscribe to Premium');
+                }
+        }
+
+        const messages = [
+                { role: 'system', content: 'You are a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.' },
+                ...appState.chatHistory.slice(-10),
+                { role: 'user', content: message }
+        ];
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                contents: [
+                        { role: 'user', parts: [{ text: `You are Jerry, a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.\n\nUser: ${message}` }] }
+                ],
+                generationConfig: {
+                        maxOutputTokens: 150,
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                }
+                })
+        });
+
+        if (!response.ok) {
+                throw new Error('API request failed');
+        }
+
+        const data = await response.json();
+        return data.candidates[0].content.parts[0].text.trim();
+        }
+
+        // API option switching
+        function setupApiOptionHandlers() {
+        const ownApiRadio = document.getElementById('useOwnApi');
+        const premiumRadio = document.getElementById('usePremium');
+        const ownApiSection = document.getElementById('ownApiSection');
+        const premiumSection = document.getElementById('premiumSection');
+
+        function switchApiOption() {
+                const selectedOption = document.querySelector('input[name="apiOption"]:checked')?.value;
+
+                if (selectedOption === 'premium') {
+                ownApiSection.style.display = 'none';
+                premiumSection.style.display = 'block';
+                setupPayPalButton();
+                } else {
+                ownApiSection.style.display = 'block';
+                premiumSection.style.display = 'none';
+                }
+
+                localStorage.setItem('jerry_api_option', selectedOption);
+                updateChatInterface();
+        }
+
+        ownApiRadio?.addEventListener('change', switchApiOption);
+        premiumRadio?.addEventListener('change', switchApiOption);
+        }
+
+        // PayPal integration
+        function setupPayPalButton() {
+        const container = document.getElementById('paypal-button-container');
+        if (!container) return;
+
+        container.innerHTML = ''; // Clear existing buttons
+
         if (subscriptionState.isSubscribed) {
-            if (subscriptionState.messageCount >= 1000) {
+                container.style.display = 'none'; // Hide if already subscribed
+                return;
+        } else {
+                container.style.display = 'block'; // Show if not subscribed
+        }
+
+        paypal.Buttons({
+                style: {
+                shape: 'pill',
+                color: 'gold',
+                layout: 'vertical',
+                label: 'subscribe'
+                },
+
+                createSubscription: function(data, actions) {
+                return actions.subscription.create({
+                        'plan_id': 'P-7LR41432T4749780UNC7UVBY', // Replace with your actual PayPal plan ID
+                        'custom_id': 'jerry_premium_' + Date.now()
+                });
+                },
+
+                onApprove: function(data, actions) {
+                subscriptionState.isSubscribed = true;
+                subscriptionState.subscriptionId = data.subscriptionID;
+                subscriptionState.messageCount = 0; // Reset counter
+                subscriptionState.billingCycle = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days from now
+
+                // Save to localStorage
+                localStorage.setItem('jerry_subscription_active', 'true');
+                localStorage.setItem('jerry_subscription_id', data.subscriptionID);
+                localStorage.setItem('jerry_message_count', '0');
+                localStorage.setItem('jerry_billing_cycle', subscriptionState.billingCycle);
+
+                showNotification('🌟 Premium subscription activated! Welcome to Jerry Premium!');
+                updateSubscriptionDisplay();
+                updateChatInterface();
+
+                container.style.display = 'none';
+                },
+
+                onError: function(err) {
+                console.error('PayPal error:', err);
+                showNotification('Subscription failed. Please try again.', 'error');
+                }
+        }).render('#paypal-button-container');
+        }
+
+
+        // Update subscription display
+        function updateSubscriptionDisplay() {
+        const statusDisplay = document.getElementById('subscriptionStatusDisplay');
+        const subscribeSection = document.getElementById('paypalSubscribeSection');
+        const messageUsageDisplay = document.getElementById('messageUsageDisplay');
+        const nextBillingDate = document.getElementById('nextBillingDate');
+
+        if (subscriptionState.isSubscribed) {
+                statusDisplay.style.display = 'block';
+                subscribeSection.style.display = 'none';
+
+                if (messageUsageDisplay) {
+                messageUsageDisplay.textContent = `${subscriptionState.messageCount} / 1000`;
+                }
+
+                if (nextBillingDate && subscriptionState.billingCycle) {
+                const date = new Date(subscriptionState.billingCycle);
+                nextBillingDate.textContent = date.toLocaleDateString();
+                }
+        } else {
+                statusDisplay.style.display = 'none';
+                subscribeSection.style.display = 'block';
+        }
+        }
+
+        // Update usage display in Jerry screen
+        function updateUsageDisplay() {
+        const messageCountEl = document.getElementById('messageCount');
+        const usageFillEl = document.getElementById('usageFill');
+        const subscriptionStatusEl = document.getElementById('subscriptionStatus');
+
+        if (subscriptionState.isSubscribed && subscriptionStatusEl) {
+                subscriptionStatusEl.style.display = 'block';
+
+                if (messageCountEl) {
+                messageCountEl.textContent = subscriptionState.messageCount;
+                }
+
+                if (usageFillEl) {
+                const percentage = (subscriptionState.messageCount / 1000) * 100;
+                usageFillEl.style.width = `${percentage}%`;
+                }
+        } else if (subscriptionStatusEl) {
+                subscriptionStatusEl.style.display = 'none';
+        }
+        }
+
+        // Update chat interface based on API option
+        function updateChatInterface() {
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+
+        if (apiOption === 'premium') {
+                if (subscriptionState.isSubscribed) {
+                if (subscriptionState.messageCount >= 1000) {
+                        chatInput.disabled = true;
+                        sendButton.disabled = true;
+                        chatInput.placeholder = 'Monthly limit reached. Resets next billing cycle.';
+                } else {
+                        chatInput.disabled = false;
+                        sendButton.disabled = false;
+                        chatInput.placeholder = 'Type your message... (Premium)';
+                }
+                } else {
                 chatInput.disabled = true;
                 sendButton.disabled = true;
-                chatInput.placeholder = 'Monthly limit reached. Resets next billing cycle.';
-            } else {
-                chatInput.disabled = false;
-                sendButton.disabled = false;
-                chatInput.placeholder = 'Type your message... (Premium)';
-            }
+                chatInput.placeholder = 'Premium subscription required';
+                }
         } else {
-            chatInput.disabled = true;
-            sendButton.disabled = true;
-            chatInput.placeholder = 'Premium subscription required';
+                const hasApiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
+                chatInput.disabled = !hasApiKey;
+                sendButton.disabled = !hasApiKey;
+                chatInput.placeholder = hasApiKey ? 'Type your message...' : 'Please enter your API key in Settings';
         }
-    } else {
-        const hasApiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
-        chatInput.disabled = !hasApiKey;
-        sendButton.disabled = !hasApiKey;
-        chatInput.placeholder = hasApiKey ? 'Type your message...' : 'Please enter your API key in Settings';
-    }
-}
+        }
 
-// Cancel subscription
-async function cancelSubscription() {
-    if (!confirm('Are you sure you want to cancel your Premium subscription? You will lose access at the end of your current billing period.')) {
-        return;
-    }
+        // Cancel subscription
+        async function cancelSubscription() {
+        if (!confirm('Are you sure you want to cancel your Premium subscription? You will lose access at the end of your current billing period.')) {
+                return;
+        }
 
-    try {
-        // In a real implementation, you would call your backend to cancel the PayPal subscription
-        // For now, we'll just clear local storage
-        subscriptionState.isSubscribed = false;
-        subscriptionState.subscriptionId = null;
+        try {
+                // In a real implementation, you would call your backend to cancel the PayPal subscription
+                // For now, we'll just clear local storage
+                subscriptionState.isSubscribed = false;
+                subscriptionState.subscriptionId = null;
 
-        localStorage.removeItem('jerry_subscription_active');
-        localStorage.removeItem('jerry_subscription_id');
-        localStorage.removeItem('jerry_billing_cycle');
+                localStorage.removeItem('jerry_subscription_active');
+                localStorage.removeItem('jerry_subscription_id');
+                localStorage.removeItem('jerry_billing_cycle');
 
-        showNotification('Subscription cancelled. You can continue using Premium until your next billing date.');
+                showNotification('Subscription cancelled. You can continue using Premium until your next billing date.');
+                updateSubscriptionDisplay();
+                updateChatInterface();
+
+                // Switch back to own API option
+                document.getElementById('useOwnApi').checked = true;
+                document.querySelector('input[name="apiOption"][value="own"]').dispatchEvent(new Event('change'));
+
+        } catch (error) {
+                showNotification('Failed to cancel subscription. Please try again.', 'error');
+        }
+        }
+
+        function getFallbackResponse(message) {
+        const lowerMessage = message.toLowerCase();
+        const responses = {
+                'hello': "Hello! It's good to see you.",
+                'hi': "Hello! It's good to see you.",
+                'how are you': "I'm doing well, thank you! How can I help you today?",
+                'thank': "You're very welcome!",
+                'bye': "Goodbye! Have a great day!",
+                'help': "I'm here to listen and support you. You can talk to me about anything, or try the CBT and DBT tools in the other tabs.",
+                'sad': "I'm sorry you're feeling sad. Your emotions are valid. Would you like to talk about what's bothering you?",
+                'anxious': "Anxiety can be really difficult. Remember to breathe deeply. I'm here to listen if you'd like to share what's making you anxious.",
+                'angry': "It's okay to feel angry. Let's talk about what's causing these feelings."
+        };
+
+        for (const [key, response] of Object.entries(responses)) {
+                if (lowerMessage.includes(key)) {
+                return response;
+                }
+        }
+
+        return "I'm here to listen. Tell me what's on your mind.";
+        }
+
+        // Check-in Functions
+        function setCheckinResponse(category, choice) {
+        appState.checkinData[category] = choice;
+
+        // Update button states
+        const buttons = document.querySelectorAll(`[onclick*="${category}"]`);
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        }
+
+        function completeCheckin() {
+        if (Object.keys(appState.checkinData).length < 3) {
+                showNotification('Please answer all questions before continuing.', 'error');
+                return;
+        }
+
+        const entry = {
+                timestamp: new Date().toISOString(),
+                type: 'Check-in',
+                data: { ...appState.checkinData }
+        };
+
+        appState.entries.unshift(entry);
+        saveToLocalStorage('hush_entries', appState.entries);
+
+        feedJerry('clarity', 50);
+        addXP(10);
+
+        showNotification('Check-in completed! Jerry gained clarity.');
+
+        // Reset form
+        appState.checkinData = {};
+        document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('active'));
+
+        // Switch to Jerry tab
+        switchTab('jerry');
+        }
+
+        // CBT Functions
+        function completeCBT() {
+        const situation = document.getElementById('cbtSituation').value.trim();
+        const emotions = document.getElementById('cbtEmotions').value.trim();
+        const thoughts = document.getElementById('cbtThoughts').value.trim();
+
+        if (!situation || !emotions || !thoughts) {
+                showNotification('Please fill in all fields.', 'error');
+                return;
+        }
+
+        // Get selected distortions
+        const distortions = [];
+        document.querySelectorAll('#cbtDistortions input:checked').forEach(checkbox => {
+                distortions.push(checkbox.nextElementSibling.textContent);
+        });
+
+        const entry = {
+                timestamp: new Date().toISOString(),
+                type: 'CBT',
+                data: {
+                situation,
+                emotions,
+                thoughts,
+                distortions
+                }
+        };
+
+        appState.entries.unshift(entry);
+        saveToLocalStorage('hush_entries', appState.entries);
+
+        feedJerry('insight', 50);
+        addXP(20);
+
+        showNotification('CBT session completed! Jerry gained insight.');
+
+        // Reset form
+        document.getElementById('cbtSituation').value = '';
+        document.getElementById('cbtEmotions').value = '';
+        document.getElementById('cbtThoughts').value = '';
+        document.querySelectorAll('#cbtDistortions input').forEach(checkbox => checkbox.checked = false);
+
+        // Switch to Jerry tab
+        switchTab('jerry');
+        }
+
+        // DBT Functions
+        function setDBTRating(emotion, value) {
+        appState.dbtData[emotion] = value;
+
+        // Update button states
+        const buttons = document.querySelectorAll(`[onclick*="${emotion}"]`);
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        }
+
+        function completeDBT() {
+        const requiredRatings = ['anger', 'sadness', 'fear', 'shame'];
+        const missingRatings = requiredRatings.filter(rating => appState.dbtData[rating] === undefined);
+
+        if (missingRatings.length > 0) {
+                showNotification('Please rate all emotions.', 'error');
+                return;
+        }
+
+        // Get selected skills
+        const skills = [];
+        document.querySelectorAll('#dbtSkills input:checked').forEach(checkbox => {
+                skills.push(checkbox.nextElementSibling.textContent);
+        });
+
+        const entry = {
+                timestamp: new Date().toISOString(),
+                type: 'DBT',
+                data: {
+                ...appState.dbtData,
+                skills
+                }
+        };
+
+        appState.entries.unshift(entry);
+        saveToLocalStorage('hush_entries', appState.entries);
+
+        feedJerry('calm', 50);
+        addXP(20);
+
+        showNotification('DBT session completed! Jerry feels calmer.');
+
+        // Reset form
+        appState.dbtData = {};
+        document.querySelectorAll('#dbt .rating-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('#dbtSkills input').forEach(checkbox => checkbox.checked = false);
+
+        // Switch to Jerry tab
+        switchTab('jerry');
+        }
+
+        // Timer Functions
+        function toggleTimer() {
+        if (!appState.timer.active) {
+                startTimer();
+        } else {
+                stopTimer();
+        }
+        }
+
+        function startTimer() {
+        appState.timer.active = true;
+        appState.timer.remaining = 180; // 3 minutes
+
+        document.getElementById('timerButton').textContent = 'Stop';
+
+        appState.timer.interval = setInterval(() => {
+                appState.timer.remaining--;
+                updateTimerDisplay();
+
+                if (appState.timer.remaining <= 0) {
+                completeTimer();
+                }
+        }, 1000);
+
+        updateTimerDisplay();
+        }
+
+        function stopTimer() {
+        appState.timer.active = false;
+        appState.timer.remaining = 180;
+
+        if (appState.timer.interval) {
+                clearInterval(appState.timer.interval);
+                appState.timer.interval = null;
+        }
+
+        document.getElementById('timerButton').textContent = 'Start';
+        document.getElementById('timerDisplay').textContent = '03:00';
+        }
+
+        function completeTimer() {
+        appState.timer.active = false;
+
+        if (appState.timer.interval) {
+                clearInterval(appState.timer.interval);
+                appState.timer.interval = null;
+        }
+
+        document.getElementById('timerButton').textContent = 'Start';
+        document.getElementById('timerDisplay').textContent = 'Done';
+
+        feedJerry('calm', 30);
+        addXP(15);
+
+        showNotification('Mindfulness session completed!');
+
+        setTimeout(() => {
+                document.getElementById('timerDisplay').textContent = '03:00';
+                appState.timer.remaining = 180;
+        }, 2000);
+        }
+
+        function updateTimerDisplay() {
+        const minutes = Math.floor(appState.timer.remaining / 60);
+        const seconds = appState.timer.remaining % 60;
+        document.getElementById('timerDisplay').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Entries and History Functions
+        function loadEntries() {
+        const entriesList = document.getElementById('entriesList');
+        entriesList.innerHTML = '';
+
+        if (appState.entries.length === 0) {
+                entriesList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No entries yet. Complete some activities to see your progress here!</p>';
+                return;
+        }
+
+        appState.entries.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'entry-item';
+
+                const date = new Date(entry.timestamp).toLocaleDateString();
+                const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                let content = '';
+                if (entry.type === 'Check-in') {
+                content = `Feeling ${entry.data.emotion || 'N/A'} emotionally, ${entry.data.physical || 'N/A'} physically, ${entry.data.mental || 'N/A'} mentally.`;
+                } else if (entry.type === 'CBT') {
+                content = `Situation: ${entry.data.situation?.substring(0, 100)}${entry.data.situation?.length > 100 ? '...' : ''}`;
+                } else if (entry.type === 'DBT') {
+                const ratings = Object.entries(entry.data)
+                        .filter(([key]) => ['anger', 'sadness', 'fear', 'shame'].includes(key))
+                        .map(([key, value]) => `${key}: ${value}`)
+                        .join(', ');
+                content = `Emotion ratings: ${ratings}`;
+                }
+
+                entryDiv.innerHTML = `
+                <div class="entry-date">${date} at ${time}</div>
+                <div class="entry-content"><strong>${entry.type}</strong><br>${content}</div>
+                `;
+
+                entriesList.appendChild(entryDiv);
+        });
+        }
+
+        function loadHistory() {
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = '';
+        
+        if (appState.chatHistory.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No conversation history yet. Chat with Jerry to see your conversations here!</p>';
+                return;
+        }
+        
+        // Group conversations by session (this is a simplified approach)
+        const sessions = [];
+        let currentSession = [];
+        
+        appState.chatHistory.forEach(message => {
+                currentSession.push(message);
+        });
+        
+        if (currentSession.length > 0) {
+                sessions.push({
+                timestamp: new Date().toISOString(),
+                conversation: currentSession
+                });
+        }
+        
+        sessions.forEach(session => {
+                const sessionDiv = document.createElement('div');
+                sessionDiv.className = 'entry-item';
+                
+                const date = new Date(session.timestamp).toLocaleDateString();
+                const time = new Date(session.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const messageCount = session.conversation.length;
+                
+                sessionDiv.innerHTML = `
+                <div class="entry-date">${date} at ${time}</div>
+                <div class="entry-content">Conversation with ${messageCount} messages</div>
+                `;
+                
+                historyList.appendChild(sessionDiv);
+        });
+        }
+
+        // =======================
+        // Subscription Verification
+        // =======================
+        function verifySubscriptionOnLoad() {
+        const subscriptionId = localStorage.getItem('jerry_subscription_id');
+        const isActive = localStorage.getItem('jerry_subscription_active') === 'true';
+
+        subscriptionState.isSubscribed = isActive;
+        subscriptionState.subscriptionId = subscriptionId;
+        subscriptionState.messageCount = parseInt(localStorage.getItem('jerry_message_count') || '0', 10);
+        subscriptionState.billingCycle = localStorage.getItem('jerry_billing_cycle') || null;
+
+        // Update UI
         updateSubscriptionDisplay();
+        updateUsageDisplay();
+        updateChatInterface();
+        }
+
+        // =======================
+        // Settings Loader/Saver
+        // =======================
+        function loadSettings() {
+        // Basic settings
+        document.getElementById('apiKey').value = appState.apiKey || '';
+        document.getElementById('botName').value = appState.botName || 'Jerry';
+
+        // Theme
+        const storedTheme = localStorage.getItem('spriteTheme') || 'default';
+        appState.spriteTheme = storedTheme;
+        document.getElementById('spriteTheme').value = appState.spriteTheme;
+        updateJerrySprite();
+
+        // API option
+        const apiOption = localStorage.getItem('jerry_api_option') || 'own';
+        document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
+
+        // Wire up event handlers
+        setupApiOptionHandlers();
+        }
+
+        function saveSettings() {
+        const apiKey = document.getElementById('apiKey').value.trim();
+        appState.apiKey = apiKey;
+        localStorage.setItem('hush_api_key', apiKey);
+
+        const botName = document.getElementById('botName').value.trim() || 'Jerry';
+        appState.botName = botName;
+        localStorage.setItem('botName', botName);
+
+        const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+        localStorage.setItem('jerry_api_option', selectedApiOption);
+
+        appState.spriteTheme = document.getElementById('spriteTheme').value;
+        localStorage.setItem('spriteTheme', appState.spriteTheme);
+
+        showNotification('Settings saved successfully!');
+        updateChatInterface();
+        updateJerrySprite();
+        }
+
+
+        function toggleTheme() {
+        document.body.classList.toggle('light-theme');
+
+        const isLightMode = document.body.classList.contains('light-theme');
+        localStorage.setItem('hush_theme', isLightMode ? 'light' : 'dark');
+
+        showNotification('Theme updated!');
+
+        updateJerrySprite();
+        }
+
+        function resetMonthlyUsageIfNeeded() {
+        if (subscriptionState.billingCycle) {
+                const now = new Date();
+                const billingDate = new Date(subscriptionState.billingCycle);
+
+                if (now >= billingDate) {
+                subscriptionState.messageCount = 0;
+                subscriptionState.billingCycle = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+                localStorage.setItem('jerry_message_count', '0');
+                localStorage.setItem('jerry_billing_cycle', subscriptionState.billingCycle);
+
+                updateUsageDisplay();
+                updateSubscriptionDisplay();
+                updateChatInterface();
+                }
+        }
+        }
+
+        // =======================
+        // App Initialization
+        // =======================
+        function initializeApp() {
+        // --- Theme ---
+        const savedTheme = localStorage.getItem('hush_theme');
+        if (savedTheme === 'light') document.body.classList.add('light-theme');
+
+        // --- Load bot name ---
+        appState.botName = localStorage.getItem('botName') || 'Jerry';
+        const nameInput = document.getElementById('botName');
+        if (nameInput) {
+                nameInput.value = appState.botName;
+                nameInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                appState.botName = val || 'Jerry';
+                localStorage.setItem('botName', appState.botName);
+                });
+        }
+        
+        // --- Load Jerry state FIRST ---
+        loadJerryState();
+        
+        // --- Load settings FIRST ---
+        loadSettings();
+
+        // --- Initial rendering ---
+        updateJerryUI();
+        updateAffirmationBanner('jerry');
+
+        // --- Verify subscription (localStorage backup) ---
+        verifySubscriptionOnLoad();
+
+        // --- Start intervals ---
+        setInterval(updateJerryNeeds, 60000); // update needs every minute
+        setInterval(updateJerrySprite, 2000); // animate sprite
+        setInterval(() => {
+                if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
+                updateAffirmationBanner(appState.currentTab);
+                }
+        }, 10000); // refresh affirmations
+        setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000); // daily usage check
+
+        // --- Update usage and chat interface after everything is loaded ---
+        updateUsageDisplay();
         updateChatInterface();
 
-        // Switch back to own API option
-        document.getElementById('useOwnApi').checked = true;
-        document.querySelector('input[name="apiOption"][value="own"]').dispatchEvent(new Event('change'));
-
-    } catch (error) {
-        showNotification('Failed to cancel subscription. Please try again.', 'error');
-    }
-}
-
-function getFallbackResponse(message) {
-    const lowerMessage = message.toLowerCase();
-    const responses = {
-        'hello': "Hello! It's good to see you.",
-        'hi': "Hello! It's good to see you.",
-        'how are you': "I'm doing well, thank you! How can I help you today?",
-        'thank': "You're very welcome!",
-        'bye': "Goodbye! Have a great day!",
-        'help': "I'm here to listen and support you. You can talk to me about anything, or try the CBT and DBT tools in the other tabs.",
-        'sad': "I'm sorry you're feeling sad. Your emotions are valid. Would you like to talk about what's bothering you?",
-        'anxious': "Anxiety can be really difficult. Remember to breathe deeply. I'm here to listen if you'd like to share what's making you anxious.",
-        'angry': "It's okay to feel angry. Let's talk about what's causing these feelings."
-    };
-
-    for (const [key, response] of Object.entries(responses)) {
-        if (lowerMessage.includes(key)) {
-            return response;
+        // Wire up save settings on theme change
+        const spriteThemeSelect = document.getElementById('spriteTheme');
+        if (spriteThemeSelect) {
+                spriteThemeSelect.addEventListener('change', saveSettings);
         }
-    }
-
-    return "I'm here to listen. Tell me what's on your mind.";
-}
-
-// Check-in Functions
-function setCheckinResponse(category, choice) {
-    appState.checkinData[category] = choice;
-
-    // Update button states
-    const buttons = document.querySelectorAll(`[onclick*="${category}"]`);
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-}
-
-function completeCheckin() {
-    if (Object.keys(appState.checkinData).length < 3) {
-        showNotification('Please answer all questions before continuing.', 'error');
-        return;
-    }
-
-    const entry = {
-        timestamp: new Date().toISOString(),
-        type: 'Check-in',
-        data: { ...appState.checkinData }
-    };
-
-    appState.entries.unshift(entry);
-    saveToLocalStorage('hush_entries', appState.entries);
-
-    feedJerry('clarity', 50);
-    addXP(10);
-
-    showNotification('Check-in completed! Jerry gained clarity.');
-
-    // Reset form
-    appState.checkinData = {};
-    document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('active'));
-
-    // Switch to Jerry tab
-    switchTab('jerry');
-}
-
-// CBT Functions
-function completeCBT() {
-    const situation = document.getElementById('cbtSituation').value.trim();
-    const emotions = document.getElementById('cbtEmotions').value.trim();
-    const thoughts = document.getElementById('cbtThoughts').value.trim();
-
-    if (!situation || !emotions || !thoughts) {
-        showNotification('Please fill in all fields.', 'error');
-        return;
-    }
-
-    // Get selected distortions
-    const distortions = [];
-    document.querySelectorAll('#cbtDistortions input:checked').forEach(checkbox => {
-        distortions.push(checkbox.nextElementSibling.textContent);
-    });
-
-    const entry = {
-        timestamp: new Date().toISOString(),
-        type: 'CBT',
-        data: {
-            situation,
-            emotions,
-            thoughts,
-            distortions
-        }
-    };
-
-    appState.entries.unshift(entry);
-    saveToLocalStorage('hush_entries', appState.entries);
-
-    feedJerry('insight', 50);
-    addXP(20);
-
-    showNotification('CBT session completed! Jerry gained insight.');
-
-    // Reset form
-    document.getElementById('cbtSituation').value = '';
-    document.getElementById('cbtEmotions').value = '';
-    document.getElementById('cbtThoughts').value = '';
-    document.querySelectorAll('#cbtDistortions input').forEach(checkbox => checkbox.checked = false);
-
-    // Switch to Jerry tab
-    switchTab('jerry');
-}
-
-// DBT Functions
-function setDBTRating(emotion, value) {
-    appState.dbtData[emotion] = value;
-
-    // Update button states
-    const buttons = document.querySelectorAll(`[onclick*="${emotion}"]`);
-    buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
-}
-
-function completeDBT() {
-    const requiredRatings = ['anger', 'sadness', 'fear', 'shame'];
-    const missingRatings = requiredRatings.filter(rating => appState.dbtData[rating] === undefined);
-
-    if (missingRatings.length > 0) {
-        showNotification('Please rate all emotions.', 'error');
-        return;
-    }
-
-    // Get selected skills
-    const skills = [];
-    document.querySelectorAll('#dbtSkills input:checked').forEach(checkbox => {
-        skills.push(checkbox.nextElementSibling.textContent);
-    });
-
-    const entry = {
-        timestamp: new Date().toISOString(),
-        type: 'DBT',
-        data: {
-            ...appState.dbtData,
-            skills
-        }
-    };
-
-    appState.entries.unshift(entry);
-    saveToLocalStorage('hush_entries', appState.entries);
-
-    feedJerry('calm', 50);
-    addXP(20);
-
-    showNotification('DBT session completed! Jerry feels calmer.');
-
-    // Reset form
-    appState.dbtData = {};
-    document.querySelectorAll('#dbt .rating-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('#dbtSkills input').forEach(checkbox => checkbox.checked = false);
-
-    // Switch to Jerry tab
-    switchTab('jerry');
-}
-
-// Timer Functions
-function toggleTimer() {
-    if (!appState.timer.active) {
-        startTimer();
-    } else {
-        stopTimer();
-    }
-}
-
-function startTimer() {
-    appState.timer.active = true;
-    appState.timer.remaining = 180; // 3 minutes
-
-    document.getElementById('timerButton').textContent = 'Stop';
-
-    appState.timer.interval = setInterval(() => {
-        appState.timer.remaining--;
-        updateTimerDisplay();
-
-        if (appState.timer.remaining <= 0) {
-            completeTimer();
-        }
-    }, 1000);
-
-    updateTimerDisplay();
-}
-
-function stopTimer() {
-    appState.timer.active = false;
-    appState.timer.remaining = 180;
-
-    if (appState.timer.interval) {
-        clearInterval(appState.timer.interval);
-        appState.timer.interval = null;
-    }
-
-    document.getElementById('timerButton').textContent = 'Start';
-    document.getElementById('timerDisplay').textContent = '03:00';
-}
-
-function completeTimer() {
-    appState.timer.active = false;
-
-    if (appState.timer.interval) {
-        clearInterval(appState.timer.interval);
-        appState.timer.interval = null;
-    }
-
-    document.getElementById('timerButton').textContent = 'Start';
-    document.getElementById('timerDisplay').textContent = 'Done';
-
-    feedJerry('calm', 30);
-    addXP(15);
-
-    showNotification('Mindfulness session completed!');
-
-    setTimeout(() => {
-        document.getElementById('timerDisplay').textContent = '03:00';
-        appState.timer.remaining = 180;
-    }, 2000);
-}
-
-function updateTimerDisplay() {
-    const minutes = Math.floor(appState.timer.remaining / 60);
-    const seconds = appState.timer.remaining % 60;
-    document.getElementById('timerDisplay').textContent =
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
-// Entries and History Functions
-function loadEntries() {
-    const entriesList = document.getElementById('entriesList');
-    entriesList.innerHTML = '';
-
-    if (appState.entries.length === 0) {
-        entriesList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No entries yet. Complete some activities to see your progress here!</p>';
-        return;
-    }
-
-    appState.entries.forEach(entry => {
-        const entryDiv = document.createElement('div');
-        entryDiv.className = 'entry-item';
-
-        const date = new Date(entry.timestamp).toLocaleDateString();
-        const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-        let content = '';
-        if (entry.type === 'Check-in') {
-            content = `Feeling ${entry.data.emotion || 'N/A'} emotionally, ${entry.data.physical || 'N/A'} physically, ${entry.data.mental || 'N/A'} mentally.`;
-        } else if (entry.type === 'CBT') {
-            content = `Situation: ${entry.data.situation?.substring(0, 100)}${entry.data.situation?.length > 100 ? '...' : ''}`;
-        } else if (entry.type === 'DBT') {
-            const ratings = Object.entries(entry.data)
-                .filter(([key]) => ['anger', 'sadness', 'fear', 'shame'].includes(key))
-                .map(([key, value]) => `${key}: ${value}`)
-                .join(', ');
-            content = `Emotion ratings: ${ratings}`;
         }
 
-        entryDiv.innerHTML = `
-            <div class="entry-date">${date} at ${time}</div>
-            <div class="entry-content"><strong>${entry.type}</strong><br>${content}</div>
-        `;
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+                const swCode = `
+                const CACHE_NAME = 'jerry-pwa-v2';
+                const urlsToCache = [
+                        '/',
+                        '/index.html',
+                        '/manifest.json',
+                        '/JerryIcon.png'
+                ];
 
-        entriesList.appendChild(entryDiv);
-    });
-}
+                self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                        caches.open(CACHE_NAME).then((cache) => {
+                                return cache.addAll(urlsToCache);
+                        })
+                        );
+                });
 
-function loadHistory() {
-    const historyList = document.getElementById('historyList');
-    historyList.innerHTML = '';
-    
-    if (appState.chatHistory.length === 0) {
-        historyList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No conversation history yet. Chat with Jerry to see your conversations here!</p>';
-        return;
-    }
-    
-    // Group conversations by session (this is a simplified approach)
-    const sessions = [];
-    let currentSession = [];
-    
-    appState.chatHistory.forEach(message => {
-        currentSession.push(message);
-    });
-    
-    if (currentSession.length > 0) {
-        sessions.push({
-            timestamp: new Date().toISOString(),
-            conversation: currentSession
+                self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                        caches.match(event.request).then((response) => {
+                                return response || fetch(event.request);
+                        })
+                        );
+                });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+
+                navigator.serviceWorker.register(swUrl)
+                .then((registration) => {
+                        console.log('ServiceWorker registration successful');
+                })
+                .catch((err) => {
+                        console.log('ServiceWorker registration failed');
+                });
         });
-    }
-    
-    sessions.forEach(session => {
-        const sessionDiv = document.createElement('div');
-        sessionDiv.className = 'entry-item';
-        
-        const date = new Date(session.timestamp).toLocaleDateString();
-        const time = new Date(session.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        const messageCount = session.conversation.length;
-        
-        sessionDiv.innerHTML = `
-            <div class="entry-date">${date} at ${time}</div>
-            <div class="entry-content">Conversation with ${messageCount} messages</div>
-        `;
-        
-        historyList.appendChild(sessionDiv);
-    });
-}
-
-// =======================
-// Subscription Verification
-// =======================
-function verifySubscriptionOnLoad() {
-    const subscriptionId = localStorage.getItem('jerry_subscription_id');
-    const isActive = localStorage.getItem('jerry_subscription_active') === 'true';
-
-    subscriptionState.isSubscribed = isActive;
-    subscriptionState.subscriptionId = subscriptionId;
-    subscriptionState.messageCount = parseInt(localStorage.getItem('jerry_message_count') || '0', 10);
-    subscriptionState.billingCycle = localStorage.getItem('jerry_billing_cycle') || null;
-
-    // Update UI
-    updateSubscriptionDisplay();
-    updateUsageDisplay();
-    updateChatInterface();
-}
-
-// =======================
-// Settings Loader/Saver
-// =======================
-function loadSettings() {
-    // Basic settings
-    document.getElementById('apiKey').value = appState.apiKey || '';
-    document.getElementById('botName').value = appState.botName || 'Jerry';
-
-    // Theme
-    const storedTheme = localStorage.getItem('spriteTheme') || 'default';
-    appState.spriteTheme = storedTheme;
-    document.getElementById('spriteTheme').value = appState.spriteTheme;
-    updateJerrySprite();
-
-    // API option
-    const apiOption = localStorage.getItem('jerry_api_option') || 'own';
-    document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
-
-    // Wire up event handlers
-    setupApiOptionHandlers();
-}
-
-function saveSettings() {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    appState.apiKey = apiKey;
-    localStorage.setItem('hush_api_key', apiKey);
-
-    const botName = document.getElementById('botName').value.trim() || 'Jerry';
-    appState.botName = botName;
-    localStorage.setItem('botName', botName);
-
-    const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
-    localStorage.setItem('jerry_api_option', selectedApiOption);
-
-    appState.spriteTheme = document.getElementById('spriteTheme').value;
-    localStorage.setItem('spriteTheme', appState.spriteTheme);
-
-    showNotification('Settings saved successfully!');
-    updateChatInterface();
-    updateJerrySprite();
-}
-
-
-function toggleTheme() {
-    document.body.classList.toggle('light-theme');
-
-    const isLightMode = document.body.classList.contains('light-theme');
-    localStorage.setItem('hush_theme', isLightMode ? 'light' : 'dark');
-
-    showNotification('Theme updated!');
-
-    updateJerrySprite();
-}
-
-function resetMonthlyUsageIfNeeded() {
-    if (subscriptionState.billingCycle) {
-        const now = new Date();
-        const billingDate = new Date(subscriptionState.billingCycle);
-
-        if (now >= billingDate) {
-            subscriptionState.messageCount = 0;
-            subscriptionState.billingCycle = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
-
-            localStorage.setItem('jerry_message_count', '0');
-            localStorage.setItem('jerry_billing_cycle', subscriptionState.billingCycle);
-
-            updateUsageDisplay();
-            updateSubscriptionDisplay();
-            updateChatInterface();
         }
-    }
-}
 
-// =======================
-// App Initialization
-// =======================
-function initializeApp() {
-    // --- Theme ---
-    const savedTheme = localStorage.getItem('hush_theme');
-    if (savedTheme === 'light') document.body.classList.add('light-theme');
-
-    // --- Load bot name ---
-    appState.botName = localStorage.getItem('botName') || 'Jerry';
-    const nameInput = document.getElementById('botName');
-    if (nameInput) {
-        nameInput.value = appState.botName;
-        nameInput.addEventListener('input', (e) => {
-            const val = e.target.value.trim();
-            appState.botName = val || 'Jerry';
-            localStorage.setItem('botName', appState.botName);
-        });
-    }
-    
-    // --- Load Jerry state FIRST ---
-    loadJerryState();
-    
-    // --- Load settings FIRST ---
-    loadSettings();
-
-    // --- Initial rendering ---
-    updateJerryUI();
-    updateAffirmationBanner('jerry');
-
-    // --- Verify subscription (localStorage backup) ---
-    verifySubscriptionOnLoad();
-
-    // --- Start intervals ---
-    setInterval(updateJerryNeeds, 60000); // update needs every minute
-    setInterval(updateJerrySprite, 2000); // animate sprite
-    setInterval(() => {
-        if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
-            updateAffirmationBanner(appState.currentTab);
-        }
-    }, 10000); // refresh affirmations
-    setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000); // daily usage check
-
-    // --- Update usage and chat interface after everything is loaded ---
-    updateUsageDisplay();
-    updateChatInterface();
-
-    // Wire up save settings on theme change
-    const spriteThemeSelect = document.getElementById('spriteTheme');
-    if (spriteThemeSelect) {
-        spriteThemeSelect.addEventListener('change', saveSettings);
-    }
-}
-
-// Register Service Worker for PWA
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        const swCode = `
-            const CACHE_NAME = 'jerry-pwa-v2';
-            const urlsToCache = [
-                '/',
-                '/index.html',
-                '/manifest.json',
-                '/JerryIcon.png'
-            ];
-
-            self.addEventListener('install', (event) => {
-                event.waitUntil(
-                    caches.open(CACHE_NAME).then((cache) => {
-                        return cache.addAll(urlsToCache);
-                    })
-                );
-            });
-
-            self.addEventListener('fetch', (event) => {
-                event.respondWith(
-                    caches.match(event.request).then((response) => {
-                        return response || fetch(event.request);
-                    })
-                );
-            });
-        `;
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        const swUrl = URL.createObjectURL(blob);
-
-        navigator.serviceWorker.register(swUrl)
-            .then((registration) => {
-                console.log('ServiceWorker registration successful');
-            })
-            .catch((err) => {
-                console.log('ServiceWorker registration failed');
-            });
-    });
-}
-
-// Initialize app when DOM is loaded
-document.addEventListener('DOMContentLoaded', initializeApp);
-
-
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>
