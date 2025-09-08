@@ -953,7 +953,8 @@
                 remaining: 180,
                 interval: null
             },
-            const subscriptionState = {
+        };
+        const subscriptionState = {
             isSubscribed: localStorage.getItem('jerry_subscription_active') === 'true',
             subscriptionId: localStorage.getItem('jerry_subscription_id') || null,
             messageCount: parseInt(localStorage.getItem('jerry_message_count') || '0'),
