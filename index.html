@@ -915,7 +915,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
-                <select class="form-input" id="spriteTheme" onchange="saveSettings()">
+                <select class="form-input" id="spriteTheme" onchange="updateSpritePreview()">
                     <option value="default">Default</option>
                     <option value="chaotic">Chaotic</option>
                     <option value="neutral">Neutral</option>
@@ -1256,6 +1256,27 @@
                 });
         });
         }
+
+        // Function to handle the real-time preview update
+        function updateSpritePreview() {
+            const selectedTheme = document.getElementById('spriteTheme').value;
+            const needs = appState.jerry.needs;
+            let spriteType = 'content';
+
+            const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
+            if (minNeed < 50) {
+                if (needs.insight === minNeed) {
+                    spriteType = 'lowInsight';
+                } else if (needs.calm === minNeed) {
+                    spriteType = 'lowCalm';
+                }
+            }
+            const spriteData = jerrySprites[spriteType];
+    
+            // This line is the key—it updates only the preview
+            renderSpritePreview(spriteData, selectedTheme);
+        }
+
 
         // === Jerry Animation Controller ===
         let currentMood = "content";
