@@ -2161,7 +2161,6 @@
             }
 
             // Load settings and UI
-            verifySubscriptionOnLoad();
             loadSettings();
             appState.spriteTheme = localStorage.getItem('spriteTheme') || 'default';
             loadJerryState();
@@ -2178,6 +2177,8 @@
                     updateAffirmationBanner(appState.currentTab);
                 }
             }, 10000);
+            verifySubscriptionOnLoad();
+            
             setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000);
         }
 
