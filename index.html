@@ -2075,7 +2075,7 @@
             const apiOption = localStorage.getItem('jerry_api_option') || 'own';
             document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
 
-            // Wire up event handlers
+            // Wire up event handlers 
             setupApiOptionHandlers();
 
             const spriteThemeSelect = document.getElementById('spriteTheme');
@@ -2144,11 +2144,11 @@
         // App Initialization
         // =======================
         function initializeApp() {
-            // Theme
+            // --- Theme ---
             const savedTheme = localStorage.getItem('hush_theme');
             if (savedTheme === 'light') document.body.classList.add('light-theme');
 
-            // Load bot name
+            // --- Load bot name ---
             appState.botName = localStorage.getItem('botName') || 'Jerry';
             const nameInput = document.getElementById('botName');
             if (nameInput) {
@@ -2160,26 +2160,44 @@
                 });
             }
 
-            // Load settings and UI
-            loadSettings();
+            // --- Load Jerry state FIRST ---
+            loadJerryState(); // ensures appState.spriteData is populated
             appState.spriteTheme = localStorage.getItem('spriteTheme') || 'default';
-            loadJerryState();
+
+            // --- Load settings ---
+            loadSettings(); // wires up inputs and event listeners
+
+            // --- Wire sprite theme select after spriteData exists ---
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+            spriteThemeSelect.addEventListener('change', () => {
+                appState.spriteTheme = spriteThemeSelect.value;
+                saveSettings();
+                renderJerrySprite();
+                updateSpritePreview();
+                renderSpritePreview(appState.spriteData);
+            });
+
+            // --- Initial rendering ---
+            renderJerrySprite();
             updateJerryUI();
             updateAffirmationBanner('jerry');
-            updateUsageDisplay();
-            updateChatInterface();
 
-            // Start intervals
-            setInterval(updateJerryNeeds, 60000);
-            setInterval(() => updateJerrySprite(), 2000);
+            // --- Verify subscription (localStorage backup) ---
+            verifySubscriptionOnLoad();
+
+            // --- Start intervals ---
+            setInterval(updateJerryNeeds, 60000); // update needs every minute
+            setInterval(() => updateJerrySprite(), 2000); // animate sprite
             setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
                     updateAffirmationBanner(appState.currentTab);
                 }
-            }, 10000);
-            verifySubscriptionOnLoad();
-            
-            setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000);
+            }, 10000); // refresh affirmations
+            setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000); // daily usage check
+
+            // --- Update usage and chat interface after everything is loaded ---
+            updateUsageDisplay();
+            updateChatInterface();
         }
 
         // Register Service Worker for PWA
