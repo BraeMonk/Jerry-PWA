@@ -1242,6 +1242,7 @@
         function breatheJerry() {
             breathTime += 0.05;
             const brightness = 1 + 0.1 * Math.sin(breathTime); // 5% pulse
+            jerryContainer.style.filter = `brightness(${brightness})`;
             jerryContainer.style.transform = `scale(${scale})`;
         }
 
