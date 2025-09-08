@@ -1222,12 +1222,17 @@
             if (Math.random() < 0.005 && !jerryTalking) {
                 const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
                 let eyes;
+                let bodyColor = 1;
                 switch (currentMood) {
                     case 'content': eyes = [[4,5],[4,10]]; break;
                     case 'lowInsight': eyes = [[4,4],[4,11]]; break;
                     case 'lowCalm': eyes = [[3,4],[3,11]]; break;
                 }
-                eyes.forEach(([r,c]) => sprite[r][c] = 0);
+                eyes.forEach(([r,c]) => {
+                    sprite[r][c] = bodyColor;
+                    sprite[r+1][c] = bodyColor;
+                });
+                
                 drawJerry(sprite);
                 setTimeout(() => drawJerry(getCurrentSprite()), 150);
             }
@@ -1236,8 +1241,8 @@
         // Breathing (brightness pulse)
         function breatheJerry() {
             breathTime += 0.05;
-            const brightness = 1 + 0.05 * Math.sin(breathTime); // 5% pulse
-            jerryContainer.style.filter = `brightness(${brightness})`;
+            const brightness = 1 + 0.1 * Math.sin(breathTime); // 5% pulse
+            jerryContainer.style.transform = `scale(${scale})`;
         }
 
         // Mood switching
