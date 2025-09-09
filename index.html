@@ -1093,15 +1093,23 @@
         function updateJerryNeeds() {
             const now = Date.now();
             const decayRates = { clarity: 12, insight: 24, calm: 6 }; // hours to fully deplete
+            const gracePeriod = 10 * 60 * 1000; // 10 minutes
+            const tickInterval = 2000; // matches your NEEDS_TICK_INTERVAL
 
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
-                const decayPerMs = 100 / (decayRates[need] * 60 * 60 * 1000); // % per millisecond
-
                 const elapsedMs = now - lastFed;
-                const decayAmount = elapsedMs * decayPerMs;
 
-                appState.jerry.needs[need] = Math.max(0, 100 - decayAmount);
+                if (elapsedMs < gracePeriod) {
+                    // Stay at 100% during grace period
+                    appState.jerry.needs[need] = 100;
+                } else {
+                    // Smooth decay per tick
+                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // full depletion time in ms
+                    const decayPerTick = (tickInterval / totalDecayMs) * 100; // % per tick
+
+                    appState.jerry.needs[need] = Math.max(0, appState.jerry.needs[need] - decayPerTick);
+                }
             });
 
             updateJerryUI();
