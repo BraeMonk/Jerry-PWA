@@ -1094,37 +1094,40 @@
             const now = Date.now();
             const decayRates = { clarity: 12, insight: 24, calm: 6 }; // hours to fully deplete
             const gracePeriod = 10 * 60 * 1000; // 10 minutes
-            const tickInterval = 2000; // matches your NEEDS_TICK_INTERVAL
 
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
                 const elapsedMs = now - lastFed;
 
                 if (elapsedMs < gracePeriod) {
-                    // Stay at 100% during grace period
                     appState.jerry.needs[need] = 100;
                 } else {
-                    // Smooth decay per tick
-                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // full depletion time in ms
-                    const decayAmount = ((elapsedMs - gracePeriod) / totalDecayMs) * 100;
-
-                    appState.jerry.needs[need] = Math.max(0, appState.jerry.needs[need] - decayAmount);
+                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
+                    const decayFraction = (elapsedMs - gracePeriod) / totalDecayMs;
+                    // Smooth decay for animation
+                    const targetValue = Math.max(0, 100 * (1 - decayFraction));
+                    // Animate by moving 5% of the difference per tick
+                    const current = appState.jerry.needs[need];
+                    appState.jerry.needs[need] = current + (targetValue - current) * 0.05;
                 }
             });
 
-            // Determine mood based on lowest need
-            const minNeed = Math.min(...Object.values(appState.jerry.needs));
+            // Update mood based on lowest need
+            const needs = appState.jerry.needs;
+            const minNeed = Math.min(...Object.values(needs));
             let newMood = 'content';
             if (minNeed < 50) {
-                if (appState.jerry.needs.insight === minNeed) newMood = 'lowInsight';
-                else if (appState.jerry.needs.calm === minNeed) newMood = 'lowCalm';
+                if (needs.insight === minNeed) newMood = 'lowInsight';
+                else if (needs.calm === minNeed) newMood = 'lowCalm';
             }
-            
-            setMood(newMood); // updates sprite immediately
-            
+            setMood(newMood);
+
             updateJerryUI();
             saveJerryState();
         }
+
+        // Start interval to update needs every 2 seconds
+        setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
 
         function feedJerry(need, amount = 50) {
         appState.jerry.needs[need] = Math.min(100, appState.jerry.needs[need] + amount);
@@ -1434,15 +1437,17 @@
                 xp: 0,
                 xpToNext: 100
             };
-            
+    
             const saved = getFromLocalStorage('hush_jerry_state');
-            appState.jerry = saved ? { ...defaultJerryState, ...saved } : defaultJerryState;
-            
-            // Ensure lastFed exists for all needs
-            if (!appState.jerry.lastFed) {
-                appState.jerry.lastFed = {};
+            if (saved) {
+                // Merge saved state with defaults, but keep saved lastFed
+                appState.jerry = { ...defaultJerryState, ...saved };
+                appState.jerry.lastFed = { ...defaultJerryState.lastFed, ...saved.lastFed };
+            } else {
+                appState.jerry = defaultJerryState;
             }
 
+            // Ensure lastFed exists for all needs (for any missing keys)
             ['clarity', 'insight', 'calm'].forEach(need => {
                 if (!appState.jerry.lastFed[need]) {
                     appState.jerry.lastFed[need] = Date.now();
