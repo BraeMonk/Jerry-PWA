@@ -2173,7 +2173,7 @@
 
         // Register Service Worker for PWA
         if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
+            window.addEventListener('load', () => {
                 const swCode = `
                 const CACHE_NAME = 'jerry-pwa-v2';
                 const urlsToCache = [
@@ -2181,34 +2181,35 @@
                         '/index.html',
                         '/manifest.json',
                         '/JerryIcon.png'
-                ];
-
-                self.addEventListener('install', (event) => {
+                        ];
+                        
+                        self.addEventListener('install', (event) => {
                         event.waitUntil(
                         caches.open(CACHE_NAME).then((cache) => {
                                 return cache.addAll(urlsToCache);
-                        })
-                        );
-                });
-
-                self.addEventListener('fetch', (event) => {
+                                })
+                                );
+                                });
+                                
+                        self.addEventListener('fetch', (event) => {
                         event.respondWith(
                         caches.match(event.request).then((response) => {
                                 return response || fetch(event.request);
                         })
                         );
-                });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
+                        });
+                        `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
 
-                navigator.serviceWorker.register(swUrl)
-                .then((registration) => {
-                        console.log('ServiceWorker registration successful');
-                })
-                .catch((err) => {
-                        console.log('ServiceWorker registration failed');
-                });
+            navigator.serviceWorker.register(swUrl)
+            .then((registration) => {
+                    console.log('ServiceWorker registration successful');
+            })
+            .catch((err) => {
+                    console.log('ServiceWorker registration failed');
+            });
         });
         }
 
