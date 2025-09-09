@@ -2162,7 +2162,7 @@
             // Wire up save settings on theme change
             const spriteThemeSelect = document.getElementById('spriteTheme');
             if (spriteThemeSelect) {
-                spriteThemeSelect.addEventListener('change', (e) => {
+                spriteThemeSelect.addEventListener('input', (e) => {
                     appState.spriteTheme = e.target.value;
 
                     localStorage.setItem('spriteTheme', appState.spriteTheme);
