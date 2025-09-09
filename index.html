@@ -934,13 +934,7 @@
     <script>
         // Application State
         const appState = {
-        jerry: {
-                needs: { clarity: 100, insight: 100, calm: 100 },
-                lastFed: { clarity: Date.now(), insight: Date.now(), calm: Date.now() },
-                level: 1,
-                xp: 0,
-                xpToNext: 100
-        },
+        jerry: {},
         apiKey: localStorage.getItem('hush_api_key') || '',
         currentTab: 'jerry',
         checkinData: {},
@@ -1415,11 +1409,17 @@
         }
 
         function loadJerryState() {
+            const defaultJerryState = {
+                needs: { clarity: 100, insight: 100, calm: 100 },
+                lastFed: { clarity: Date.now(), insight: Date.now(), calm: Date.now() },
+                level: 1,
+                xp: 0,
+                xpToNext: 100
+            };
+            
             const saved = getFromLocalStorage('hush_jerry_state');
-            if (saved) {
-                Object.assign(appState.jerry, saved);
-            }
-
+            appState.jerry = saved ? { ...defaultJerryState, ...saved } : defaultJerryState;
+            
             // Ensure lastFed exists for all needs
             if (!appState.jerry.lastFed) {
                 appState.jerry.lastFed = {};
