@@ -1098,7 +1098,7 @@
 
         function updateJerryNeeds() {
             const now = Date.now();
-            const decayRates = { clarity: 24, insight: 48, calm: 12 }; // hours to fully deplete
+            const decayRates = { clarity: 12, insight: 24, calm: 6 }; // hours to fully deplete
 
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
@@ -1392,6 +1392,8 @@
         if (!jerryTalking) {
                 blinkJerry();
                 breatheJerry();
+                jerryTalk();
+                evolveJerry();
         }
         requestAnimationFrame(updateJerry);
         }
@@ -1401,7 +1403,17 @@
         updateJerry();
 
         function saveJerryState() {
-        saveToLocalStorage('hush_jerry_state', appState.jerry);
+            // Ensure lastFed exists before saving
+            if (!appState.jerry.lastFed) {
+                appState.jerry.lastFed = {};
+            }
+
+            ['clarity', 'insight', 'calm'].forEach(need => {
+                if (!appState.jerry.lastFed[need]) {
+                    appState.jerry.lastFed[need] = Date.now();
+                }
+            });
+            saveToLocalStorage('hush_jerry_state', appState.jerry);
         }
 
         function loadJerryState() {
