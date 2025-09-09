@@ -2208,8 +2208,16 @@
         // Wire up save settings on theme change
         const spriteThemeSelect = document.getElementById('spriteTheme');
         if (spriteThemeSelect) {
-                spriteThemeSelect.addEventListener('change', saveSettings);
-        }
+            spriteThemeSelect.addEventListener('change', (e) => {
+                // Update the app state
+                appState.spriteTheme = e.target.value;
+
+                // Redraw both main sprite and preview
+                updateJerrySprite();
+
+                // Optional: save settings if you want persistence
+                saveSettings();
+            });
         }
 
         // Register Service Worker for PWA
