@@ -1112,6 +1112,16 @@
                 }
             });
 
+            // Determine mood based on lowest need
+            const minNeed = Math.min(...Object.values(appState.jerry.needs));
+            let newMood = 'content';
+            if (minNeed < 50) {
+                if (appState.jerry.needs.insight === minNeed) newMood = 'lowInsight';
+                else if (appState.jerry.needs.calm === minNeed) newMood = 'lowCalm';
+            }
+            
+            setMood(newMood); // updates sprite immediately
+            
             updateJerryUI();
             saveJerryState();
         }
