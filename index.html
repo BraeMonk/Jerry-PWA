@@ -2116,52 +2116,52 @@
         // App Initialization
         // =======================
         function initializeApp() {
-        // --- Theme ---
-        const savedTheme = localStorage.getItem('hush_theme');
-        if (savedTheme === 'light') document.body.classList.add('light-theme');
+            // --- Theme ---
+            const savedTheme = localStorage.getItem('hush_theme');
+            if (savedTheme === 'light') document.body.classList.add('light-theme');
 
-        // --- Load bot name ---
-        appState.botName = localStorage.getItem('botName') || 'Jerry';
-        const nameInput = document.getElementById('botName');
-        if (nameInput) {
+            // --- Load bot name ---
+            appState.botName = localStorage.getItem('botName') || 'Jerry';
+            const nameInput = document.getElementById('botName');
+            if (nameInput) {
                 nameInput.value = appState.botName;
                 nameInput.addEventListener('input', (e) => {
                 const val = e.target.value.trim();
                 appState.botName = val || 'Jerry';
                 localStorage.setItem('botName', appState.botName);
                 });
-        }
+            }
         
-        // --- Load Jerry state FIRST ---
-        loadJerryState();
+            // --- Load Jerry state FIRST ---
+            loadJerryState();
         
-        // --- Load settings FIRST ---
-        loadSettings();
+            // --- Load settings FIRST ---
+            loadSettings();
 
-        // --- Initial rendering ---
-        updateJerryUI();
-        updateAffirmationBanner('jerry');
+            // --- Initial rendering ---
+            updateJerryUI();
+            updateAffirmationBanner('jerry');
 
-        // --- Verify subscription (localStorage backup) ---
-        verifySubscriptionOnLoad();
+            // --- Verify subscription (localStorage backup) ---
+            verifySubscriptionOnLoad();
 
-        // --- Start intervals ---
-        setInterval(updateJerryNeeds, 60000); // update needs every minute
-        setInterval(updateJerrySprite, 2000); // animate sprite
-        setInterval(() => {
+            // --- Start intervals ---
+            setInterval(updateJerryNeeds, 60000); // update needs every minute
+            setInterval(updateJerrySprite, 2000); // animate sprite
+            setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
-                updateAffirmationBanner(appState.currentTab);
+                    updateAffirmationBanner(appState.currentTab);
                 }
-        }, 10000); // refresh affirmations
-        setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000); // daily usage check
+            }, 10000); // refresh affirmations
+            setInterval(resetMonthlyUsageIfNeeded, 24 * 60 * 60 * 1000); // daily usage check
 
-        // --- Update usage and chat interface after everything is loaded ---
-        updateUsageDisplay();
-        updateChatInterface();
+            // --- Update usage and chat interface after everything is loaded ---
+            updateUsageDisplay();
+            updateChatInterface();
 
-        // Wire up save settings on theme change
-        const spriteThemeSelect = document.getElementById('spriteTheme');
-        if (spriteThemeSelect) {
+            // Wire up save settings on theme change
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+            if (spriteThemeSelect) {
                 spriteThemeSelect.addEventListener('change', (e) => {
                     appState.spriteTheme = e.target.value;
 
@@ -2169,49 +2169,31 @@
 
                     updateJerrySprite();
                 });
-        }
+            }
+        
 
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                const CACHE_NAME = 'jerry-pwa-v2';
-                const urlsToCache = [
-                        '/',
-                        '/index.html',
-                        '/manifest.json',
-                        '/JerryIcon.png'
-                        ];
-                        
+            // --- Service Worker registration ---
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    const swCode = `
+                        const CACHE_NAME = 'jerry-pwa-v2';
+                        const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
-                        event.waitUntil(
-                        caches.open(CACHE_NAME).then((cache) => {
-                                return cache.addAll(urlsToCache);
-                                })
-                                );
-                                });
-                                
-                        self.addEventListener('fetch', (event) => {
-                        event.respondWith(
-                        caches.match(event.request).then((response) => {
-                                return response || fetch(event.request);
-                        })
-                        );
+                            event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
                         });
-                        `;
-            
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
+                        self.addEventListener('fetch', (event) => {
+                            event.respondWith(caches.match(event.request).then((response) => response || fetch(event.request)));
+                        });
+                    `;
+                    const blob = new Blob([swCode], { type: 'application/javascript' });
+                    const swUrl = URL.createObjectURL(blob);
 
-            navigator.serviceWorker.register(swUrl)
-            .then((registration) => {
-                    console.log('ServiceWorker registration successful');
-            })
-            .catch((err) => {
-                    console.log('ServiceWorker registration failed');
-            });
-        });
-        }
+                    navigator.serviceWorker.register(swUrl)
+                        .then(() => console.log('ServiceWorker registration successful'))
+                        .catch(() => console.log('ServiceWorker registration failed'));
+                });
+            }
+        } // <-- THIS CLOSES initializeApp
 
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', initializeApp);
