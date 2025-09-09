@@ -2138,6 +2138,17 @@
             // --- Load settings FIRST ---
             loadSettings();
 
+            // --- Wire up instant sprite theme updates ---
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+            if (spriteThemeSelect) {
+                spriteThemeSelect.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    appState.spriteTheme = value;
+                    localStorage.setItem('spriteTheme', value);
+                    updateJerrySprite(); // updates main sprite and preview immediately
+                });
+            }
+
             // --- Initial rendering ---
             updateJerryUI();
             updateAffirmationBanner('jerry');
@@ -2159,20 +2170,7 @@
             updateUsageDisplay();
             updateChatInterface();
 
-            // Wire up save settings on theme change
-            const spriteThemeSelect = document.getElementById('spriteTheme');
-            if (spriteThemeSelect) {
-                spriteThemeSelect.addEventListener('change', (e) => {
-                    appState.spriteTheme = e.target.value;
-
-                    localStorage.setItem('spriteTheme', appState.spriteTheme);
-
-                    updateJerrySprite();
-                    renderSpritePreview();
-                });
-            }
-        
-
+            
             // --- Service Worker registration ---
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
