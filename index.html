@@ -2085,58 +2085,76 @@
         updateChatInterface();
         }
 
-        // =======================
-        // Settings Loader/Saver
-        // =======================
         function loadSettings() {
-        // Basic settings
-        document.getElementById('apiKey').value = appState.apiKey || '';
-        document.getElementById('botName').value = appState.botName || 'Jerry';
+            // Basic settings
+            document.getElementById('apiKey').value = appState.apiKey || '';
+            document.getElementById('botName').value = appState.botName || 'Jerry';
 
-        // Theme
-        const storedTheme = localStorage.getItem('spriteTheme') || 'default';
-        appState.spriteTheme = storedTheme;
-        document.getElementById('spriteTheme').value = appState.spriteTheme;
-        updateJerrySprite();
+            // Theme
+            const storedTheme = localStorage.getItem('spriteTheme') || 'default';
+            appState.spriteTheme = storedTheme;
 
-        // API option
-        const apiOption = localStorage.getItem('jerry_api_option') || 'own';
-        document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+            if (spriteThemeSelect) {
+                spriteThemeSelect.value = appState.spriteTheme;
 
-        // Wire up event handlers
-        setupApiOptionHandlers();
+                // Safe event listener — updates theme in real time without breaking animations
+                spriteThemeSelect.addEventListener('change', (e) => {
+                    appState.spriteTheme = e.target.value;
+                    localStorage.setItem('spriteTheme', appState.spriteTheme);
+
+                    // Update main sprite and preview immediately
+                    drawJerry(getCurrentSprite());
+                    renderSpritePreview(getCurrentSprite(), appState.spriteTheme);
+                });
+            }
+
+            // API option
+            const apiOption = localStorage.getItem('jerry_api_option') || 'own';
+            document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
+
+            // Wire up other event handlers
+            setupApiOptionHandlers();
+
+            // Draw sprites once with the correct theme
+            drawJerry(getCurrentSprite());
+            renderSpritePreview(getCurrentSprite(), appState.spriteTheme);
         }
 
         function saveSettings() {
-        const apiKey = document.getElementById('apiKey').value.trim();
-        appState.apiKey = apiKey;
-        localStorage.setItem('hush_api_key', apiKey);
+            const apiKey = document.getElementById('apiKey').value.trim();
+            appState.apiKey = apiKey;
+            localStorage.setItem('hush_api_key', apiKey);
 
-        const botName = document.getElementById('botName').value.trim() || 'Jerry';
-        appState.botName = botName;
-        localStorage.setItem('botName', botName);
+            const botName = document.getElementById('botName').value.trim() || 'Jerry';
+            appState.botName = botName;
+            localStorage.setItem('botName', botName);
 
-        const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
-        localStorage.setItem('jerry_api_option', selectedApiOption);
+            const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+            localStorage.setItem('jerry_api_option', selectedApiOption);
 
-        appState.spriteTheme = document.getElementById('spriteTheme').value;
-        localStorage.setItem('spriteTheme', appState.spriteTheme);
+            appState.spriteTheme = document.getElementById('spriteTheme').value;
+            localStorage.setItem('spriteTheme', appState.spriteTheme);
 
-        showNotification('Settings saved successfully!');
-        updateChatInterface();
-        updateJerrySprite();
+            showNotification('Settings saved successfully!');
+            updateChatInterface();
+
+            // Instead of updateJerrySprite(), just redraw main sprite and preview safely
+            drawJerry(getCurrentSprite());
+            renderSpritePreview(getCurrentSprite(), appState.spriteTheme);
         }
 
-
         function toggleTheme() {
-        document.body.classList.toggle('light-theme');
+            document.body.classList.toggle('light-theme');
 
-        const isLightMode = document.body.classList.contains('light-theme');
-        localStorage.setItem('hush_theme', isLightMode ? 'light' : 'dark');
+            const isLightMode = document.body.classList.contains('light-theme');
+            localStorage.setItem('hush_theme', isLightMode ? 'light' : 'dark');
 
-        showNotification('Theme updated!');
+            showNotification('Theme updated!');
 
-        updateJerrySprite();
+            // Safe redraw without breaking the animation loop
+            drawJerry(getCurrentSprite());
+            renderSpritePreview(getCurrentSprite(), appState.spriteTheme);
         }
 
         function resetMonthlyUsageIfNeeded() {
@@ -2205,20 +2223,23 @@
         updateUsageDisplay();
         updateChatInterface();
 
+        // --- Safe sprite theme change handler ---
         const spriteThemeSelect = document.getElementById('spriteTheme');
         if (spriteThemeSelect) {
-            spriteThemeSelect.addEventListener('change', (e) => {
-                // 1️⃣ Update app state
-                appState.spriteTheme = e.target.value;
+            // Set initial value from appState
+            spriteThemeSelect.value = appState.spriteTheme || 'default';
 
-                // 2️⃣ Persist theme
+            // Listen for changes
+            spriteThemeSelect.addEventListener('change', (e) => {
+                // Update appState and persist
+                appState.spriteTheme = e.target.value;
                 localStorage.setItem('spriteTheme', appState.spriteTheme);
 
-                // 3️⃣ Redraw sprite (main + preview) **once** to reflect change immediately
-                updateJerrySprite();
-
-                // ✅ Do NOT call saveSettings() here because it also triggers updateJerrySprite() again
-                showNotification('Sprite theme updated!');
+                // Immediately update sprite and preview
+                if (jerrySprites && appState.jerry) {
+                    drawJerry(getCurrentSprite());          // main sprite
+                    renderSpritePreview(getCurrentSprite(), appState.spriteTheme); // preview
+                }
             });
         }
 
