@@ -1106,9 +1106,9 @@
                 } else {
                     // Smooth decay per tick
                     const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // full depletion time in ms
-                    const decayPerTick = (tickInterval / totalDecayMs) * 100; // % per tick
+                    const decayAmount = ((elapsedMs - gracePeriod) / totalDecayMs) * 100;
 
-                    appState.jerry.needs[need] = Math.max(0, appState.jerry.needs[need] - decayPerTick);
+                    appState.jerry.needs[need] = Math.max(0, appState.jerry.needs[need] - decayAmount);
                 }
             });
 
