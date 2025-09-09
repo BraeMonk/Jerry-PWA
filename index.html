@@ -2205,18 +2205,20 @@
         updateUsageDisplay();
         updateChatInterface();
 
-        // Wire up save settings on theme change
         const spriteThemeSelect = document.getElementById('spriteTheme');
         if (spriteThemeSelect) {
             spriteThemeSelect.addEventListener('change', (e) => {
-                // Update the app state
+                // 1️⃣ Update app state
                 appState.spriteTheme = e.target.value;
 
-                // Redraw both main sprite and preview
+                // 2️⃣ Persist theme
+                localStorage.setItem('spriteTheme', appState.spriteTheme);
+
+                // 3️⃣ Redraw sprite (main + preview) **once** to reflect change immediately
                 updateJerrySprite();
 
-                // Optional: save settings if you want persistence
-                saveSettings();
+                // ✅ Do NOT call saveSettings() here because it also triggers updateJerrySprite() again
+                showNotification('Sprite theme updated!');
             });
         }
 
