@@ -1093,19 +1093,25 @@
         localStorage.setItem('botName', appState.botName);
         }
 
-        // Jerry Companion Functions
+        // Real-time Jerry Needs Decay
+        const NEEDS_TICK_INTERVAL = 2000; // 2 seconds
+
         function updateJerryNeeds() {
-        const now = Date.now();
-        const decayRates = { clarity: 0.2, insight: 0.1, calm: 0.3 }; // hours
+            const now = Date.now();
+            const decayRates = { clarity: 24, insight: 48, calm: 12 }; // hours to fully deplete
 
-        Object.keys(appState.jerry.needs).forEach(need => {
-                const hoursSinceLastFed = (now - appState.jerry.lastFed[need]) / (1000 * 60 * 60);
-                const decayAmount = (hoursSinceLastFed / decayRates[need]) * 100;
+            Object.keys(appState.jerry.needs).forEach(need => {
+                const lastFed = appState.jerry.lastFed[need] || now;
+                const decayPerMs = 100 / (decayRates[need] * 60 * 60 * 1000); // % per millisecond
+
+                const elapsedMs = now - lastFed;
+                const decayAmount = elapsedMs * decayPerMs;
+
                 appState.jerry.needs[need] = Math.max(0, 100 - decayAmount);
-        });
+            });
 
-        updateJerryUI();
-        saveJerryState();
+            updateJerryUI();
+            saveJerryState();
         }
 
         function feedJerry(need, amount = 50) {
@@ -2157,7 +2163,8 @@
             verifySubscriptionOnLoad();
 
             // --- Start intervals ---
-            setInterval(updateJerryNeeds, 60000); // update needs every minute
+            // Start interval for smooth decay
+            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL); // update needs every minute
             setInterval(updateJerrySprite, 2000); // animate sprite
             setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
