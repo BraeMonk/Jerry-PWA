@@ -2203,7 +2203,7 @@
 
             // --- Start intervals ---
             // Start interval for smooth decay
-            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL); // update needs every minute
+            setInterval(updateJerryNeeds, 2000); // update needs every minute
             setInterval(updateJerrySprite, 2000); // animate sprite
             setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
