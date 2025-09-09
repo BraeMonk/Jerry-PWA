@@ -2163,8 +2163,14 @@
         // Wire up save settings on theme change
         const spriteThemeSelect = document.getElementById('spriteTheme');
         if (spriteThemeSelect) {
-                spriteThemeSelect.addEventListener('change', saveSettings);
-        }
+                spriteThemeSelect.addEventListener('change', (e) => {
+                    appState.spriteTheme = e.target.value;
+
+                    localStorage.setItem('spriteTheme', appState.spriteTheme);
+
+                    updateJerrySprite();
+                    updateJerrySpritePreview();
+                });
         }
 
         // Register Service Worker for PWA
