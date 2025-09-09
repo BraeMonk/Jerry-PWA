@@ -915,7 +915,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
-                <select class="form-input" id="spriteTheme" onchange="updateSpritePreview()">
+                <select class="form-input" id="spriteTheme">
                     <option value="default">Default</option>
                     <option value="chaotic">Chaotic</option>
                     <option value="neutral">Neutral</option>
@@ -1404,11 +1404,35 @@
 
         // === Main Update Loop ===
         function updateJerry() {
-        if (!jerryTalking) {
+            // 1️⃣ Determine sprite based on needs
+            const needs = appState.jerry.needs;
+            let spriteType = 'content';
+            const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
+            if (minNeed < 50) {
+                if (needs.insight === minNeed) {
+                    spriteType = 'lowInsight';
+                } else if (needs.calm === minNeed) {
+                    spriteType = 'lowCalm';
+                }
+            }
+
+            // 2️⃣ Update base sprite if mood has changed
+            if (spriteType !== currentMood) {
+                currentMood = spriteType;
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
+            }
+
+            // 3️⃣ Redraw Jerry (main sprite) and preview
+            drawJerry(getCurrentSprite());
+            renderSpritePreview(getCurrentSprite(), appState.spriteTheme);
+
+            // 4️⃣ Run animations
+            if (!jerryTalking) {
                 blinkJerry();
                 breatheJerry();
-        }
-        requestAnimationFrame(updateJerry);
+            }
+
+            requestAnimationFrame(updateJerry); // keep loop running
         }
 
         // Start animation
