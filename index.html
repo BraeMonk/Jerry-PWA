@@ -2162,12 +2162,13 @@
             // Wire up save settings on theme change
             const spriteThemeSelect = document.getElementById('spriteTheme');
             if (spriteThemeSelect) {
-                spriteThemeSelect.addEventListener('input', (e) => {
+                spriteThemeSelect.addEventListener('change', (e) => {
                     appState.spriteTheme = e.target.value;
 
                     localStorage.setItem('spriteTheme', appState.spriteTheme);
 
                     updateJerrySprite();
+                    renderSpritePreview();
                 });
             }
         
