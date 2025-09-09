@@ -1405,10 +1405,21 @@
         }
 
         function loadJerryState() {
-        const saved = getFromLocalStorage('hush_jerry_state');
-        if (saved) {
+            const saved = getFromLocalStorage('hush_jerry_state');
+            if (saved) {
                 Object.assign(appState.jerry, saved);
-        }
+            }
+
+            // Ensure lastFed exists for all needs
+            if (!appState.jerry.lastFed) {
+                appState.jerry.lastFed = {};
+            }
+
+            ['clarity', 'insight', 'calm'].forEach(need => {
+                if (!appState.jerry.lastFed[need]) {
+                    appState.jerry.lastFed[need] = Date.now();
+                }
+            });
         }
 
         // Chat Functions
