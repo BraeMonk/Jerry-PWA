@@ -2369,6 +2369,10 @@
             // --- Initial rendering ---
             updateJerryUI();
             updateAffirmationBanner('jerry');
+
+            // Load journal
+            appState.journal = getFromLocalStorage('hush_journal') || [];
+            
             renderJournalEntries();
 
             // --- Verify subscription (localStorage backup) ---
