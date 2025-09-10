@@ -1094,25 +1094,24 @@
             const now = Date.now();
             const decayRates = { clarity: 12, insight: 24, calm: 6 }; // hours to fully deplete
             const gracePeriod = 10 * 60 * 1000; // 10 minutes
-            const tickInterval = 2000; // 2 seconds
 
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
                 const elapsedMs = now - lastFed;
 
                 if (elapsedMs < gracePeriod) {
-                    // Grace period: stay at 100%
+                    // Grace period: stay full
                     appState.jerry.needs[need] = 100;
                 } else {
-                    // Smooth decay per tick
-                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // full depletion time in ms
-                    const decayPerTick = (tickInterval / totalDecayMs) * 100;
+                    // Calculate percent remaining based on total elapsed time
+                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // ms until empty
+                    const percentRemaining = Math.max(0, 100 - (elapsedMs / totalDecayMs) * 100);
 
-                    appState.jerry.needs[need] = Math.max(0, appState.jerry.needs[need] - decayPerTick);
+                    appState.jerry.needs[need] = percentRemaining;
                 }
             });
 
-            // Update mood based on lowest need
+            // Mood based on lowest need
             const minNeed = Math.min(...Object.values(appState.jerry.needs));
             let newMood = 'content';
             if (minNeed < 50) {
@@ -1120,7 +1119,7 @@
                 else if (appState.jerry.needs.calm === minNeed) newMood = 'lowCalm';
             }
 
-            setMood(newMood); // immediately updates sprite
+            setMood(newMood);
             updateJerryUI();
             saveJerryState();
         }
