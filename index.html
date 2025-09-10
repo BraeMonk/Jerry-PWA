@@ -2567,7 +2567,7 @@
             };
 
             if (splashImg.complete) {
-                fadeSplash(); // image cached, start fade immediately
+                requestAnimationFrame(fadeSplash); // image cached, start fade immediately
             } else {
                 splashImg.addEventListener('load', fadeSplash);
                 splashImg.addEventListener('error', fadeSplash);
