@@ -531,6 +531,29 @@
             width: 10px;
             height: 10px;
         }
+
+        .journalEntry {
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            background-color: var(--bg-secondary);
+        }
+
+        .journalEntry .entryHeader {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .journalEntry .entryContent {
+            white-space: pre-wrap;
+        }
+
+        .journalEntry.expanded {
+            background-color: var(--bg-highlight);
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -564,6 +587,7 @@
             <button class="tab" onclick="switchTab('checkin', event)">Check-in</button>
             <button class="tab" onclick="switchTab('cbt', event)">CBT</button>
             <button class="tab" onclick="switchTab('dbt', event)">DBT</button>
+            <button class="tab" onclick="switchTab('journalTab', event)">Journal</button>
             <button class="tab" onclick="switchTab('hush', event)">Hush</button>
             <button class="tab" onclick="switchTab('entries', event)">Entries</button>
             <!--<button class="tab" style="display: none;" onclick="switchTab('history')">History</button>-->
@@ -776,7 +800,15 @@
                 <button class="btn" onclick="completeDBT()">Complete DBT Session</button>
             </div>
         </div>
-        
+
+        <!-- Journal Tab -->
+        <div class="screen" id="journalTab">
+            <h2>Journal</h2>
+            <!-- New Entry Input -->
+            <textarea id="journalInput" placeholder="Write your thoughts here..." rows="5"></textarea>
+            <button id="saveJournalEntry">Save Entry</button>
+        </div>
+
         <!-- Hush Timer Screen -->
         <div class="screen" id="hush">
             <div class="timer-container">
@@ -1941,6 +1973,58 @@
         switchTab('jerry');
         }
 
+        // Initialize journal if it doesn't exist
+        if (!appState.journal) appState.journal = [];
+
+        // Save a new entry
+        function saveJournalEntry() {
+            const input = document.getElementById('journalInput');
+            const content = input.value.trim();
+            if (!content) return;
+
+            const timestamp = new Date().toISOString();
+            const entry = { content, timestamp };
+
+            appState.journal.push(entry);
+            saveToLocalStorage('hush_journal', appState.journal);
+
+            input.value = '';
+            renderJournalEntries();
+            // Optional: switch to Entries tab automatically
+            switchTab('jerry');
+        }
+
+        // Render entries in the existing entries screen
+        function renderJournalEntries() {
+            const container = document.getElementById('entriesList');
+            container.innerHTML = '';
+
+            // Show newest first
+            appState.journal.slice().reverse().forEach((entry, index) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'journalEntry preview';
+                entryDiv.dataset.index = index;
+
+                const previewText = entry.content.length > 100 ? entry.content.slice(0, 100) + '…' : entry.content;
+                entryDiv.innerHTML = `
+                    <div class="entryHeader">${new Date(entry.timestamp).toLocaleString()}</div>
+                    <div class="entryContent">${previewText}</div>
+                `;
+
+                // Toggle full view
+                entryDiv.addEventListener('click', () => {
+                    const isExpanded = entryDiv.classList.toggle('expanded');
+                    const contentDiv = entryDiv.querySelector('.entryContent');
+                    contentDiv.textContent = isExpanded ? entry.content : previewText;
+                });
+
+                container.appendChild(entryDiv);
+            });
+        }
+
+        // Wire up save button
+        document.getElementById('saveJournalEntry')?.addEventListener('click', saveJournalEntry);
+
         // Timer Functions
         function toggleTimer() {
         if (!appState.timer.active) {
@@ -2232,6 +2316,7 @@
             // --- Initial rendering ---
             updateJerryUI();
             updateAffirmationBanner('jerry');
+            renderJournalEntries();
 
             // --- Verify subscription (localStorage backup) ---
             verifySubscriptionOnLoad();
