@@ -9,6 +9,6 @@
   "orientation": "portrait",
   "scope": "/",
   "icons": [
-    { "src": "/jerryIcon2.png.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "./jerryIcon2.png.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
