@@ -1102,6 +1102,9 @@
                     <option value="default">Default</option>
                     <option value="chaotic">Chaotic</option>
                     <option value="neutral">Neutral</option>
+                    <option value="dreamy">Dreamy</option>
+                    <option value="forest">Forest</option>
+                    <option value="neon">Neon</option>
                 </select>
             </div>
     
@@ -1394,7 +1397,22 @@
                 // NEUTRAL: Calm, balanced, slightly muted but defined
                 neutral: isLightMode
                 ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' } // deep purple body, lavender eyes, darker outline, soft features
-                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' } // lavender body, deep purple eyes, soft features, darker outline
+                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }, // lavender body, deep purple eyes, soft features, darker outline
+                
+                // DREAMY: Soft, ethereal pastels, calming vibe
+                dreamy: isLightMode
+                ? { 0: 'transparent', 1: '#FFC0CB', 2: '#FFF0F5', 3: '#FF69B4', 4: '#FFD6E8' }  // pink body, lavender eyes, darker pink outline, soft features
+                : { 0: 'transparent', 1: '#FFF0F5', 2: '#FFC0CB', 3: '#FFD6E8', 4: '#FF69B4' }, // soft lavender body, pink eyes, subtle features, dark outline
+            
+                // FOREST: Earthy, natural, grounded
+                forest: isLightMode
+                ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }  // green body, light mint eyes, dark outline, soft highlights
+                : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20' }, // mint body, green eyes, soft highlights, dark outline
+            
+                // NEON: Bright, playful, stands out in dark mode
+                neon: isLightMode
+                ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF' } // magenta body, cyan eyes, dark magenta outline, bright accents
+                : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099' } // cyan body, magenta eyes, bright accents, dark outline
         };
 
         const colors = colorSets[spriteTheme || 'default'];
@@ -1428,7 +1446,20 @@
                 : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
                 neutral: isLightMode
                 ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
-                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }
+                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
+                // DREAMY: Soft, ethereal pastels, calming vibe
+                dreamy: isLightMode
+                ? { 0: 'transparent', 1: '#FFC0CB', 2: '#FFF0F5', 3: '#FF69B4', 4: '#FFD6E8' }  // pink body, lavender eyes, darker pink outline, soft features
+                : { 0: 'transparent', 1: '#FFF0F5', 2: '#FFC0CB', 3: '#FFD6E8', 4: '#FF69B4' }, // soft lavender body, pink eyes, subtle features, dark outline
+                // FOREST: Earthy, natural, grounded
+                forest: isLightMode
+                ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }  // green body, light mint eyes, dark outline, soft highlights
+                : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20' }, // mint body, green eyes, soft highlights, dark outline
+
+                // NEON: Bright, playful, stands out in dark mode
+                neon: isLightMode
+                ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF' } // magenta body, cyan eyes, dark magenta outline, bright accents
+                : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099' } // cyan body, magenta eyes, bright accents, dark outline
         };
         const colors = colorSets[spriteTheme || 'default'];
 
@@ -1488,7 +1519,21 @@
                 : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
                 neutral: isLightMode
                 ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
-                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }
+                : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
+                // DREAMY: Soft, ethereal pastels, calming vibe
+                dreamy: isLightMode
+                ? { 0: 'transparent', 1: '#FFC0CB', 2: '#FFF0F5', 3: '#FF69B4', 4: '#FFD6E8' }  // pink body, lavender eyes, darker pink outline, soft features
+                : { 0: 'transparent', 1: '#FFF0F5', 2: '#FFC0CB', 3: '#FFD6E8', 4: '#FF69B4' }, // soft lavender body, pink eyes, subtle features, dark outline
+            
+                // FOREST: Earthy, natural, grounded
+                forest: isLightMode
+                ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }  // green body, light mint eyes, dark outline, soft highlights
+                : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20' }, // mint body, green eyes, soft highlights, dark outline
+            
+                // NEON: Bright, playful, stands out in dark mode
+                neon: isLightMode
+                ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF' } // magenta body, cyan eyes, dark magenta outline, bright accents
+                : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099' } // cyan body, magenta eyes, bright accents, dark outline
         };
 
         const colors = colorSets[spriteTheme];
