@@ -1458,54 +1458,54 @@
             const message = input.value.trim();
             if (!message) return;
 
-            // Add message to chat UI only (history will be updated after response)
-            addMessageToChat('You', message, 'user');
+            // Add user message
+            addMessageToChat('user', message, 'user');
             input.value = '';
 
-            // Show thinking indicator
+            // Add thinking indicator and keep reference
             const thinkingDiv = addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
 
             try {
                 const response = await getAIResponse(message);
 
-                // Remove thinking indicator
-                thinkingDiv?.remove();
+                // Replace "Thinking..." with actual response
+                thinkingDiv.innerHTML = `<strong>${appState.botName || 'Jerry'}:</strong> ${response}`;
+                thinkingDiv.classList.remove('thinking');
 
-                // Add AI response to chat UI
-                addMessageToChat('assistant', response, 'jerry');
-
-                // Limit chat history to MAX_CHAT_HISTORY (let's say 20)
+                // Keep chat history within limit
                 const MAX_CHAT_HISTORY = 20;
                 if (appState.chatHistory.length > MAX_CHAT_HISTORY) {
                     appState.chatHistory = appState.chatHistory.slice(-MAX_CHAT_HISTORY);
                 }
-            
+
             } catch (error) {
                 console.error('sendMessage error:', error);
 
-                // Remove thinking indicator
-                thinkingDiv?.remove();
-
-                // Fallback response
-                const fallback = getFallbackResponse(message);
-                addMessageToChat('assistant', fallback, 'jerry');
+                // Replace thinking indicator with fallback response
+                thinkingDiv.innerHTML = `<strong>${appState.botName || 'Jerry'}:</strong> ${getFallbackResponse(message)}`;
+                thinkingDiv.classList.remove('thinking');
             }
         }
 
-        function addMessageToChat(speaker, message, className) {
-        const chatLog = document.getElementById('chatLog');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${className}`;
-        // Determine display name
-        let displayName;
-        if (speaker === 'assistant') {
-                displayName = appState.botName || 'Jerry'; // use saved name
-        } else {
-                displayName = 'You';
-        }
-        messageDiv.innerHTML = `<strong>${displayName}:</strong> ${message}`;
-        chatLog.appendChild(messageDiv);
-        chatLog.scrollTop = chatLog.scrollHeight;
+        /**
+         * Adds a message to the chat and returns the created div for later updates.
+         * @param {string} speaker - 'assistant' or 'user'
+         * @param {string} message - The message text
+         * @param {string} className - Additional class for styling (e.g., 'jerry', 'thinking')
+         * @returns {HTMLElement} - The created message div
+         */
+        function addMessageToChat(speaker, message, className = '') {
+            const chatLog = document.getElementById('chatLog');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`.trim();
+
+            const displayName = speaker === 'assistant' ? (appState.botName || 'Jerry') : 'You';
+            messageDiv.innerHTML = `<strong>${displayName}:</strong> ${message}`;
+
+            chatLog.appendChild(messageDiv);
+            chatLog.scrollTop = chatLog.scrollHeight;
+
+            return messageDiv; // <-- return it so we can update/replace later
         }
 
         async function getAIResponse(message) {
