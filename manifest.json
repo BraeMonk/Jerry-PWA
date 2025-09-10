@@ -10,12 +10,12 @@
   "scope": "/",
   "icons": [
     {
-      "src": "JerryIcon.png",
+      "src": "https://raw.githubusercontent.com/BraeMonk/Jerry-PWA/refs/heads/main/JerryIcon.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "JerryIcon.png",
+      "src": "https://raw.githubusercontent.com/BraeMonk/Jerry-PWA/refs/heads/main/JerryIcon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
