@@ -532,27 +532,38 @@
             height: 10px;
         }
 
-        .journalEntry {
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            background-color: var(--bg-secondary);
+        #journal {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
         }
 
-        .journalEntry .entryHeader {
-            font-size: 0.85em;
-            color: var(--text-muted);
-            margin-bottom: 4px;
+        #journalInput {
+            flex: 1; /* fills all available vertical space */
+            width: 100%;
+            padding: 16px;
+            font-size: 1rem;
+            border: 1px solid #4a5568;
+            border-radius: 8px;
+            background: #2d3748;
+            color: #e2e8f0;
+            resize: none;
+            box-sizing: border-box;
+            margin-bottom: 70px; /* space for the fixed button */
+            overflow-y: auto;
         }
 
-        .journalEntry .entryContent {
-            white-space: pre-wrap;
-        }
-
-        .journalEntry.expanded {
-            background-color: var(--bg-highlight);
+        #saveJournalEntry {
+            position: fixed;       /* sticks to bottom of viewport */
+            bottom: 20px;          /* space from bottom */
+            left: 50%;             /* center horizontally */
+            transform: translateX(-50%);
+            z-index: 10;
+            padding: 12px 30px;
+            width: auto;           /* adjust width if needed */
         }
         
         @media (max-width: 480px) {
