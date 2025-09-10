@@ -2237,40 +2237,6 @@
             switchTab('jerry');
         }
 
-        
-        // Render entries in the existing entries screen
-        function renderJournalEntries() {
-            const container = document.getElementById('entriesList');
-            container.innerHTML = '';
-
-            // Show newest first
-            appState.journal.slice().reverse().forEach((entry) => {
-                const entryDiv = document.createElement('div');
-                entryDiv.className = 'journalEntry';
-
-                // Determine preview text (first 100 chars)
-                const previewText = entry.content.length > 100 
-                    ? entry.content.slice(0, 100) + '…' 
-                    : entry.content;
-
-                // Keep your original structure and IDs/classes
-                entryDiv.innerHTML = `
-                    <div class="entryHeader">${new Date(entry.timestamp).toLocaleString()}</div>
-                    <div class="entryContent">${previewText}</div>
-                `;
-
-                const contentDiv = entryDiv.querySelector('.entryContent');
-
-                // Toggle full view on click
-                entryDiv.addEventListener('click', () => {
-                    const isExpanded = entryDiv.classList.toggle('expanded');
-                    contentDiv.textContent = isExpanded ? entry.content : previewText;
-                });
-
-                container.appendChild(entryDiv);
-            });
-        }
-
         // Wire up save button
         document.getElementById('saveJournalEntry')?.addEventListener('click', saveJournalEntry);
 
@@ -2370,7 +2336,7 @@
             const filteredEntries = allEntries.filter(entry => filterValue === 'all' || entry.type === filterValue);
 
             // Render filtered entries
-            filteredEntries.forEach((entry, index) => {
+            filteredEntries.forEach((entry) => {
                 const entryDiv = document.createElement('div');
                 entryDiv.className = entry.type === 'Journal' ? 'journalEntry preview' : 'entry-item';
 
@@ -2392,36 +2358,32 @@
                     content = `Emotion ratings: ${ratings}`;
                 }
 
+                // Determine preview text for journals
+                const previewText = entry.type === 'Journal' && content.length > 100 ? content.slice(0, 100) + '…' : content;
+
+                // Build entry HTML (once)
                 entryDiv.innerHTML = `
                     <div class="entry-date">${date} at ${time}</div>
-                    <div class="entry-content"><strong>${entry.type}</strong><br>${entry.type === 'Journal' ? content.slice(0, 100) + (content.length > 100 ? '…' : '') : content}</div>
+                    <div class="entry-content"><strong>${entry.type}</strong><br>${previewText}</div>
+                    <button class="delete-entry">Delete</button>
                 `;
 
-                // Toggle full view only for Journal entries
+                // Expand/collapse only for journal entries
                 if (entry.type === 'Journal') {
-                    const previewText = content.length > 100 ? content.slice(0, 100) + '…' : content;
                     const contentDiv = entryDiv.querySelector('.entry-content');
-                    entryDiv.addEventListener('click', () => {
+                    entryDiv.addEventListener('click', (e) => {
+                        // Ignore clicks on delete button
+                        if (e.target.classList.contains('delete-entry')) return;
+
                         const isExpanded = entryDiv.classList.toggle('expanded');
-                        contentDiv.textContent = isExpanded ? content : previewText;
+                        contentDiv.innerHTML = `<strong>${entry.type}</strong><br>` + (isExpanded ? content : previewText);
                     });
                 }
 
-                entryDiv.innerHTML = `
-                <div class="entry-date">${date} at ${time}</div>
-                <div class="entry-content"><strong>${entry.type}</strong><br>${
-                    entry.type === 'Journal'
-                    ? content.slice(0, 100) + (content.length > 100 ? '…' : '')
-                    : content
-                }</div>
-                <button class="delete-entry">Delete</button>
-                `;
-                
-                // Handle delete single
+                // Delete button
                 entryDiv.querySelector('.delete-entry').addEventListener('click', () => {
                     if (!confirm('Delete this entry?')) return;
-                    
-                    // Remove from appState
+
                     if (entry.type === 'Journal') {
                         appState.journal = appState.journal.filter(j => j.timestamp !== entry.timestamp);
                         saveToLocalStorage('hush_journal', appState.journal);
@@ -2432,7 +2394,7 @@
 
                     loadEntries();
                 });
-                
+
                 entriesList.appendChild(entryDiv);
             });
         }
