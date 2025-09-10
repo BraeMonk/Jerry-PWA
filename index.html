@@ -1164,7 +1164,7 @@
 
         function updateJerryNeeds() {
             const now = Date.now();
-            const decayRates = { clarity: 12, insight: 24, calm: 6 }; // hours to fully deplete
+            const decayRates = { clarity: 6, insight: 24, calm: 12 }; // hours to fully deplete
             const gracePeriod = 10 * 60 * 1000; // 10 minutes
 
             Object.keys(appState.jerry.needs).forEach(need => {
