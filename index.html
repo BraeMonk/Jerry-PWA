@@ -568,7 +568,7 @@
             resize: none;
             overflow-y: auto;
             box-sizing: border-box;
-            margin-bottom: 20px;   /* spacing above button */
+            margin-bottom: 80px;   /* spacing above button */
         }
 
         #saveJournalEntry {
@@ -2132,17 +2132,30 @@
                 `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // Entries and History Functions
         function loadEntries() {
-        const entriesList = document.getElementById('entriesList');
-        entriesList.innerHTML = '';
+            const entriesList = document.getElementById('entriesList');
+            entriesList.innerHTML = '';
 
-        if (appState.entries.length === 0) {
-                entriesList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No entries yet. Complete some activities to see your progress here!</p>';
+            // Merge activity entries and journal entries
+            const allEntries = [
+                ...(appState.entries || []),  // existing activity/check-in entries
+                ...(appState.journal || []).map(j => ({ 
+                    type: 'Journal',
+                    data: { content: j.content },
+                    timestamp: j.timestamp
+                }))
+            ];
+
+            if (allEntries.length === 0) {
+                entriesList.innerHTML = '<p style="text-align: center; color: #a0aec0;">No entries yet. Complete activities or write in your journal to see progress here!</p>';
                 return;
-        }
+            }
 
-        appState.entries.forEach(entry => {
+            // Sort newest first
+            allEntries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            // Render all entries
+            allEntries.forEach(entry => {
                 const entryDiv = document.createElement('div');
                 entryDiv.className = 'entry-item';
 
@@ -2150,25 +2163,27 @@
                 const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
                 let content = '';
-                if (entry.type === 'Check-in') {
-                content = `Feeling ${entry.data.emotion || 'N/A'} emotionally, ${entry.data.physical || 'N/A'} physically, ${entry.data.mental || 'N/A'} mentally.`;
+                if (entry.type === 'Journal') {
+                    content = entry.data.content;
+                } else if (entry.type === 'Check-in') {
+                    content = `Feeling ${entry.data.emotion || 'N/A'} emotionally, ${entry.data.physical || 'N/A'} physically, ${entry.data.mental || 'N/A'} mentally.`;
                 } else if (entry.type === 'CBT') {
-                content = `Situation: ${entry.data.situation?.substring(0, 100)}${entry.data.situation?.length > 100 ? '...' : ''}`;
+                    content = `Situation: ${entry.data.situation?.substring(0, 100)}${entry.data.situation?.length > 100 ? '...' : ''}`;
                 } else if (entry.type === 'DBT') {
-                const ratings = Object.entries(entry.data)
+                    const ratings = Object.entries(entry.data)
                         .filter(([key]) => ['anger', 'sadness', 'fear', 'shame'].includes(key))
                         .map(([key, value]) => `${key}: ${value}`)
                         .join(', ');
-                content = `Emotion ratings: ${ratings}`;
+                    content = `Emotion ratings: ${ratings}`;
                 }
 
                 entryDiv.innerHTML = `
-                <div class="entry-date">${date} at ${time}</div>
-                <div class="entry-content"><strong>${entry.type}</strong><br>${content}</div>
+                    <div class="entry-date">${date} at ${time}</div>
+                    <div class="entry-content"><strong>${entry.type}</strong><br>${content}</div>
                 `;
-
+                
                 entriesList.appendChild(entryDiv);
-        });
+            });
         }
 
         function loadHistory() {
