@@ -2229,12 +2229,18 @@
             container.innerHTML = '';
 
             // Show newest first
-            appState.journal.slice().reverse().forEach((entry, index) => {
+            appState.journal.slice().reverse().forEach((entry) => {
                 const entryDiv = document.createElement('div');
                 entryDiv.className = 'journalEntry preview';
-                entryDiv.dataset.index = index;
 
-                const previewText = entry.content.length > 100 ? entry.content.slice(0, 100) + '…' : entry.content;
+                const previewText = entry.content.length > 100 
+                    ? entry.content.slice(0, 100) + '…' 
+                    : entry.content;
+
+                // Store both versions as dataset for easy toggling
+                entryDiv.dataset.full = entry.content;
+                entryDiv.dataset.preview = previewText;
+
                 entryDiv.innerHTML = `
                     <div class="entryHeader">${new Date(entry.timestamp).toLocaleString()}</div>
                     <div class="entryContent">${previewText}</div>
@@ -2242,9 +2248,11 @@
 
                 // Toggle full view
                 entryDiv.addEventListener('click', () => {
-                    const isExpanded = entryDiv.classList.toggle('expanded');
                     const contentDiv = entryDiv.querySelector('.entryContent');
-                    contentDiv.textContent = isExpanded ? entry.content : previewText;
+                    const isExpanded = entryDiv.classList.toggle('expanded');
+                    contentDiv.textContent = isExpanded 
+                        ? entryDiv.dataset.full 
+                        : entryDiv.dataset.preview;
                 });
 
                 container.appendChild(entryDiv);
