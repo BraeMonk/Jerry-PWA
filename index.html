@@ -573,7 +573,7 @@
         }
 
         #saveJournalEntry {
-            position: fixed;       /* fixed at bottom of viewport */
+            position: static;       /* fixed at bottom of viewport */
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
@@ -588,6 +588,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border: none;
+            margin-top: 12px;
         }
 
         #saveJournalEntry:hover {
