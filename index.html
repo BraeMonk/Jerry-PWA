@@ -1524,7 +1524,7 @@
                 subscriptionState.messageCount++;
                 localStorage.setItem('jerry_message_count', String(subscriptionState.messageCount));
                 updateUsageDisplay();
-                else {
+            } else {
                 apiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
                 if (!apiKey) throw new Error('Please enter your API key or subscribe to Premium');
             }
