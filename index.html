@@ -2223,10 +2223,19 @@
 
             // --- Verify subscription (localStorage backup) ---
             verifySubscriptionOnLoad();
+            
+            // Ensure lastFed exists for every need
+            Object.keys(appState.jerry.needs).forEach(need => {
+                if (!appState.jerry.lastFed[need]) {
+                    // Start lastFed so decay can begin after grace period
+                    appState.jerry.lastFed[need] = Date.now() - (10 * 60 * 1000 + 1000); // 10 min + 1 sec
+                }
+            });
+            // Start real-time decay
+            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
 
             // --- Start intervals ---
             // Start interval for smooth decay
-            setInterval(updateJerryNeeds, 2000); // update needs every minute
             setInterval(updateJerrySprite, 2000); // animate sprite
             setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
