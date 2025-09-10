@@ -2556,25 +2556,31 @@
             const splashImg = document.getElementById('splashImage');
 
             if (splash && splashImg) {
-            splash.style.opacity = '1';
-            splash.style.transition = 'opacity 0.5s ease';
+                // Ensure splash is fully visible immediately
+                splash.style.opacity = '1';
+                splash.style.transition = 'opacity 0.5s ease';
 
-            const fadeSplash = () => {
-                setTimeout(() => {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.remove(), 500);
-                }, 3000);
-            };
+                const fadeSplash = () => {
+                    // Wait 3 seconds before starting fade
+                    setTimeout(() => {
+                        // Use requestAnimationFrame to ensure opacity=1 is rendered first
+                        requestAnimationFrame(() => {
+                            splash.style.opacity = '0';  // trigger fade
+                        });
+                        // Remove splash after transition completes
+                        splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+                    }, 3000);
+                };
 
-            if (splashImg.complete) {
-                requestAnimationFrame(fadeSplash); // image cached, start fade immediately
-            } else {
-                splashImg.addEventListener('load', fadeSplash);
-                splashImg.addEventListener('error', fadeSplash);
-            }
-        
-            const isLightMode = document.body.classList.contains('light-theme');
-            if (splash) {
+                if (splashImg.complete) {
+                    fadeSplash(); // image cached, start fade timer
+                } else {
+                    splashImg.addEventListener('load', fadeSplash);
+                    splashImg.addEventListener('error', fadeSplash);
+                }
+
+                // Set background based on theme
+                const isLightMode = document.body.classList.contains('light-theme');
                 splash.style.background = isLightMode ? '#f7ede5' : '#1a202c';
             }
             // --- Theme ---
