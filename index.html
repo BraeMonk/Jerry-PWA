@@ -748,7 +748,7 @@
 </head>
 <body>
     <div id="splashScreen">
-        <img src="./jerrySplash.png.png" alt="Splash" />
+        <img src="./jerrySplash.png.png" alt="Splash" id="splashImage" />
     </div>
     <div class="app-container">
         <div class="affirmation-banner" id="affirmationBanner">
@@ -2553,6 +2553,26 @@
         // =======================
         function initializeApp() {
             const splash = document.getElementById('splashScreen');
+            const splashImg = document.getElementById('splashImage');
+
+            if (splash && splashImg) {
+            splash.style.opacity = '1';
+            splash.style.transition = 'opacity 0.5s ease';
+
+            const fadeSplash = () => {
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 500);
+                }, 3000);
+            };
+
+            if (splashImg.complete) {
+                fadeSplash(); // image cached, start fade immediately
+            } else {
+                splashImg.addEventListener('load', fadeSplash);
+                splashImg.addEventListener('error', fadeSplash);
+            }
+        
             const isLightMode = document.body.classList.contains('light-theme');
             if (splash) {
                 splash.style.background = isLightMode ? '#f7ede5' : '#1a202c';
@@ -2634,14 +2654,6 @@
             // --- Update usage and chat interface after everything is loaded ---
             updateUsageDisplay();
             updateChatInterface();
-
-            if (splash) {
-                setTimeout(() => {
-                    splash.style.transition = 'opacity 0.5s ease';
-                    setTimeout(() => splash.style.opacity = '0';
-                    setTimeout(() => splash.remove(), 500);
-                }, 3000);
-            }
 
             
             // --- Service Worker registration ---
