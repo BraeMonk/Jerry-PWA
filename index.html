@@ -1452,7 +1452,7 @@
             });
         }
 
-        // Chat Functions
+        // === Chat Functions ===
         async function sendMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
@@ -1461,6 +1461,9 @@
             // Add user message
             addMessageToChat('user', message, 'user');
             input.value = '';
+
+            // Add to history
+            appState.chatHistory.push({ role: 'user', content: message });
 
             // Add thinking indicator and keep reference
             const thinkingDiv = addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
@@ -1505,7 +1508,7 @@
             chatLog.appendChild(messageDiv);
             chatLog.scrollTop = chatLog.scrollHeight;
 
-            return messageDiv; // <-- return it so we can update/replace later
+            return messageDiv;
         }
 
         async function getAIResponse(message) {
@@ -1519,7 +1522,7 @@
                 if (!subscriptionState.isSubscribed) throw new Error('Premium subscription required');
                 if (subscriptionState.messageCount >= 1000) throw new Error('Monthly message limit reached');
                 apiKey = PREMIUM_API_KEY;
-                subscriptionState.messageCount++;
+                subscriptionState.messageCount++; 
                 localStorage.setItem('jerry_message_count', String(subscriptionState.messageCount));
                 updateUsageDisplay();
             } else {
@@ -1532,23 +1535,34 @@
                 appState.chatHistory = appState.chatHistory.slice(-15);
             }
 
-            // Build conversation payload
+            // Only add system prompt once at the very beginning
             const systemPromptText = 'You are Jerry, a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.';
 
-            const contents = [
-                { role: 'user', parts: [{ text: systemPromptText }] },
-                ...appState.chatHistory.map(m => ({
-                    role: m.role === 'assistant' ? 'assistant' : 'user',
-                    parts: [{ text: m.content }]
-                }))
-            ];
+            const contents = [];
+            if (!appState.chatHistory.some(m => m.role === 'system')) {
+                contents.push({ role: 'user', parts: [{ text: systemPromptText }] });
+                appState.chatHistory.unshift({ role: 'system', content: systemPromptText });
+            }
+
+            // Add conversation history
+            contents.push(
+                ...appState.chatHistory
+                    .filter(m => m.role !== 'system')
+                    .map(m => ({
+                        role: m.role === 'assistant' ? 'assistant' : 'user',
+                        parts: [{ text: m.content }]
+                    }))
+            );
 
             let data;
             try {
                 const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: 150, temperature: 0.7, topK: 40, topP: 0.95 } })
+                    body: JSON.stringify({
+                        contents,
+                        generationConfig: { maxOutputTokens: 150, temperature: 0.7, topK: 40, topP: 0.95 }
+                    })
                 });
 
                 if (!resp.ok) {
