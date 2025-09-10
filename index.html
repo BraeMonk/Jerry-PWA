@@ -1454,47 +1454,42 @@
 
         // Chat Functions
         async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const message = input.value.trim();
-        if (!message) return;
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
 
-        addMessageToChat('You', message, 'user');
-        input.value = '';
+            // Add message to chat UI only (history will be updated after response)
+            addMessageToChat('You', message, 'user');
+            input.value = '';
 
-        // Add to chat history
-        appState.chatHistory.push({ role: 'user', content: message });
+            // Show thinking indicator
+            const thinkingDiv = addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
 
-        // Show thinking indicator
-        addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
-
-        try {
+            try {
                 const response = await getAIResponse(message);
-                // Remove thinking indicator
-                const chatLog = document.getElementById('chatLog');
-                const lastMessage = chatLog.lastElementChild;
-                if (lastMessage && lastMessage.classList.contains('thinking')) {
-                lastMessage.remove();
-                }
 
+                // Remove thinking indicator
+                thinkingDiv?.remove();
+
+                // Add AI response to chat UI
                 addMessageToChat('assistant', response, 'jerry');
-                appState.chatHistory.push({ role: 'assistant', content: response });
 
-                // Limit chat history
-                if (appState.chatHistory.length > 20) {
-                appState.chatHistory = appState.chatHistory.slice(-20);
+                // Limit chat history to MAX_CHAT_HISTORY (let's say 20)
+                const MAX_CHAT_HISTORY = 20;
+                if (appState.chatHistory.length > MAX_CHAT_HISTORY) {
+                    appState.chatHistory = appState.chatHistory.slice(-MAX_CHAT_HISTORY);
                 }
+            
+            } catch (error) {
+                console.error('sendMessage error:', error);
 
-                //saveToLocalStorage('hush_chat_history', appState.chatHistory);
-        } catch (error) {
                 // Remove thinking indicator
-                const chatLog = document.getElementById('chatLog');
-                const lastMessage = chatLog.lastElementChild;
-                if (lastMessage && lastMessage.classList.contains('thinking')) {
-                lastMessage.remove();
-                }
+                thinkingDiv?.remove();
 
-                addMessageToChat('assistant', getFallbackResponse(message), 'jerry');
-        }
+                // Fallback response
+                const fallback = getFallbackResponse(message);
+                addMessageToChat('assistant', fallback, 'jerry');
+            }
         }
 
         function addMessageToChat(speaker, message, className) {
@@ -1514,7 +1509,10 @@
         }
 
         async function getAIResponse(message) {
-            // pick API key (same logic you already had)
+            if (!appState) appState = { chatHistory: [], botName: 'Jerry', apiKey: '' };
+            if (!subscriptionState) subscriptionState = { isSubscribed: false, messageCount: 0 };
+
+            // Pick API key
             const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
             let apiKey;
             if (apiOption === 'premium') {
@@ -1529,69 +1527,56 @@
                 if (!apiKey) throw new Error('Please enter your API key or subscribe to Premium');
             }
 
-            // Ensure the last user message is present in history (sendMessage() should already push it)
-            if (!appState.chatHistory.length || appState.chatHistory[appState.chatHistory.length - 1].content !== message || appState.chatHistory[appState.chatHistory.length - 1].role !== 'user') {
-                appState.chatHistory.push({ role: 'user', content: message });
-            }
-
             // Keep only last 15 messages
             if (appState.chatHistory.length > 15) {
                 appState.chatHistory = appState.chatHistory.slice(-15);
             }
 
-            // Build contents for the Generative Language API (Gemini)
+            // Build conversation payload
             const systemPromptText = 'You are Jerry, a friendly, gentle, and supportive AI companion focused on mental health. Keep responses brief and caring, offering emotional support and encouragement. You help users with CBT and DBT techniques when appropriate.';
 
             const contents = [
-                // system prompt as first element (the API may not support "system" role, so keep it as user instruction)
                 { role: 'user', parts: [{ text: systemPromptText }] },
-                // conversation history converted to the API shape
                 ...appState.chatHistory.map(m => ({
                     role: m.role === 'assistant' ? 'assistant' : 'user',
                     parts: [{ text: m.content }]
                 }))
             ];
 
-            // Debug: log request payload so you can inspect it in console/network
-            console.log('Sending conversation (contents):', contents);
+            let data;
+            try {
+                const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: 150, temperature: 0.7, topK: 40, topP: 0.95 } })
+                });
 
-            const body = {
-                contents,
-                generationConfig: {
-                    maxOutputTokens: 150,
-                    temperature: 0.7,
-                    topK: 40,
-                    topP: 0.95
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    console.error('Generative API error:', resp.status, text);
+                    throw new Error('API request failed');
                 }
-            };
 
-            // Send request
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
+                data = await resp.json();
+                console.log('Generative API response:', data);
 
-            // Debug: log status and raw text if not OK
-            if (!resp.ok) {
-                const text = await resp.text();
-                console.error('Generative API error:', resp.status, text);
-                throw new Error('API request failed');
+            } catch (err) {
+                console.error('Fetch failed', err);
+                return getFallbackResponse(message);
             }
 
-            const data = await resp.json();
-            console.log('Generative API response:', data);
+            // Parse reply defensively
+            let reply = 'Sorry, I\'m having trouble composing a response right now.';
+            try {
+                reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
+                     || data?.outputs?.[0]?.content?.text?.trim()
+                     || reply;
+            } catch (e) {
+                console.error('Parsing AI response failed', e);
+            }
 
-            // Defensive parsing of the reply
-            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim()
-                || data?.outputs?.[0]?.content?.text?.trim()
-                || 'Sorry, I\'m having trouble composing a response right now.';
-
-            // Push assistant reply into history and keep cap
+            // Push assistant reply
             appState.chatHistory.push({ role: 'assistant', content: reply });
-            if (appState.chatHistory.length > 15) {
-                appState.chatHistory = appState.chatHistory.slice(-15);
-            }
 
             return reply;
         }
