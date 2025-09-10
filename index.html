@@ -613,10 +613,6 @@
             cursor: default;
         }
 
-        .journalEntry.expanded {
-            background: #1a202c; /* slightly darker when expanded */
-        }
-
         /* Entry date */
         .entry-date {
             font-size: 12px;
@@ -723,6 +719,29 @@
             object-fit: contain;
             border-radius: 12px;           /* soft edges like your UI */
             box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* subtle depth */
+        }
+
+        /* Header always visible */
+        .journalEntry .entryHeader {
+            font-weight: bold;
+            margin-bottom: 0.25em;
+        }
+
+        /* Preview state: clamp to 1 line */
+        .journalEntry .entryContent {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;     /* number of lines to show in preview */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: 1.5em;         /* ~1 line of text */
+            transition: max-height 0.3s ease;
+        }
+
+        /* Expanded: show full text */
+        .journalEntry.expanded .entryContent {
+            -webkit-line-clamp: unset;
+            max-height: 100vh;         /* large enough to fit */
         }
         
         @media (max-width: 480px) {
@@ -2223,6 +2242,7 @@
             switchTab('jerry');
         }
 
+        
         // Render entries in the existing entries screen
         function renderJournalEntries() {
             const container = document.getElementById('entriesList');
@@ -2231,28 +2251,25 @@
             // Show newest first
             appState.journal.slice().reverse().forEach((entry) => {
                 const entryDiv = document.createElement('div');
-                entryDiv.className = 'journalEntry preview';
+                entryDiv.className = 'journalEntry';
 
+                // Determine preview text (first 100 chars)
                 const previewText = entry.content.length > 100 
                     ? entry.content.slice(0, 100) + '…' 
                     : entry.content;
 
-                // Store both versions as dataset for easy toggling
-                entryDiv.dataset.full = entry.content;
-                entryDiv.dataset.preview = previewText;
-
+                // Keep your original structure and IDs/classes
                 entryDiv.innerHTML = `
                     <div class="entryHeader">${new Date(entry.timestamp).toLocaleString()}</div>
                     <div class="entryContent">${previewText}</div>
                 `;
 
-                // Toggle full view
+                const contentDiv = entryDiv.querySelector('.entryContent');
+
+                // Toggle full view on click
                 entryDiv.addEventListener('click', () => {
-                    const contentDiv = entryDiv.querySelector('.entryContent');
                     const isExpanded = entryDiv.classList.toggle('expanded');
-                    contentDiv.textContent = isExpanded 
-                        ? entryDiv.dataset.full 
-                        : entryDiv.dataset.preview;
+                    contentDiv.textContent = isExpanded ? entry.content : previewText;
                 });
 
                 container.appendChild(entryDiv);
