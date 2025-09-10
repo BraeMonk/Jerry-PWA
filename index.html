@@ -594,6 +594,105 @@
             background: #2d4aa7;
             transform: translateY(-1px);
         }
+
+        /* --- Journal Entries & Delete Buttons --- */
+
+        /* Entry container */
+        .journalEntry,
+        .entry-item {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3355d4;
+            color: #e2e8f0;
+            line-height: 1.5;
+            transition: background 0.3s ease;
+            cursor: default;
+        }
+
+        .journalEntry.expanded {
+            background: #1a202c; /* slightly darker when expanded */
+        }
+
+        /* Entry date */
+        .entry-date {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-bottom: 8px;
+        }
+
+        /* Entry content */
+        .entry-content {
+            font-size: 14px;
+        }
+
+        /* Delete button */
+        .delete-entry {
+            margin-top: 8px;
+            padding: 8px 16px;
+            background: #c53030;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .delete-entry:hover {
+            background: #9b2c2c;
+            transform: translateY(-1px);
+        }
+
+        /* --- Filter Dropdown --- */
+        #entryFilter {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #4a5568;
+            background: #2d3748;
+            color: #e2e8f0;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        #entryFilter:focus {
+            border-color: #3355d4;
+        }
+
+        /* --- Light Theme Overrides --- */
+        body.light-theme .journalEntry,
+        body.light-theme .entry-item {
+            background: #ffffff;
+            color: #3e3e3e;
+            border-left-color: #e3b88d;
+        }
+
+        body.light-theme .journalEntry.expanded {
+            background: #f0e8e0;
+        }
+
+        body.light-theme .delete-entry {
+            background: #e53e3e;
+            color: white;
+        }
+
+        body.light-theme .delete-entry:hover {
+            background: #c53030;
+        }
+
+        body.light-theme #entryFilter {
+            background: #ffffff;
+            color: #3e3e3e;
+            border: 1px solid #d8cfc4;
+        }
+
+        /* Ensure hover, focus, and expanded states look good */
+        body.light-theme #entryFilter:focus {
+            border-color: #e3b88d;
+        }
         
         @media (max-width: 480px) {
             .app-container {
