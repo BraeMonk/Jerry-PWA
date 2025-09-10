@@ -861,6 +861,17 @@
         <!-- Entries Screen -->
         <div class="screen" id="entries">
             <h2 style="margin-bottom: 20px;">Your Entries</h2>
+            <div class="filter-container">
+                <label for="entryFilter" class="form-label">Filter by type:</label>
+                <select id="entryFilter" class="form-input">
+                    <option value="all">All</option>
+                    <option value="Check-in">Check-in</option>
+                    <option value="CBT">CBT</option>
+                    <option value="DBT">DBT</option>
+                    <option value="Journal">Journal</option>
+                </select>
+  
+            </div>
             <div id="entriesList">
                 <!-- Entries will be populated here -->
             </div>
@@ -2156,10 +2167,14 @@
             // Sort newest first
             allEntries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-            // Render all entries
-            allEntries.forEach(entry => {
+            // Optional: filter by type
+            const filterValue = document.getElementById('entryFilter')?.value || 'all';
+            const filteredEntries = allEntries.filter(entry => filterValue === 'all' || entry.type === filterValue);
+
+            // Render filtered entries
+            filteredEntries.forEach((entry, index) => {
                 const entryDiv = document.createElement('div');
-                entryDiv.className = 'entry-item';
+                entryDiv.className = entry.type === 'Journal' ? 'journalEntry preview' : 'entry-item';
 
                 const date = new Date(entry.timestamp).toLocaleDateString();
                 const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -2181,8 +2196,44 @@
 
                 entryDiv.innerHTML = `
                     <div class="entry-date">${date} at ${time}</div>
-                    <div class="entry-content"><strong>${entry.type}</strong><br>${content}</div>
+                    <div class="entry-content"><strong>${entry.type}</strong><br>${entry.type === 'Journal' ? content.slice(0, 100) + (content.length > 100 ? '…' : '') : content}</div>
                 `;
+
+                // Toggle full view only for Journal entries
+                if (entry.type === 'Journal') {
+                    const previewText = content.length > 100 ? content.slice(0, 100) + '…' : content;
+                    const contentDiv = entryDiv.querySelector('.entry-content');
+                    entryDiv.addEventListener('click', () => {
+                        const isExpanded = entryDiv.classList.toggle('expanded');
+                        contentDiv.textContent = isExpanded ? content : previewText;
+                    });
+                }
+
+                entryDiv.innerHTML = `
+                <div class="entry-date">${date} at ${time}</div>
+                <div class="entry-content"><strong>${entry.type}</strong><br>${
+                    entry.type === 'Journal'
+                    ? content.slice(0, 100) + (content.length > 100 ? '…' : '')
+                    : content
+                }</div>
+                <button class="delete-entry">Delete</button>
+                `;
+                
+                // Handle delete single
+                entryDiv.querySelector('.delete-entry').addEventListener('click', () => {
+                    if (!confirm('Delete this entry?')) return;
+                    
+                    // Remove from appState
+                    if (entry.type === 'Journal') {
+                        appState.journal = appState.journal.filter(j => j.timestamp !== entry.timestamp);
+                        saveToLocalStorage('hush_journal', appState.journal);
+                    } else {
+                        appState.entries = appState.entries.filter(e => e.timestamp !== entry.timestamp);
+                        saveToLocalStorage('hush_entries', appState.entries);
+                    }
+
+                    loadEntries();
+                });
                 
                 entriesList.appendChild(entryDiv);
             });
@@ -2374,8 +2425,15 @@
 
             // Load journal
             appState.journal = getFromLocalStorage('hush_journal') || [];
+
+            // Wire up Entries filter
+            const entryFilter = document.getElementById('entryFilter');
+            if (entryFilter) {
+                entryFilter.addEventListener('change', loadEntries);
+            }
             
             renderJournalEntries();
+            loadEntries();
 
             // --- Verify subscription (localStorage backup) ---
             verifySubscriptionOnLoad();
