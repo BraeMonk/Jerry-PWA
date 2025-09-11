@@ -385,6 +385,12 @@
             color: #e2e8f0;
             outline: none;
             font-size: 14px;
+
+            resize: none;               /* prevent manual resizing */
+            overflow-y: auto;           /* scroll when text exceeds box height */
+            min-height: 36px;           /* same as original input height */
+            max-height: 100px;          /* maximum height before scroll */
+            white-space: pre-wrap;
         }
         
         .send-button {
@@ -433,6 +439,12 @@
             background: #ffffff; /* input box light */
             color: #3e3e3e;      /* text dark */
             border: 1px solid #d8cfc4;
+
+            resize: none;               /* prevent manual resizing */
+            overflow-y: auto;           /* scroll when text exceeds box height */
+            min-height: 36px;           /* same as original input height */
+            max-height: 100px;          /* maximum height before scroll */
+            white-space: pre-wrap;
         }
 
         body.light-theme .chat-input::placeholder {
@@ -947,9 +959,8 @@
                     <div class="message jerry">It's good to see you again.</div>
                 </div>
                 <div class="chat-input-container">
-                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." 
-                           onkeypress="if(event.key==='Enter') sendMessage()">
-                    <button class="send-button" onclick="sendMessage()">→</button>
+                    <textarea class="chat-input" id="chatInput" placeholder="Type your message..." 
+                         onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
                 </div>
             </div>
         </div>
