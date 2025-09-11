@@ -871,6 +871,32 @@
         body.light-theme .api-toggle input[type="radio"] {
             accent-color: #f0c9a2; /* makes the radio dot match the theme */
         }
+
+        /* Dark theme (default) */
+        .def-button {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #3355d4;
+            transition: background 0.3s ease;
+        }
+
+        .def-button:hover {
+            background: #2d4aa7;
+        }
+
+        /* Light theme */
+        body.light-theme .def-button {
+            color: #ffffff; /* text stays white if you want */
+            background: #A0522D; /* brown theme color */
+        }
+
+        body.light-theme .def-button:hover {
+            background: #8b421f; /* slightly darker on hover */
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1120,7 +1146,7 @@
                 <button class="btn" onclick="completeDBT()">Complete DBT Session</button>
             </div>
             <p style="margin-top: 16px; text-align: center;">
-                <a href="./dbt-definitions.html" class="button">Definitions</a>
+                <a href="./dbt-definitions.html" class="def-button">Definitions</a>
             </p>
         </div>
 
