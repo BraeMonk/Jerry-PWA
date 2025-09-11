@@ -961,6 +961,7 @@
                 <div class="chat-input-container">
                     <textarea class="chat-input" id="chatInput" placeholder="Type your message..." 
                          onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                    <button class="send-button" onclick="sendMessage()">→</button>
                 </div>
             </div>
         </div>
