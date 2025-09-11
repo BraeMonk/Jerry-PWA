@@ -349,6 +349,43 @@
         .send-button:hover {
             background: #2d4aa7;
         }
+
+        /* Light mode chat box */
+        body.light-theme .chat-container {
+            background: #f7ede5; /* light brown background */
+        }
+
+        body.light-theme .chat-log {
+            background: #e3b88d; /* darker brown for messages area */
+            border-radius: 8px;
+        }
+
+        body.light-theme .message.user {
+            color: #ffffff; /* user messages white */
+        }
+
+        body.light-theme .message.jerry {
+            color: #3e3e3e; /* Jerry messages dark for contrast */
+        }
+
+        body.light-theme .chat-input {
+            background: #ffffff; /* input box light */
+            color: #3e3e3e;      /* text dark */
+            border: 1px solid #d8cfc4;
+        }
+
+        body.light-theme .chat-input::placeholder {
+            color: #a0aec0; /* placeholder text lighter */
+        }
+
+        body.light-theme .send-button {
+            background: #e3b88d; /* button brown */
+            color: #3e3e3e;      /* button text dark */
+        }
+
+        body.light-theme .send-button:hover {
+            background: #cfa273; /* slightly darker on hover */
+        }
         
         /* Form Styles */
         .form-group {
@@ -742,6 +779,23 @@
         .journalEntry.expanded .entryContent {
             -webkit-line-clamp: unset;
             max-height: 100vh;         /* large enough to fit */
+        }
+
+        /* Light mode API option text */
+        body.light-theme .api-toggle {
+            background: #8B4513 !important; /* dark brown background for contrast */
+        }
+
+        body.light-theme .api-toggle .api-option label {
+            color: #ffffff; /* main label text */
+        }
+
+        body.light-theme .api-toggle .api-option label div {
+            color: #f0e6d2; /* description text, slightly lighter */
+        }
+
+        body.light-theme .api-toggle input[type="radio"] {
+            accent-color: #f0c9a2; /* makes the radio dot match the theme */
         }
         
         @media (max-width: 480px) {
@@ -2504,6 +2558,20 @@
         updateJerrySprite();
         }
 
+        function updateThemeColor() {
+            let metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (!metaTheme) {
+                metaTheme = document.createElement('meta');
+                metaTheme.name = "theme-color";
+                document.head.appendChild(metaTheme);
+            }
+
+            if (document.body.classList.contains('light-theme')) {
+                metaTheme.setAttribute('content', '#A0522D'); // brown for light mode
+            } else {
+                metaTheme.setAttribute('content', '#3355d4'); // dark mode color
+            }
+        }
 
         function toggleTheme() {
         document.body.classList.toggle('light-theme');
@@ -2514,6 +2582,8 @@
         showNotification('Theme updated!');
 
         updateJerrySprite();
+
+        updateThemeColor();
         }
 
         function resetMonthlyUsageIfNeeded() {
@@ -2618,6 +2688,7 @@
             // --- Initial rendering ---
             updateJerryUI();
             updateAffirmationBanner('jerry');
+            updateThemeColor();
 
             // Load journal
             appState.journal = getFromLocalStorage('hush_journal') || [];
