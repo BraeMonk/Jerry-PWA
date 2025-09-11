@@ -2501,13 +2501,12 @@
                     <button class="delete-entry">Delete</button>
                 `;
 
-                // Expand/collapse only for journal entries
-                if (entry.type === 'Journal') {
+                // Expand/collapse for journal and CBT entries
+                if (entry.type === 'Journal' || entry.type === 'CBT') {
                     const contentDiv = entryDiv.querySelector('.entry-content');
                     entryDiv.addEventListener('click', (e) => {
-                        // Ignore clicks on delete button
                         if (e.target.classList.contains('delete-entry')) return;
-
+                        
                         const isExpanded = entryDiv.classList.toggle('expanded');
                         contentDiv.innerHTML = `<strong>${entry.type}</strong><br>` + (isExpanded ? content : previewText);
                     });
