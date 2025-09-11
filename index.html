@@ -2482,7 +2482,7 @@
                 } else if (entry.type === 'Check-in') {
                     content = `Feeling ${entry.data.emotion || 'N/A'} emotionally, ${entry.data.physical || 'N/A'} physically, ${entry.data.mental || 'N/A'} mentally.`;
                 } else if (entry.type === 'CBT') {
-                    content = `Situation: ${entry.data.situation?.substring(0, 100)}${entry.data.situation?.length > 100 ? '...' : ''}`;
+                    content = `Situation: ${entry.data.situation || ''}`;
                 } else if (entry.type === 'DBT') {
                     const ratings = Object.entries(entry.data)
                         .filter(([key]) => ['anger', 'sadness', 'fear', 'shame'].includes(key))
@@ -2491,8 +2491,9 @@
                     content = `Emotion ratings: ${ratings}`;
                 }
 
-                // Determine preview text for journals
-                const previewText = entry.type === 'Journal' && content.length > 100 ? content.slice(0, 100) + '…' : content;
+                const previewText = (entry.type === 'Journal' || entry.type === 'CBT') && content.length > 100
+                    ? content.slice(0, 100) + '…'
+                    : content;
 
                 // Build entry HTML (once)
                 entryDiv.innerHTML = `
