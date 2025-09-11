@@ -1145,9 +1145,47 @@
                 
                 <button class="btn" onclick="completeDBT()">Complete DBT Session</button>
             </div>
-            <p style="margin-top: 16px; text-align: center;">
-                <a href="./dbt-definitions.html" class="def-button">Definitions</a>
-            </p>
+            <!-- DBT Definitions Overlay -->
+            <div id="dbtDefinitionsOverlay" style="
+                display: none;
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0
+                background: rgba(26,32,44,0.95);
+                color: #e2e8f0;
+                z-index: 999;
+                overflow-y: auto;
+                padding: 20px;
+                ">
+                <h2 style="margin-bottom: 20px; text-align:center;">DBT Skills Definitions</h2>
+
+                <p><strong>Mindfulness</strong> – Observe, Describe, Participate in the moment without judgment.</p>
+
+                <p><strong>Distress Tolerance</strong> – 
+                    <em>TIP</em> (Temperature, Intense exercise, Paced breathing, Progressive relaxation), 
+                    <em>ACCEPTS</em> (Activities, Contributing, Comparisons, Emotions, Pushing away, Thoughts, Sensations), 
+                    and Self-Soothe (use the five senses to calm yourself).
+                </p>
+                <p><strong>Emotion Regulation</strong> – 
+                    <em>Check the Facts</em> (do your emotions fit the facts?), 
+                    <em>Opposite Action</em> (act opposite to unhelpful emotions).
+                </p>
+                <p><strong>Interpersonal Effectiveness</strong> – 
+                    <em>DEAR MAN</em> (assert needs), 
+                    <em>GIVE</em> (relationship skills), 
+                    <em>FAST</em> (self-respect effectiveness).
+                </p>
+                <div style="text-align:center; margin-top: 30px;">
+                    <button id="closeDBTDefinitions" style="
+                        padding: 10px 20px;
+                        background: #3355d4;
+                        color: white;
+                        border-radius: 8px;
+                        border: none;
+                        font-weight: bold;
+                        cursor: pointer;
+                        ">← Back</button>
+                </div>
+            </div>
         </div>
 
         <!-- Journal Tab -->
@@ -1440,6 +1478,26 @@
         function getFromLocalStorage(key, defaultValue = null) {
         const stored = localStorage.getItem(key);
         return stored ? JSON.parse(stored) : defaultValue;
+        }
+
+        // Open overlay
+        document.querySelector('.def-button').addEventListener('click', function(e){
+            e.preventDefault();
+            document.getElementById('dbtDefinitionsOverlay').style.display = 'block';
+        });
+
+        // Close overlay
+        document.getElementById('closeDBTDefinitions').addEventListener('click', function(){
+            document.getElementById('dbtDefinitionsOverlay').style.display = 'none';
+        });
+
+        // Apply light theme to overlay if active
+        if (document.body.classList.contains('light-theme')) {
+            const overlay = document.getElementById('dbtDefinitionsOverlay');
+            overlay.style.background = 'rgba(247,237,229,0.95)';
+            overlay.style.color = '#3e3e3e';
+            document.getElementById('closeDBTDefinitions').style.background = '#A0522D';
+            document.getElementById('closeDBTDefinitions').style.color = '#ffffff';
         }
 
         // Tab Management
