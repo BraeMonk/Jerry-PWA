@@ -1329,12 +1329,17 @@
     <div id="dbtDefinitionsOverlay" style="
         display: none;
         width: 100%;
-        min-height: 100vh;
+        min-height: 50vh; /* or 100vh if you want it taller */
         background: rgba(26,32,44,0.95);
         color: #e2e8f0;
         z-index: 9999;
         padding: 20px;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
         ">
+        
         <h2 style="margin-bottom: 20px; text-align:center;">DBT Skills Definitions</h2>
 
         <p><strong>Mindfulness</strong> – Observe, Describe, Participate in the moment without judgment.</p>
