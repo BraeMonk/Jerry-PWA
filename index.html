@@ -146,6 +146,61 @@
         body.light-theme #saveJournalEntry:hover {
             background: #cfa273;
         }
+
+        /* Light mode premium subscription card */
+        body.light-theme #premiumSection .subscription-card {
+            background: #A0522D;          /* main brown background */
+            border: 2px solid #8B4513;    /* slightly darker brown border */
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            color: #ffffff;               /* default text color */
+        }
+
+        /* Title */
+        body.light-theme #premiumSection .subscription-title {
+            color: #ffffff;               /* white text */
+        }
+
+        /* Price */
+        body.light-theme #premiumSection .subscription-price {
+            color: #ffffff;
+        }
+
+        body.light-theme #premiumSection .subscription-price span {
+            color: #f0e6d2; /* slightly lighter for /month text */
+        }
+
+        /* Features list */
+        body.light-theme #premiumSection .subscription-features li {
+            color: #ffffff;               /* white text */
+        }
+
+        body.light-theme #premiumSection .subscription-features li span {
+            color: #68d391;               /* keep green checkmarks */
+        }
+
+        /* Subscription status */
+        body.light-theme #premiumSection #subscriptionStatusDisplay .subscription-status.active {
+            background: #8B4513;          /* darker brown for status box */
+            border: 1px solid #cfa273;   /* matching border */
+            color: #ffffff;               /* white text */
+        }
+
+        body.light-theme #premiumSection #subscriptionStatusDisplay .subscription-status.active div {
+            color: #ffffff;               /* white text */
+        }
+
+        /* Cancel button */
+        body.light-theme #premiumSection #subscriptionStatusDisplay .btn.btn-danger {
+            background: #c03b1f;          /* dark reddish-brown button */
+            color: #ffffff;               /* white text */
+            width: 100%;
+        }
+
+        body.light-theme #premiumSection #subscriptionStatusDisplay .btn.btn-danger:hover {
+            background: #a52d1a;          /* slightly darker on hover */
+        }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
