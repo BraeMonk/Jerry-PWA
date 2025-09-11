@@ -2424,36 +2424,48 @@
         switchTab('jerry');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {       
-            // Get references
+        document.addEventListener('DOMContentLoaded', () => {
             const openBtn = document.getElementById('openDBTOverlay');
             const overlay = document.getElementById('dbtDefinitionsOverlay');
             const closeBtn = document.getElementById('closeDBTDefinitions');
+
+            // Function to apply theme to overlay
+            function applyOverlayTheme() {
+                if (document.body.classList.contains('light-theme')) {
+                    overlay.style.background = '#A0522D';
+                    overlay.style.color = '#ffffff';
+                    closeBtn.style.background = '#e3b88d';
+                    closeBtn.style.color = '#3e3e3e';
+                } else {
+                    overlay.style.background = 'rgba(26,32,44,0.95)';
+                    overlay.style.color = '#e2e8f0';
+                    closeBtn.style.background = '#3355d4';
+                    closeBtn.style.color = '#ffffff';
+                }
+            }
+
             // Open overlay
             openBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 overlay.style.display = 'block';
+                applyOverlayTheme();
             });
 
             // Close overlay
             closeBtn.addEventListener('click', () => {
                 overlay.style.display = 'none';
             });
-            
-            // Optional: close overlay if user clicks outside content
+
+            // Close overlay if clicking outside content
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
                     overlay.style.display = 'none';
                 }
             });
 
-            // Apply light theme if needed
-            if (document.body.classList.contains('light-theme')) {
-                overlay.style.background = '#A0522D';
-                overlay.style.color = '#ffffff';
-                closeBtn.style.background = '#e3b88d';
-                closeBtn.style.color = '#3e3e3e';
-            }
+            // Optional: listen for theme changes dynamically
+            const observer = new MutationObserver(applyOverlayTheme);
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         });
 
         // Initialize journal if it doesn't exist
