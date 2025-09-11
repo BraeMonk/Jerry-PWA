@@ -2433,26 +2433,39 @@
         switchTab('jerry');
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // overlay creation functions here
+        document.addEventListener('DOMContentLoaded', () => {       
+            // Get references
+            const openBtn = document.getElementById('openDBTOverlay');
+            const overlay = document.getElementById('dbtDefinitionsOverlay');
+            const closeBtn = document.getElementById('closeDBTDefinitions');
             // Open overlay
-            document.querySelector('openDBTOverlay').addEventListener('click', function(e){
+            openBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.getElementById('dbtDefinitionsOverlay').style.display = 'block';
+                overlay.style.display = 'block';
+                // Optional: prevent background scrolling while overlay is open
+                document.body.style.overflow = 'hidden';
             });
 
             // Close overlay
-            document.getElementById('closeDBTDefinitions').addEventListener('click', function(){
-                document.getElementById('dbtDefinitionsOverlay').style.display = 'none';
+            closeBtn.addEventListener('click', () => {
+                overlay.style.display = 'none';
+                document.body.style.overflow = ''; // restore scrolling
+            });
+            
+            // Optional: close overlay if user clicks outside content
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = '';
+                }
             });
 
-            // Apply light theme to overlay if active
+            // Apply light theme if needed
             if (document.body.classList.contains('light-theme')) {
-                const overlay = document.getElementById('dbtDefinitionsOverlay');
                 overlay.style.background = 'rgba(247,237,229,0.95)';
                 overlay.style.color = '#3e3e3e';
-                document.getElementById('closeDBTDefinitions').style.background = '#A0522D';
-                document.getElementById('closeDBTDefinitions').style.color = '#ffffff';
+                closeBtn.style.background = '#A0522D';
+                closeBtn.style.color = '#ffffff';
             }
         });
 
