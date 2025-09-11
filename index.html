@@ -1328,8 +1328,6 @@
     <!-- DBT Definitions Overlay -->
     <div id="dbtDefinitionsOverlay" style="
         display: none;
-        top: 0;
-        left: 0;
         width: 100%;
         min-height: 100vh;
         background: rgba(26,32,44,0.95);
@@ -2431,21 +2429,17 @@
             openBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 overlay.style.display = 'block';
-                // Optional: prevent background scrolling while overlay is open
-                document.body.style.overflow = 'hidden';
             });
 
             // Close overlay
             closeBtn.addEventListener('click', () => {
                 overlay.style.display = 'none';
-                document.body.style.overflow = ''; // restore scrolling
             });
             
             // Optional: close overlay if user clicks outside content
             overlay.addEventListener('click', (e) => {
                 if (e.target === overlay) {
                     overlay.style.display = 'none';
-                    document.body.style.overflow = '';
                 }
             });
 
