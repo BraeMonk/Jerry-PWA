@@ -900,14 +900,47 @@
             background: #8b421f; /* slightly darker on hover */
         }
 
-        /* RADIAL MENU STYLING - Dark/Light Theme Compatible */
-        #radialMenuApp {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            margin: 40px auto;
+        #menuTrigger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            color: inherit;
+            font-size: 28px;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            z-index: 1000;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: background 0.2s;
+        }
+        
+        #menuTrigger:hover {
+            background: rgba(255,255,255,0.2);
         }
 
+        /* Radial Menu */
+        #radialMenuApp {
+            position: fixed;
+            top: 50px;
+            left: 50px;
+            width: 320px;
+            height: 320px;
+            pointer-events: none; /* disables clicks when closed */
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+
+        #radialMenuApp.open {
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        /* Radial buttons styling (same as before) */
         .radial-center {
             position: absolute;
             top: 50%;
@@ -918,7 +951,6 @@
             color: inherit;
         }
 
-        /* Radial Buttons */
         .radial-item {
             position: absolute;
             width: 70px;
@@ -933,27 +965,42 @@
             font-weight: 600;
             color: inherit;
             white-space: nowrap;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
-        /* Hover / Active Effects */
         .radial-item:hover,
         .radial-item.active {
             transform: scale(1.2);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
         /* LIGHT THEME OVERRIDES */
+        body.light-theme #menuTrigger {
+            background: rgba(0, 0, 0, 0.05);
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            color: #3e3e3e;
+        }
+
+        body.light-theme #menuTrigger:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
         body.light-theme .radial-item {
             background: rgba(0, 0, 0, 0.05);
             border: 2px solid rgba(0, 0, 0, 0.1);
+            color: #3e3e3e;
         }
 
         body.light-theme .radial-item:hover,
         body.light-theme .radial-item.active {
             background: rgba(0, 0, 0, 0.1);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* LIGHT THEME OVERRIDES FOR RADIAL CENTER ICON */
+        body.light-theme .radial-center {
+            color: #3e3e3e; /* matches light theme text */
         }
         
         @media (max-width: 480px) {
@@ -985,17 +1032,19 @@
         <div class="affirmation-banner" id="affirmationBanner">
             Your feelings are valid, even the difficult ones.
         </div>
+
+        <div id="menuTrigger">☰</div>
         
         <div id="radialMenuApp">
             <div class="radial-center">🏠</div>
-            <button class="radial-item" onclick="switchTab('jerry', event)">🧍 Jerry</button>
-            <button class="radial-item" onclick="switchTab('checkin', event)">✅ Check-in</button>
-            <button class="radial-item" onclick="switchTab('cbt', event)">💭 CBT</button>
-            <button class="radial-item" onclick="switchTab('dbt', event)">🧘‍♂️ DBT</button>
-            <button class="radial-item" onclick="switchTab('journalTab', event)">📓 Journal</button>
-            <button class="radial-item" onclick="switchTab('hush', event)">🤫 Hush</button>
-            <button class="radial-item" onclick="switchTab('entries', event)">🗂 Entries</button>
-            <button class="radial-item" onclick="switchTab('settings', event)">⚙️ Settings</button>
+            <button class="radial-item" onclick="switchTab('jerry', event)">🧍</button>
+            <button class="radial-item" onclick="switchTab('checkin', event)">✅</button>
+            <button class="radial-item" onclick="switchTab('cbt', event)">💭</button>
+            <button class="radial-item" onclick="switchTab('dbt', event)">🧘‍♂️</button>
+            <button class="radial-item" onclick="switchTab('journalTab', event)">📓</button>
+            <button class="radial-item" onclick="switchTab('hush', event)">🤫</button>
+            <button class="radial-item" onclick="switchTab('entries', event)">🗂</button>
+            <button class="radial-item" onclick="switchTab('settings', event)">⚙️</button>
         </div>
         
         <!-- Jerry Screen -->
@@ -1593,12 +1642,12 @@
         return stored ? JSON.parse(stored) : defaultValue;
         }
 
-        // RADIAL MENU POSITIONING
+        // POSITION RADIAL MENU ITEMS
         function positionRadialMenu() {
             const items = document.querySelectorAll('.radial-item');
-            const radius = 130; // radius of the circle
-            const centerX = 160; // half of container width
-            const centerY = 160; // half of container height
+            const radius = 130;
+            const centerX = 160;
+            const centerY = 160;
             const angleStep = (2 * Math.PI) / items.length;
 
             items.forEach((item, index) => {
@@ -1610,37 +1659,39 @@
             });
         }
 
-        // INITIAL POSITIONING ON LOAD
         window.addEventListener('DOMContentLoaded', positionRadialMenu);
         window.addEventListener('resize', positionRadialMenu);
 
-        // TAB MANAGEMENT
-        function switchTab(tabName, event) {
-            // Remove active class from all radial items
-            document.querySelectorAll('.radial-item').forEach(item => item.classList.remove('active'));
+        // TOGGLE RADIAL MENU
+        const menuTrigger = document.getElementById('menuTrigger');
+        const radialMenu = document.getElementById('radialMenuApp');
 
-            // Add active class to the clicked radial item
-            if(event && event.currentTarget) {
-                event.currentTarget.classList.add('active');
+        menuTrigger.addEventListener('click', (e) => {
+            radialMenu.classList.toggle('open');
+        });
+
+        // CLOSE MENU WHEN CLICKING OUTSIDE
+        document.addEventListener('click', (e) => {
+            if (!radialMenu.contains(e.target) && e.target !== menuTrigger) {
+                radialMenu.classList.remove('open');
             }
+        });
 
-            // Update screens
+        // UPDATED SWITCH TAB FUNCTION
+        function switchTab(tabName, event) {
+            document.querySelectorAll('.radial-item').forEach(item => item.classList.remove('active'));
+            if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
+ 
+            if (typeof updateAffirmationBanner === 'function') updateAffirmationBanner(tabName);
+            if (tabName === 'entries' && typeof loadEntries === 'function') loadEntries();
+            else if (tabName === 'history' && typeof loadHistory === 'function') loadHistory();
+            else if (tabName === 'settings' && typeof loadSettings === 'function') loadSettings();
 
-            // Optional: update affirmation banner if your function exists
-            if (typeof updateAffirmationBanner === 'function') {
-                updateAffirmationBanner(tabName);
-            }
-
-            // Load screen-specific data
-            if (tabName === 'entries' && typeof loadEntries === 'function') {
-                loadEntries();
-            } else if (tabName === 'history' && typeof loadHistory === 'function') {
-                loadHistory();
-            } else if (tabName === 'settings' && typeof loadSettings === 'function') {
-                loadSettings();
-            }
+            // Close menu after selecting
+            radialMenu.classList.remove('open');
         }
 
         function updateAffirmationBanner(screenName) {
