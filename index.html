@@ -3083,7 +3083,7 @@
 
             // Create a subtle reverb effect
             const reverb = audioCtx.createDelay();
-            reverb.delayTime.value = 0.15; // 150ms delay
+            reverb.delayTime.value = 0.2; // 150ms delay
             const reverbGain = audioCtx.createGain();
             reverbGain.gain.value = 0.2; // low volume for subtlety
             reverb.connect(reverbGain).connect(masterGain);
