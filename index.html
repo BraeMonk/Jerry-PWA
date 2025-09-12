@@ -1029,6 +1029,20 @@
             background: rgba(255, 255, 255, 0.3); /* subtle light tint */
             backdrop-filter: blur(6px);
         }
+
+        /* Jerry alert shake + jump */
+        @keyframes jerryShakeJump {
+            0%   { transform: translateX(0) scale(1); }
+            20%  { transform: translateX(-5px) scale(1.1); }
+            40%  { transform: translateX(5px) scale(1.1); }
+            60%  { transform: translateX(-5px) scale(1.05); }
+            80%  { transform: translateX(5px) scale(1.05); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        #jerrySprite.alert {
+            animation: jerryShakeJump 0.5s ease-in-out;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -2108,6 +2122,33 @@
         // Start animation
         drawJerry(); // initial draw
         updateJerry();
+
+        // === Alert Animation on Click ===
+        jerryContainer.addEventListener('click', () => {
+            // Trigger blink instantly
+            const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+            let eyes;
+            const bodyColor = 1;
+            switch (currentMood) {
+                case 'content': eyes = [[4, 5], [4, 10]]; break;
+                case 'lowInsight': eyes = [[4, 4], [4, 11]]; break;
+                case 'lowCalm': eyes = [[3, 4], [3, 11]]; break;
+            }
+            eyes.forEach(([r, c]) => {
+                sprite[r][c] = bodyColor;
+                sprite[r + 1][c] = bodyColor;
+            });
+            drawJerry(sprite);
+
+            // Reset to normal after blink
+            setTimeout(() => drawJerry(getCurrentSprite()), 200);
+
+            // Add shake effect
+            jerryContainer.classList.add('alert');
+            setTimeout(() => {
+                jerryContainer.classList.remove('alert');
+            }, 400); // match CSS animation duration
+        });
 
         function saveJerryState() {
             // Ensure lastFed exists before saving
