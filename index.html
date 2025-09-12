@@ -1958,9 +1958,9 @@
         });
         }
 
-        // === Jerry Animation Controller ===
-        const jerryContainer = document.getElementById('jerryContainer');
-        const jerrySprite = document.getElementById('jerrySprite');
+        // === Jerry Animation Controller ==
+        const jerryContainer = document.getElementById('jerryContainer'); // main container
+        const jerrySprite = document.getElementById('jerrySprite');       // holds pixel divs
 
         
         let currentMood = "content";
@@ -1973,9 +1973,7 @@
         let pomRight = null;
         let cheerScale = 1;
 
-        // Grab Jerry container
-        const jerryContainer = document.getElementById('jerrySprite');
-
+        
         // === Persistent base sprite (includes evolutions/mood) ===
         let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
 
@@ -1986,7 +1984,7 @@
 
         // Redraw Jerry sprite
         function drawJerry(spriteData = baseSprite) {
-        jerryContainer.innerHTML = '';
+        jerryContainer.querySelectorAll('.pixel').forEach(p => p.remove());
         const isLightMode = document.body.classList.contains('light-theme');
         const spriteTheme = appState.spriteTheme || 'default';
 
@@ -2166,7 +2164,7 @@
             }
 
             // Apply combined transform only to Jerry sprite (not pom-poms)
-            jerryContainer.style.transform = `scale(${baseScale * cheerScale})`;
+            jerrSprite.style.transform = `scale(${baseScale * cheerScale})`;
 
             // Animate pom-poms vertically
             if (pomLeft && pomRight) {
