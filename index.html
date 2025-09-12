@@ -280,6 +280,19 @@
             position: relative;
         }
 
+        /* Background inside container, above stats */
+        .jerry-background {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: calc(100% - 120px); /* leave room for stats at bottom */
+            background-size: cover;
+            background-position: center bottom;
+            z-index: 0;
+        }
+        
         /* Pedestal as a subtle shadow or ground under Jerry */
         .jerry-container::before {
             content: '';
@@ -1103,21 +1116,6 @@
             margin-bottom: 5px;
         }
         
-        /* Background images for the sprite container */
-        .jerry-container.bg-default {
-            background: none; /* just light/dark scheme */
-        }
-
-        .jerry-container.bg-wildBerry {
-            background: url('./wildBerry.PNG') center bottom no-repeat;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-finalFrontier {
-            background: url('./finalFrontier.jpg') center bottom no-repeat;
-            background-size: cover;
-        }
-        
         @media (max-width: 480px) {
             .app-container {
                 max-width: 100%;
@@ -1166,6 +1164,7 @@
         <!-- Jerry Screen -->
         <div class="screen active" id="jerry">
             <div class="jerry-container" id="jerryWrapper">
+                <div class="jerry-background" id="jerryBackground"></div>
                 <div class="jerry-sprite" id="jerrySprite"></div>
                 <div class="jerry-stats">
                     <div class="stat-bar">
@@ -3276,17 +3275,16 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            // ===== Background Selector =====
-            const jerryContainer = document.getElementById('jerryWrapper');
+            const jerryBgDiv = document.getElementById('jerryBackground');
             const bgOptions = document.querySelectorAll('.background-option');
 
             const BACKGROUNDS = {
-                default: 'bg-default',
-                wildBerry: 'bg-wildBerry',
-                finalFrontier: 'bg-finalFrontier'
+                default: '',
+                wildBerry: 'wildBerry.PNG',
+                finalFrontier: 'finalFrontier.jpg'
             };
 
-            // Load saved background on page load
+            // Load saved background
             let savedBg = localStorage.getItem('jerryBackground') || 'default';
             applyBackground(savedBg);
             markSelected(savedBg);
@@ -3301,13 +3299,16 @@
                 });
             });
 
-            // Apply background class to jerry container
+            // Set background image dynamically
             function applyBackground(bgKey) {
-                jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
-                jerryContainer.classList.add(BACKGROUNDS[bgKey]);
+                if (bgKey === 'default') {
+                    jerryBgDiv.style.backgroundImage = '';
+                } else {
+                    jerryBgDiv.style.backgroundImage = `url('${BACKGROUNDS[bgKey]}')`;
+                }
             }
 
-            // Highlight selected option in scroll view
+            // Highlight selected scroll option
             function markSelected(bgKey) {
                 bgOptions.forEach(option => {
                     option.classList.toggle('selected', option.dataset.bg === bgKey);
