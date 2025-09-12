@@ -2115,6 +2115,7 @@
             const startTime = performance.now();
             const leafCount = 6; // number of leaves flying around
             const leaves = [];
+            const originalTransform = jerryContainer.style.transform || '';
 
             // Create leaf elements
             for (let i = 0; i < leafCount; i++) {
