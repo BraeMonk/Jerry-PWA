@@ -1329,6 +1329,19 @@
         <!-- Settings Screen -->
         <div class="screen" id="settings">
             <h2 style="margin-bottom: 20px;">Settings</h2>
+
+            <!-- Add this inside your settings tab HTML -->
+            <div id="ambientMusicToggleContainer">
+                <label>
+                    <input type="checkbox" id="ambientMusicToggle">
+                    Music
+                </label>
+                <label style="margin-left:10px;">
+                    Volume:
+                    <input type="range" id="ambientMusicVolume" min="0" max="1" step="0.01" value="0.5">
+                </label>
+            </div>
+
             
             <!-- Bot Name Input -->
             <div class="form-group">
@@ -3060,6 +3073,181 @@
         }
         }
 
+        document.addEventListener("DOMContentLoaded", () => {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let isPlaying = false;
+            let startTime = 0;
+            let tempo = 90; // BPM
+            let loopLength = 20; // seconds
+            let loopInterval = null;
+
+             // Global gain node for volume control
+            const masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0.5; // default volume
+            masterGain.connect(audioCtx.destination);
+
+            // === DRUMS ===
+            function playKick(time) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(150, time);
+                osc.frequency.exponentialRampToValueAtTime(50, time + 0.5);
+                gain.gain.setValueAtTime(1, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 0.5);
+                osc.connect(gain).connect(masterGain);
+                osc.start(time);
+                osc.stop(time + 0.5);
+            }
+
+            function playSnare(time) {
+                const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
+                let data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < data.length; i++) {
+                data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = noiseBuffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = "highpass";
+                filter.frequency.setValueAtTime(1000, time);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(1, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+
+                noise.connect(filter).connect(gain).connect(masterGain);
+                noise.start(time);
+                noise.stop(time + 0.2);
+            }
+
+            function playHiHat(time) {
+                const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
+                let data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < data.length; i++) {
+                data[i] = Math.random() * 2 - 1;
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = noiseBuffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = "highpass";
+                filter.frequency.setValueAtTime(8000, time);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.4, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+
+                noise.connect(filter).connect(gain).connect(masterGain);
+                noise.start(time);
+                noise.stop(time + 0.05);
+            }
+
+            // === BASS ===
+            function playBass(time, frequency = 55) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = "sine";
+                osc.frequency.setValueAtTime(frequency, time);
+                gain.gain.setValueAtTime(0.5, time);
+                gain.gain.exponentialRampToValueAtTime(0.001, time + 1.5);
+                osc.connect(gain).connect(masterGain);
+                osc.start(time);
+                osc.stop(time + 1.5);
+            }
+
+            // === AMBIENT CHORDS ===
+            function playChord(time, freqs) {
+                freqs.forEach(freq => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = "lowpass";
+                filter.frequency.setValueAtTime(1200, time);
+
+                osc.type = "sawtooth";
+                osc.frequency.setValueAtTime(freq, time);
+                osc.detune.setValueAtTime((Math.random() - 0.5) * 20, time); // lo-fi sway
+
+                gain.gain.setValueAtTime(0.15, time);
+                gain.gain.linearRampToValueAtTime(0.05, time + 4);
+
+                osc.connect(filter).connect(gain).connect(masterGain);
+                osc.start(time);
+                osc.stop(time + 4);
+                });
+            }
+
+            // === SCHEDULER ===
+            function schedule() {
+                const secondsPerBeat = 60 / tempo;
+                const beatsPerBar = 4;
+                const barLength = secondsPerBeat * beatsPerBar;
+                
+                for (let bar = 0; bar < Math.ceil(loopLength / barLength); bar++) {
+                    const barStart = startTime + bar * barLength;
+                    for (let beat = 0; beat < beatsPerBar; beat++) {
+                        const beatTime = barStart + beat * secondsPerBeat;
+                        playHiHat(beatTime);
+                        if (beat === 0) { playKick(beatTime); playBass(beatTime, 55); }
+                        if (beat === 2) { playSnare(beatTime); playBass(beatTime, 73.42); }
+                    }
+                    // Alternate chords
+                    if (bar % 2 === 0) playChord(barStart, [220, 277, 329]);
+                    else playChord(barStart, [196, 247, 311]);
+                }
+            }
+            
+            function startBeat() {
+                if (!isPlaying) {
+                    startTime = audioCtx.currentTime + 0.1;
+                    schedule();
+                    isPlaying = true;
+
+                    loopInterval = setInterval(() => {
+                        startTime = audioCtx.currentTime + 0.1;
+                        schedule();
+                    }, loopLength * 1000);
+                }
+            }
+
+            function stopBeat() {
+                if (isPlaying) {
+                    clearInterval(loopInterval);
+                    isPlaying = false;
+                }
+            }
+
+            // === Toggle with persistence ===
+            const toggle = document.getElementById("ambientMusicToggle");
+            const volumeSlider = document.getElementById("ambientMusicVolume");
+            
+            // Load saved state
+            const savedState = localStorage.getItem("ambientMusicOn");
+            const savedVolume = localStorage.getItem("ambientMusicVolume");
+            if (savedState === "true") {
+                toggle.checked = true;
+                audioCtx.resume().then(startBeat);
+            }
+            if (savedVolume !== null) {
+                masterGain.gain.value = parseFloat(savedVolume);
+                volumeSlider.value = savedVolume;
+            }
+            
+            // Save state on change
+            toggle.addEventListener("change", async (e) => {
+                await audioCtx.resume();
+                if (e.target.checked) startBeat();
+                else stopBeat();
+                localStorage.setItem("ambientMusicOn", e.target.checked);
+            });
+
+            // Volume control
+            volumeSlider.addEventListener("input", (e) => {
+                masterGain.gain.value = parseFloat(e.target.value);
+                localStorage.setItem("ambientMusicVolume", e.target.value);
+            });
+        });
         // =======================
         // App Initialization
         // =======================
