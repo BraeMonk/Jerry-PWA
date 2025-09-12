@@ -3216,16 +3216,24 @@
                 }
             }
 
-            function startBeat() {
-                if (isPlaying) return;
+            function startBeat(duration = loopLength) {
+                if (isPlaying) return; // prevent overlapping loops
                 isPlaying = true;
                 startTime = audioCtx.currentTime + 0.1;
                 schedule();
 
+                // Repeat the loop every loopLength seconds
                 loopInterval = setInterval(() => {
                     startTime = audioCtx.currentTime + 0.1;
                     schedule();
                 }, loopLength * 1000);
+                
+                // Stop automatically after the specified duration
+                setTimeout(() => {
+                    clearInterval(loopInterval);
+                    stopAllSources();
+                    isPlaying = false;
+                }, duration * 1000);
             }
 
             // === Trigger: sprite click ===
@@ -3235,6 +3243,7 @@
                 if (isPlaying) stopAllSources(); // stop current loop if playing
                 startBeat(5); // start a fresh 10-second loop
             });
+        });
         
         // =======================
         // App Initialization
