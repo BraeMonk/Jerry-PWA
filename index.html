@@ -3230,10 +3230,11 @@
 
             // Auto-start at saved volume
             document.body.addEventListener("click", () => {
-            audioCtx.resume().then(() => {
-                if (!isPlaying) startBeat();
-            });
-        }, { once: true });
+                audioCtx.resume().then(() => {
+                    if (!isPlaying) startBeat();
+                });
+            }, { once: true });
+        });
         
         // =======================
         // App Initialization
