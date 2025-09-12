@@ -1077,7 +1077,7 @@
         
         <!-- Jerry Screen -->
         <div class="screen active" id="jerry">
-            <div class="jerry-container" id="jerryContainer">
+            <div class="jerry-container" id="jerryWrapper">
                 <div class="jerry-sprite" id="jerrySprite"></div>
                 <div class="jerry-stats">
                     <div class="stat-bar">
@@ -1959,8 +1959,7 @@
         }
 
         // === Jerry Animation Controller ==
-        const jerryContainer = document.getElementById('jerryContainer'); // main container
-        const jerrySprite = document.getElementById('jerrySprite');       // holds pixel divs
+        const jerryWrapper = document.getElementById('jerryWrapper');
 
         
         let currentMood = "content";
@@ -2120,7 +2119,7 @@
                     pom.style.backgroundColor = '#FF0000';
                     pom.style.top = '20px';
                     pom.style.left = i === 0 ? '-20px' : `${baseSprite[0].length * 10 + 10}px`;
-                    jerryContainer.appendChild(pom);
+                    jerryWrapper.appendChild(pom);
                 });
             }
         }
@@ -2164,7 +2163,7 @@
             }
 
             // Apply combined transform only to Jerry sprite (not pom-poms)
-            jerrSprite.style.transform = `scale(${baseScale * cheerScale})`;
+            jerryWrapper.style.transform = `scale(${baseScale * cheerScale})`;
 
             // Animate pom-poms vertically
             if (pomLeft && pomRight) {
