@@ -1003,6 +1003,26 @@
         body.light-theme .radial-center {
             color: #3e3e3e; /* matches light theme text */
         }
+
+        /* Background blur overlay */
+        #radialMenuOverlay {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(6px);   /* applies blur */
+            background: rgba(0, 0, 0, 0.2); /* optional dark tint */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 998; /* just below the menu */
+        }
+
+        #radialMenuOverlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1035,7 +1055,8 @@
         </div>
 
         <div id="menuTrigger">☰</div>
-        
+
+        <div id="radialMenuOverlay"></div>
         <div id="radialMenuApp">
             <div class="radial-center">🏠</div>
             <button class="radial-item" onclick="switchTab('jerry', event)">🧍</button>
@@ -1663,36 +1684,42 @@
         window.addEventListener('DOMContentLoaded', positionRadialMenu);
         window.addEventListener('resize', positionRadialMenu);
 
-        // TOGGLE RADIAL MENU
+        // ELEMENT REFERENCES
         const menuTrigger = document.getElementById('menuTrigger');
         const radialMenu = document.getElementById('radialMenuApp');
+        const radialOverlay = document.getElementById('radialMenuOverlay'); // <div id="radialMenuOverlay"></div>
 
-        menuTrigger.addEventListener('click', (e) => {
-            radialMenu.classList.toggle('open');
+        // TOGGLE RADIAL MENU
+        menuTrigger.addEventListener('click', () => {
+            const isOpen = radialMenu.classList.toggle('open');
+            radialOverlay.classList.toggle('active', isOpen);
         });
 
-        // CLOSE MENU WHEN CLICKING OUTSIDE
-        document.addEventListener('click', (e) => {
-            if (!radialMenu.contains(e.target) && e.target !== menuTrigger) {
-                radialMenu.classList.remove('open');
-            }
+        // CLOSE MENU WHEN CLICKING OUTSIDE (overlay)
+        radialOverlay.addEventListener('click', () => {
+            radialMenu.classList.remove('open');
+            radialOverlay.classList.remove('active');
         });
 
         // UPDATED SWITCH TAB FUNCTION
         function switchTab(tabName, event) {
+            // Update active state
             document.querySelectorAll('.radial-item').forEach(item => item.classList.remove('active'));
             if (event && event.currentTarget) event.currentTarget.classList.add('active');
 
+            // Switch screens
             document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
- 
+
+            // Custom tab-specific logic
             if (typeof updateAffirmationBanner === 'function') updateAffirmationBanner(tabName);
             if (tabName === 'entries' && typeof loadEntries === 'function') loadEntries();
             else if (tabName === 'history' && typeof loadHistory === 'function') loadHistory();
             else if (tabName === 'settings' && typeof loadSettings === 'function') loadSettings();
 
-            // Close menu after selecting
+            // Close menu + overlay after selecting
             radialMenu.classList.remove('open');
+            radialOverlay.classList.remove('active');
         }
 
         function updateAffirmationBanner(screenName) {
