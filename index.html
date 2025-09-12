@@ -277,6 +277,20 @@
             flex-direction: column;
             align-items: center;
             margin: 20px 0;
+            position: relative;
+        }
+
+        /* Pedestal as a subtle shadow or ground under Jerry */
+        .jerry-container::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 120px;   /* slightly smaller than sprite width */
+            height: 20px;   /* thickness of pedestal */
+            background: rgba(0, 0, 0, 0.25); /* shadow/ground effect */
+            border-radius: 50%; /* rounded oval to mimic shadow/ground */
+            filter: blur(4px);  /* soft blur for realism */
+            z-index: 1; /* behind Jerry */
         }
         
         .jerry-sprite {
@@ -284,6 +298,7 @@
             height: 160px;
             margin: 0 auto 20px;
             position: relative;
+            z-index: 2;
         }
         
         .pixel {
@@ -306,6 +321,7 @@
             width: 100%;
             max-width: 300px;
             margin-bottom: 20px;
+            z-index: 2;
         }
         
         .stat-bar {
@@ -1046,6 +1062,61 @@
             background: rgba(255, 255, 255, 0.3); /* subtle light tint */
             backdrop-filter: blur(6px);
         }
+
+        /* Settings scroll container */
+        .background-scroll {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .background-option {
+            min-width: 100px;
+            height: 60px;
+            background-color: #2d3748; /* placeholder color */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .background-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .background-option.selected {
+            border: 2px solid #f59e0b;
+        }
+
+        /* Preview image inside the scroll */
+        .bg-preview {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        /* Background images for the sprite container */
+        .jerry-container.bg-default {
+            background: none; /* just light/dark scheme */
+        }
+
+        .jerry-container.bg-wildBerry {
+            background: url('placeholder-wildberry.png') center bottom no-repeat;
+            background-size: cover;
+        }
+
+        .jerry-container.bg-finalFrontier {
+            background: url('placeholder-finalfrontier.png') center bottom no-repeat;
+            background-size: cover;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1473,6 +1544,24 @@
                     <option value="forest">Forest</option>
                     <option value="neon">Neon</option>
                 </select>
+            </div>
+            <!-- Background Environment Selection -->
+            <div id="backgroundSettings">
+                <h3>Background Environment</h3>
+                <div class="background-scroll">
+                    <div class="background-option" data-bg="default">
+                        <img src="placeholder-default.png" alt="Default" class="bg-preview">
+                        <span>Default</span>
+                    </div>
+                    <div class="background-option" data-bg="wildBerry">
+                        <img src="placeholder-wildberry.png" alt="Wild Berry" class="bg-preview">
+                            <span>Wild Berry</span>
+                    </div>
+                    <div class="background-option" data-bg="finalFrontier">
+                        <img src="placeholder-finalfrontier.png" alt="Final Frontier" class="bg-preview">
+                        <span>Final Frontier</span>
+                    </div>
+                </div>
             </div>
             <div style="margin-top: 30px;">
                 <button class="def-button" id="openDBTOverlay">Cheat Sheet</button>
@@ -3186,6 +3275,44 @@
                 startChirpLoop(1.5, 0.2, 0.5); // start a fresh 10-second loop
             });
         });
+
+        // ===== Background Selector =====
+        const jerryContainer = document.getElementById('jerryWrapper');
+        const bgOptions = document.querySelectorAll('.background-option');
+
+        const BACKGROUNDS = {
+            default: 'bg-default',
+            wildBerry: 'bg-wildBerry',
+            finalFrontier: 'bg-finalFrontier'
+        };
+
+        // Load saved background on page load
+        let savedBg = localStorage.getItem('jerryBackground') || 'default';
+        applyBackground(savedBg);
+        markSelected(savedBg);
+
+        // Add click listeners
+        bgOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const selected = option.dataset.bg;
+                applyBackground(selected);
+                markSelected(selected);
+                localStorage.setItem('jerryBackground', selected);
+            });
+        });
+
+        // Apply background class to jerry container
+        function applyBackground(bgKey) {
+            jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
+            jerryContainer.classList.add(BACKGROUNDS[bgKey]);
+        }
+
+        // Highlight selected option in scroll view
+        function markSelected(bgKey) {
+            bgOptions.forEach(option => {
+                option.classList.toggle('selected', option.dataset.bg === bgKey);
+            });
+        }
         
         // =======================
         // App Initialization
