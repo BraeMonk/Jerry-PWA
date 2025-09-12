@@ -1962,7 +1962,11 @@
         let currentMood = "content";
         let jerryTalking = false;
         let forestActive = false;
+        let tapModeActive = false; // is the tap animation running
+        let animOffset = { x: 0, y: 0, scale: 1 }; // temporary transform for animations
         let breathTime = 0;
+        let pomLeft, pomRight;
+        let cheerScale = 1;
 
         // Grab Jerry container
         const jerryContainer = document.getElementById('jerrySprite');
@@ -2097,27 +2101,38 @@
         drawJerry(getCurrentSprite());
         }
 
-        // updateJerry loop remains unchanged:
+        // === Idle update loop ===
         function updateJerry() {
-            if (!jerryTalking && !forestActive) { // only block if talking
+            // Blinking (only if not cheering)
+            if (!tapModeActive && Math.random() < 0.02) {
                 blinkJerry();
-                breatheJerry();
             }
+
+            // Breathing base scale
+            const baseScale = 1 + 0.02 * Math.sin(breathTime);
+
+            // Cheering swell (overlayed if tap mode is active)
+            if (tapModeActive) {
+                const t = performance.now() / 200; // speed factor
+                cheerScale = 1 + 0.2 * Math.sin(t * Math.PI * 2);
+            } else {
+                cheerScale = 1;
+            }
+
+            // Apply combined transform
+            jerryContainer.style.transform = `scale(${baseScale * cheerScale})`;
+
             requestAnimationFrame(updateJerry);
         }
 
-        drawJerry();
-        updateJerry();
-
-        async function cheerJerry(duration = 2000) {
-            if (jerryTalking || forestActive) return;
-            forestActive = true; // reuse this flag for animation lock
-
-            const startTime = performance.now();
+        // === Cheer toggle functions ===
+        function startCheerJerry() {
+            if (tapModeActive) return;
+            tapModeActive = true;
 
             // Create pom-poms
-            const pomLeft = document.createElement('div');
-            const pomRight = document.createElement('div');
+            pomLeft = document.createElement('div');
+            pomRight = document.createElement('div');
             [pomLeft, pomRight].forEach((pom, i) => {
                 pom.style.position = 'absolute';
                 pom.style.width = '10px';
@@ -2128,34 +2143,25 @@
                 pom.style.left = i === 0 ? '-12px' : `${baseSprite[0].length * 10 + 2}px`;
                 jerryContainer.appendChild(pom);
             });
-
-            return new Promise(resolve => {
-                function animate() {
-                    const elapsed = performance.now() - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-
-                    // swell Jerry
-                    const scale = 1 + 0.2 * Math.sin(progress * Math.PI); // grows then shrinks
-                    jerryContainer.style.transform = `scale(${scale})`;
-
-                    if (progress < 1) {
-                        requestAnimationFrame(animate);
-                    } else {
-                        // cleanup
-                        [pomLeft, pomRight].forEach(p => jerryContainer.removeChild(p));
-                        jerryContainer.style.transform = ''; // reset
-                        forestActive = false;
-                        resolve();
-                    }
-                }
-                animate();
-            });
         }
 
-        // click handler
+        function stopCheerJerry() {
+            tapModeActive = false;
+
+            // Remove pom-poms safely
+            if (pomLeft && pomLeft.parentNode) pomLeft.parentNode.removeChild(pomLeft);
+            if (pomRight && pomRight.parentNode) pomRight.parentNode.removeChild(pomRight);
+            pomLeft = pomRight = null;
+        }
+
+        // === Click toggles cheer mode ===
         jerryContainer.addEventListener('click', () => {
-            cheerJerry(2000);
+            if (tapModeActive) stopCheerJerry();
+            else startCheerJerry();
         });
+
+        // Start the loop
+        updateJerry();
 
         function saveJerryState() {
             // Ensure lastFed exists before saving
