@@ -3074,20 +3074,29 @@
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             let isPlaying = false;
             let startTime = 0;
-            let tempo = 90; // BPM
-            let loopLength = 20; // seconds
+            const loopLength = 20; // seconds
             let loopInterval = null;
             let activeSources = [];
 
-             // Global gain node for volume control
+            // Master gain for volume control
             const masterGain = audioCtx.createGain();
-            masterGain.gain.value = 0.5; // default volume
             masterGain.connect(audioCtx.destination);
 
+            // Load saved volume
+            const savedVolume = localStorage.getItem("ambientMusicVolume");
+            masterGain.gain.value = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
+
+            // Volume slider
+            const volumeSlider = document.getElementById("ambientMusicVolume");
+            volumeSlider.value = masterGain.gain.value;
+            volumeSlider.addEventListener("input", (e) => {
+                masterGain.gain.value = parseFloat(e.target.value);
+                localStorage.setItem("ambientMusicVolume", e.target.value);
+            });
+
+            // Stop all currently playing sources
             function stopAllSources() {
-                activeSources.forEach(source => {
-                    try { source.stop(); } catch(e) {}
-                });
+                activeSources.forEach(src => { try { src.stop(); } catch(e) {} });
                 activeSources = [];
             }
 
@@ -3102,14 +3111,14 @@
                 osc.connect(gain).connect(masterGain);
                 osc.start(time);
                 osc.stop(time + 0.5);
+                activeSources.push(osc);
             }
 
             function playSnare(time) {
                 const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.2, audioCtx.sampleRate);
                 let data = noiseBuffer.getChannelData(0);
-                for (let i = 0; i < data.length; i++) {
-                data[i] = Math.random() * 2 - 1;
-                }
+                for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = noiseBuffer;
 
@@ -3124,14 +3133,14 @@
                 noise.connect(filter).connect(gain).connect(masterGain);
                 noise.start(time);
                 noise.stop(time + 0.2);
+                activeSources.push(noise);
             }
 
             function playHiHat(time) {
                 const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.05, audioCtx.sampleRate);
                 let data = noiseBuffer.getChannelData(0);
-                for (let i = 0; i < data.length; i++) {
-                data[i] = Math.random() * 2 - 1;
-                }
+                for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+
                 const noise = audioCtx.createBufferSource();
                 noise.buffer = noiseBuffer;
 
@@ -3146,9 +3155,10 @@
                 noise.connect(filter).connect(gain).connect(masterGain);
                 noise.start(time);
                 noise.stop(time + 0.05);
+                activeSources.push(noise);
             }
 
-            // === BASS ===
+            // === BASS === 
             function playBass(time, frequency = 55) {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -3159,34 +3169,37 @@
                 osc.connect(gain).connect(masterGain);
                 osc.start(time);
                 osc.stop(time + 1.5);
+                activeSources.push(osc);
             }
 
             // === AMBIENT CHORDS ===
             function playChord(time, freqs) {
                 freqs.forEach(freq => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = "lowpass";
-                filter.frequency.setValueAtTime(1200, time);
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = "lowpass";
+                    filter.frequency.setValueAtTime(1200, time);
 
-                osc.type = "sawtooth";
-                osc.frequency.setValueAtTime(freq, time);
-                osc.detune.setValueAtTime((Math.random() - 0.5) * 20, time); // lo-fi sway
+                    osc.type = "sawtooth";
+                    osc.frequency.setValueAtTime(freq, time);
+                    osc.detune.setValueAtTime((Math.random() - 0.5) * 20, time);
 
-                gain.gain.setValueAtTime(0.15, time);
-                gain.gain.linearRampToValueAtTime(0.05, time + 4);
+                    gain.gain.setValueAtTime(0.15, time);
+                    gain.gain.linearRampToValueAtTime(0.05, time + 4);
 
-                osc.connect(filter).connect(gain).connect(masterGain);
-                osc.start(time);
-                osc.stop(time + 4);
+                    osc.connect(filter).connect(gain).connect(masterGain);
+                    osc.start(time);
+                    osc.stop(time + 4);
+                    activeSources.push(osc);
                 });
             }
 
             // === SCHEDULER ===
             function schedule() {
                 stopAllSources();
-                const secondsPerBeat = 60 / 90;
+                const tempo = 90;
+                const secondsPerBeat = 60 / tempo;
                 const beatsPerBar = 4;
                 const barLength = secondsPerBeat * beatsPerBar;
 
@@ -3204,44 +3217,19 @@
             }
 
             function startBeat() {
-                if (!isPlaying) {
+                if (isPlaying) return;
+                isPlaying = true;
+                startTime = audioCtx.currentTime + 0.1;
+                schedule();
+
+                loopInterval = setInterval(() => {
                     startTime = audioCtx.currentTime + 0.1;
                     schedule();
-                    isPlaying = true;
-
-                    loopInterval = setInterval(() => {
-                        startTime = audioCtx.currentTime + 0.1;
-                        schedule();
-                    }, loopLength * 1000);
-                }
+                }, loopLength * 1000);
             }
 
-            function stopBeat() {
-                if (isPlaying) {
-                    clearInterval(loopInterval);
-                    stopAllSources();
-                    isPlaying = false;
-                }
-            }
-
-            // === VOLUME CONTROL ===
-            const volumeSlider = document.getElementById("ambientMusicVolume");
-            // Load saved volume if present
-            const savedVolume = localStorage.getItem("ambientMusicVolume");
-            if (savedVolume !== null) {
-                masterGain.gain.value = parseFloat(savedVolume);
-                volumeSlider.value = savedVolume;
-            }
-
-            volumeSlider.addEventListener("input", (e) => {
-                masterGain.gain.value = parseFloat(e.target.value);
-                localStorage.setItem("ambientMusicVolume", e.target.value);
-            });
-
-            // Auto-start loop
-            audioCtx.resume().then(() => {
-            masterGain.gain.value = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
-            startBeat();
+            // Auto-start at saved volume
+            audioCtx.resume().then(startBeat);
         });
         
         // =======================
