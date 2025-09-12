@@ -1959,13 +1959,18 @@
         }
 
         // === Jerry Animation Controller ===
+        const jerryContainer = document.getElementById('jerryContainer');
+        const jerrySprite = document.getElementById('jerrySprite');
+
+        
         let currentMood = "content";
         let jerryTalking = false;
         let forestActive = false;
         let tapModeActive = false; // is the tap animation running
         let animOffset = { x: 0, y: 0, scale: 1 }; // temporary transform for animations
         let breathTime = 0;
-        let pomLeft, pomRight;
+        let pomLeft = null;
+        let pomRight = null;
         let cheerScale = 1;
 
         // Grab Jerry container
@@ -2112,56 +2117,66 @@
             // Breathing base scale
             const baseScale = 1 + 0.02 * Math.sin(breathTime);
 
-            // Cheering swell (overlayed if tap mode is active)
+            // Cheer swell
+            let cheerScale = 1;
+            let pomOffset = 0;
             if (tapModeActive) {
-                const t = performance.now() / 600; // speed factor
+                const t = performance.now() / 400; // speed factor
                 cheerScale = 1 + 0.2 * Math.sin(t * Math.PI * 2);
-            } else {
-                cheerScale = 1;
+                pomOffset = 5 * Math.sin(t * Math.PI * 2); // pom-bounce: ±5px
             }
 
-            // Apply combined transform
-            jerryContainer.style.transform = `scale(${baseScale * cheerScale})`;
+            // Apply combined transform only to Jerry sprite (not pom-poms)
+            jerrySprite.style.transform = `scale(${baseScale * cheerScale})`;
+
+            // Animate pom-poms vertically
+            if (pomLeft && pomRight) {
+                pomLeft.style.top = `${20 + pomOffset}px`;
+                pomRight.style.top = `${20 + pomOffset}px`;
+            }
 
             requestAnimationFrame(updateJerry);
         }
 
         // === Cheer toggle functions ===
         function startCheerJerry() {
-            if (tapModeActive) return;
             tapModeActive = true;
 
-            // Create pom-poms
-            pomLeft = document.createElement('div');
-            pomRight = document.createElement('div');
-            [pomLeft, pomRight].forEach((pom, i) => {
-                pom.style.position = 'absolute';
-                pom.style.width = '10px';
-                pom.style.height = '10px';
-                pom.style.borderRadius = '50%';
-                pom.style.backgroundColor = '#FF0000';
-                pom.style.top = '20px';
-                pom.style.left = i === 0 ? '-12px' : `${baseSprite[0].length * 10 + 2}px`;
-                jerryContainer.appendChild(pom);
-            });
+            // Only create pom-poms if they don’t exist yet
+            if (!pomLeft || !pomRight) {
+                pomLeft = document.createElement('div');
+                pomRight = document.createElement('div');
+                [pomLeft, pomRight].forEach((pom, i) => {
+                    pom.style.position = 'absolute';
+                    pom.style.width = '10px';
+                    pom.style.height = '10px';
+                    pom.style.borderRadius = '50%';
+                    pom.style.backgroundColor = '#FF0000';
+                    pom.style.top = '20px';
+                    pom.style.left = i === 0 ? '-20px' : `${baseSprite[0].length * 10 + 10}px`;
+                    jerryContainer.appendChild(pom);
+                });
+            }
         }
 
         function stopCheerJerry() {
             tapModeActive = false;
 
-            // Remove pom-poms safely
-            if (pomLeft && pomLeft.parentNode) pomLeft.parentNode.removeChild(pomLeft);
-            if (pomRight && pomRight.parentNode) pomRight.parentNode.removeChild(pomRight);
+            // Remove pom-poms
+            if (pomLeft && pomLeft.parentNode) pomLeft.remove();
+            if (pomRight && pomRight.parentNode) pomRight.remove();
             pomLeft = pomRight = null;
         }
 
         // === Click toggles cheer mode ===
         jerryContainer.addEventListener('click', () => {
-            if (tapModeActive) stopCheerJerry();
-            else startCheerJerry();
+            if (tapModeActive) {
+                stopCheerJerry();
+            } else {
+                startCheerJerry();
+            }
         });
 
-        // Start the loop
         updateJerry();
 
         function saveJerryState() {
