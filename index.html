@@ -3166,8 +3166,7 @@
             const sprite = document.getElementById("jerrySprite"); // your sprite element
             sprite.addEventListener("click", async () => {
                 await audioCtx.resume();
-                if (isPlaying) stopAllSources(); // stop current loop if playing
-                startChirpLoop(1.25, 0.3, 0.8); // start a fresh 10-second loop
+                startChirpLoop(1.5, 0.3, 0.8); // start a fresh 10-second loop
             });
         });
         
