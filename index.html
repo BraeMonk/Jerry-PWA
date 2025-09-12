@@ -809,30 +809,43 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #1a202c;  /* dark theme default */
-            background-image: url('./jerrySplash.png.png'); /* path to your image */
-            background-size: cover;      /* cover entire div */
-            background-position: center; /* center image */
-            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10000;                /* above everything */
-            transition: opacity 0.5s ease; /* smooth fade-out */
+            z-index: 10000;              
+            transition: opacity 0.5s ease; 
+            overflow: hidden; /* needed for pseudo-element */
         }
 
-        /* Light theme version */
-        body.light-theme #splashScreen {
-            background: #f7ede5;           /* match app's light background */
+        /* Blurred background */
+        #splashScreen::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('./jerrySplash.png.png') no-repeat center center;
+            background-size: cover;
+            filter: blur(10px); /* adjust blur intensity */
+            z-index: 0; /* behind everything */
         }
 
-        /* Splash image */
+        /* Splash image stays above the blurred background */
         #splashScreen img {
             max-width: 80%;
             max-height: 80%;
             object-fit: contain;
-            border-radius: 12px;           /* soft edges like your UI */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* subtle depth */
+            border-radius: 12px;           
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+            position: relative; /* make sure it’s above the pseudo-element */
+            z-index: 1;
+        }
+
+        /* Light theme version */
+        body.light-theme #splashScreen::before {
+            background: url('./jerrySplash.png.png') no-repeat center center;
+            background-size: cover;
         }
 
         /* Header always visible */
