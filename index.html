@@ -2135,7 +2135,11 @@
                 leaf.style.opacity = 0.7;
                 leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
                 jerryContainer.appendChild(leaf);
-                leaves.push({el: leaf, dx: Math.random() * 2 - 1, dy: Math.random() * 1 + 0.5});
+                leaves.push({
+                    el: leaf,
+                    dx: Math.random() * 2 - 1,
+                    dy: Math.random() * 1 + 0.5
+                });
             }
 
             return new Promise(resolve => {
@@ -2143,44 +2147,24 @@
                     const elapsed = performance.now() - startTime;
                     const progress = Math.min(elapsed / duration, 1);
 
-                    // === Jerry movement ===
-                    const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-                    // occasional blink
-                    if (Math.random() < 0.02) {
-                        let eyes;
-                        switch (currentMood) {
-                            case 'content': eyes = [[4,5],[4,10]]; break;
-                            case 'lowInsight': eyes = [[4,4],[4,11]]; break;
-                            case 'lowCalm': eyes = [[3,4],[3,11]]; break;
-                        }
-                        const bodyColor = 1;
-                        eyes.forEach(([r,c]) => {
-                            sprite[r][c] = bodyColor;
-                            sprite[r+1][c] = bodyColor;
-                        });
-                    }
-                    drawJerry(sprite);
-
-                    // small horizontal bobbing
-                    const offsetX = Math.sin(progress * Math.PI * 4) * 5; // side to side
-                    const offsetY = Math.sin(progress * Math.PI * 2) * 2; // slight up/down
-                    const scale = 1 + 0.02 * Math.sin(breathTime); // breathing
-                    jerryContainer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
-                    // === Leaves movement ===
+                    // Move leaves
                     leaves.forEach(l => {
                         l.el.style.left = `${parseFloat(l.el.style.left) + l.dx}px`;
                         l.el.style.top = `${parseFloat(l.el.style.top) + l.dy}px`;
-                        l.el.style.transform = `rotate(${Math.random()*360}deg)`;
+                        l.el.style.transform = `rotate(${Math.random() * 360}deg)`;
                     });
+
+                    // Optional: subtle horizontal wobble via a wrapper (doesn't interfere with breathing)
+                    const offsetX = Math.sin(progress * Math.PI * 4) * 3; // small side-to-side
+                    jerryContainer.style.marginLeft = `${offsetX}px`;
 
                     if (progress < 1) {
                         requestAnimationFrame(animate);
                     } else {
-                        // Cleanup leaves and reset
+                        // Cleanup leaves and reset wrapper offset
                         leaves.forEach(l => jerryContainer.removeChild(l.el));
+                        jerryContainer.style.marginLeft = '';
                         forestActive = false;
-                        drawJerry(getCurrentSprite());
                         resolve();
                     }
                 }
