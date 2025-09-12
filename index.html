@@ -2054,11 +2054,11 @@
 
         // Breathing (brightness + scale)
         function breatheJerry() {
-        breathTime += 0.05;
-        const brightness = 1 + 0.1 * Math.sin(breathTime); // noticeable pulse
-        const scale = 1 + 0.02 * Math.sin(breathTime);
-        jerryContainer.style.filter = `brightness(${brightness})`;
-        jerryContainer.style.transform = `scale(${scale})`;
+            breathTime += 0.05;
+            const brightness = 1 + 0.1 * Math.sin(breathTime); // noticeable pulse
+            const scale = 1 + 0.02 * Math.sin(breathTime);
+            jerryContainer.style.filter = `brightness(${brightness})`;
+            jerryContainer.style.transform = `scale(${scale})`;
         }
 
         // Mood switching
@@ -2103,6 +2103,7 @@
 
         // === Idle update loop ===
         function updateJerry() {
+            breathTime += 0.05;
             // Blinking (only if not cheering)
             if (!tapModeActive && Math.random() < 0.02) {
                 blinkJerry();
@@ -2113,7 +2114,7 @@
 
             // Cheering swell (overlayed if tap mode is active)
             if (tapModeActive) {
-                const t = performance.now() / 200; // speed factor
+                const t = performance.now() / 600; // speed factor
                 cheerScale = 1 + 0.2 * Math.sin(t * Math.PI * 2);
             } else {
                 cheerScale = 1;
