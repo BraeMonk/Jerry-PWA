@@ -3107,10 +3107,12 @@
             }
 
             // === Tri-Tone Chirp ===
-            function playTriToneChirp(time, baseFreq = 220) {
-                const triToneFreq = baseFreq * Math.pow(2, 6/12); // 6 semitones up
+            function playTriToneChirp(time, baseFreq = 963) {
+                const randomBase = 940 + Math.random() * 50;
+                
+                const triToneFreq = randomBase * Math.pow(2, 6/12); // 6 semitones up
 
-                [baseFreq, triToneFreq].forEach(freq => {
+                [randomBase, triToneFreq].forEach(freq => {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     const filter = audioCtx.createBiquadFilter();
@@ -3165,7 +3167,7 @@
             sprite.addEventListener("click", async () => {
                 await audioCtx.resume();
                 if (isPlaying) stopAllSources(); // stop current loop if playing
-                startChirpLoop(5, 1, 3); // start a fresh 10-second loop
+                startChirpLoop(5, 0.3, 0.8); // start a fresh 10-second loop
             });
         });
         
