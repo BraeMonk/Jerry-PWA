@@ -3228,13 +3228,13 @@
                 }, loopLength * 1000);
             }
 
-            // Auto-start at saved volume
-            document.body.addEventListener("click", () => {
-                audioCtx.resume().then(() => {
-                    if (!isPlaying) startBeat();
-                });
-            }, { once: true });
-        });
+            // === Trigger: sprite click ===
+            const sprite = document.getElementById("jerrySprite"); // your sprite element
+            sprite.addEventListener("click", async () => {
+                await audioCtx.resume();
+                if (isPlaying) stopAllSources(); // stop current loop if playing
+                startBeat(5); // start a fresh 10-second loop
+            });
         
         // =======================
         // App Initialization
