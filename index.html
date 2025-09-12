@@ -1959,7 +1959,7 @@
         }
 
         // === Jerry Animation Controller ==
-        const jerryWrapper = document.getElementById('jerryWrapper');
+        const jerryContainer = document.getElementById('jerrySprite');
 
         
         let currentMood = "content";
@@ -2100,28 +2100,40 @@
         drawJerry(getCurrentSprite());
         }
 
+        // Add safety check for jerryContainer
+        if (!jerryContainer) {
+        console.error('jerryContainer not found - animation will not work');
+        }
+
         function triggerShake() {
-            if (shakeActive) return; // prevent multiple shakes at once
+            if (shakeActive || !jerryContainer) return; // Add jerryContainer check
             shakeActive = true;
             let i = 0;
-            const shakeFrames = 10;  // total movements
-            const amplitude = 5;     // pixels left/right
+            const shakeFrames = 10;
+            const amplitude = 5;
             const interval = setInterval(() => {
                 shakeOffset = (i % 2 === 0 ? amplitude : -amplitude);
                 i++;
                 if (i > shakeFrames) {
                     clearInterval(interval);
-                    shakeOffset = 0;  // reset
+                    shakeOffset = 0;
                     shakeActive = false;
                 }
             }, 30);
         }
 
-        // Click triggers shake
-        jerryContainer.addEventListener('click', triggerShake);
+        // Add safety check before adding event listener
+        if (jerryContainer) {
+            jerryContainer.addEventListener('click', triggerShake);
+        }        
 
-        // Update loop
         function updateJerry() {
+            // Safety check - exit if jerryContainer doesn't exist
+            if (!jerryContainer) {
+                console.warn('jerryContainer not found, stopping animation');
+                return;
+            }
+
             breathTime += 0.05;
 
             // Blinking (only if not talking)
@@ -2138,7 +2150,10 @@
             requestAnimationFrame(updateJerry);
         }
 
-        updateJerry();
+        // Only start the animation loop if jerryContainer exists
+        if (jerryContainer) {
+            updateJerry();
+        }
 
         function saveJerryState() {
             // Ensure lastFed exists before saving
