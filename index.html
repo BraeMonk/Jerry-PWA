@@ -1332,10 +1332,7 @@
 
             <!-- Add this inside your settings tab HTML -->
             <div style="margin-bottom: 16px;" id="ambientMusicToggleContainer">
-                <label>
-                    <input type="checkbox" id="ambientMusicToggle">
-                    Music
-                </label>
+                <label class="form-label">Music</label>
                 <label style="margin-left:10px;">
                     Volume:
                     <input type="range" id="ambientMusicVolume" min="0" max="1" step="0.01" value="0.5">
@@ -3080,11 +3077,19 @@
             let tempo = 90; // BPM
             let loopLength = 20; // seconds
             let loopInterval = null;
+            let activeSources = [];
 
              // Global gain node for volume control
             const masterGain = audioCtx.createGain();
             masterGain.gain.value = 0.5; // default volume
             masterGain.connect(audioCtx.destination);
+
+            function stopAllSources() {
+                activeSources.forEach(source => {
+                    try { source.stop(); } catch(e) {}
+                });
+                activeSources = [];
+            }
 
             // === DRUMS ===
             function playKick(time) {
@@ -3180,10 +3185,11 @@
 
             // === SCHEDULER ===
             function schedule() {
-                const secondsPerBeat = 60 / tempo;
+                stopAllSources();
+                const secondsPerBeat = 60 / 90;
                 const beatsPerBar = 4;
                 const barLength = secondsPerBeat * beatsPerBar;
-                
+
                 for (let bar = 0; bar < Math.ceil(loopLength / barLength); bar++) {
                     const barStart = startTime + bar * barLength;
                     for (let beat = 0; beat < beatsPerBar; beat++) {
@@ -3192,12 +3198,11 @@
                         if (beat === 0) { playKick(beatTime); playBass(beatTime, 55); }
                         if (beat === 2) { playSnare(beatTime); playBass(beatTime, 73.42); }
                     }
-                    // Alternate chords
                     if (bar % 2 === 0) playChord(barStart, [220, 277, 329]);
                     else playChord(barStart, [196, 247, 311]);
                 }
             }
-            
+
             function startBeat() {
                 if (!isPlaying) {
                     startTime = audioCtx.currentTime + 0.1;
@@ -3214,40 +3219,31 @@
             function stopBeat() {
                 if (isPlaying) {
                     clearInterval(loopInterval);
+                    stopAllSources();
                     isPlaying = false;
                 }
             }
 
-            // === Toggle with persistence ===
-            const toggle = document.getElementById("ambientMusicToggle");
+            // === VOLUME CONTROL ===
             const volumeSlider = document.getElementById("ambientMusicVolume");
-            
-            // Load saved state
-            const savedState = localStorage.getItem("ambientMusicOn");
+            // Load saved volume if present
             const savedVolume = localStorage.getItem("ambientMusicVolume");
-            if (savedState === "true") {
-                toggle.checked = true;
-                audioCtx.resume().then(startBeat);
-            }
             if (savedVolume !== null) {
                 masterGain.gain.value = parseFloat(savedVolume);
                 volumeSlider.value = savedVolume;
             }
-            
-            // Save state on change
-            toggle.addEventListener("change", async (e) => {
-                await audioCtx.resume();
-                if (e.target.checked) startBeat();
-                else stopBeat();
-                localStorage.setItem("ambientMusicOn", e.target.checked);
-            });
 
-            // Volume control
             volumeSlider.addEventListener("input", (e) => {
                 masterGain.gain.value = parseFloat(e.target.value);
                 localStorage.setItem("ambientMusicVolume", e.target.value);
             });
+
+            // Auto-start loop
+            audioCtx.resume().then(() => {
+            masterGain.gain.value = savedVolume !== null ? parseFloat(savedVolume) : 0.5;
+            startBeat();
         });
+        
         // =======================
         // App Initialization
         // =======================
