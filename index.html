@@ -1029,20 +1029,6 @@
             background: rgba(255, 255, 255, 0.3); /* subtle light tint */
             backdrop-filter: blur(6px);
         }
-
-        /* Jerry alert shake + jump */
-        @keyframes jerryShakeJump {
-            0%   { transform: translateX(0) scale(1); }
-            20%  { transform: translateX(-5px) scale(1.1); }
-            40%  { transform: translateX(5px) scale(1.1); }
-            60%  { transform: translateX(-5px) scale(1.05); }
-            80%  { transform: translateX(5px) scale(1.05); }
-            100% { transform: translateX(0) scale(1); }
-        }
-
-        #jerrySprite.alert {
-            animation: jerryShakeJump 0.5s ease-in-out;
-        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -2123,31 +2109,82 @@
         drawJerry(); // initial draw
         updateJerry();
 
-        // === Alert Animation on Click ===
-        jerryContainer.addEventListener('click', () => {
-            // Trigger blink instantly
-            const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-            let eyes;
-            const bodyColor = 1;
-            switch (currentMood) {
-                case 'content': eyes = [[4, 5], [4, 10]]; break;
-                case 'lowInsight': eyes = [[4, 4], [4, 11]]; break;
-                case 'lowCalm': eyes = [[3, 4], [3, 11]]; break;
+        async function forestAdventureAnimation(duration = 3000) {
+            jerryTalking = true;
+
+            const startTime = performance.now();
+            const leafCount = 6; // number of leaves flying around
+            const leaves = [];
+
+            // Create leaf elements
+            for (let i = 0; i < leafCount; i++) {
+                const leaf = document.createElement('div');
+                leaf.style.position = 'absolute';
+                leaf.style.width = '6px';
+                leaf.style.height = '6px';
+                leaf.style.backgroundColor = '#228B22'; // green leaf
+                leaf.style.borderRadius = '50%';
+                leaf.style.left = `${Math.random() * 140}px`;
+                leaf.style.top = `${Math.random() * 140}px`;
+                leaf.style.opacity = 0.7;
+                leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                jerryContainer.appendChild(leaf);
+                leaves.push({el: leaf, dx: Math.random() * 2 - 1, dy: Math.random() * 1 + 0.5});
             }
-            eyes.forEach(([r, c]) => {
-                sprite[r][c] = bodyColor;
-                sprite[r + 1][c] = bodyColor;
+
+            return new Promise(resolve => {
+                function animate() {
+                    const elapsed = performance.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // === Jerry movement ===
+                    const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+                    // occasional blink
+                    if (Math.random() < 0.02) {
+                        let eyes;
+                        switch (currentMood) {
+                            case 'content': eyes = [[4,5],[4,10]]; break;
+                            case 'lowInsight': eyes = [[4,4],[4,11]]; break;
+                            case 'lowCalm': eyes = [[3,4],[3,11]]; break;
+                        }
+                        const bodyColor = 1;
+                        eyes.forEach(([r,c]) => {
+                            sprite[r][c] = bodyColor;
+                            sprite[r+1][c] = bodyColor;
+                        });
+                    }
+                    drawJerry(sprite);
+
+                    // small horizontal bobbing
+                    const offsetX = Math.sin(progress * Math.PI * 4) * 5; // side to side
+                    const offsetY = Math.sin(progress * Math.PI * 2) * 2; // slight up/down
+                    jerryContainer.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+
+                    // === Leaves movement ===
+                    leaves.forEach(l => {
+                        l.el.style.left = `${parseFloat(l.el.style.left) + l.dx}px`;
+                        l.el.style.top = `${parseFloat(l.el.style.top) + l.dy}px`;
+                        l.el.style.transform = `rotate(${Math.random()*360}deg)`;
+                    });
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Cleanup leaves and reset
+                        leaves.forEach(l => jerryContainer.removeChild(l.el));
+                        jerryContainer.style.transform = '';
+                        drawJerry(getCurrentSprite());
+                        jerryTalking = false;
+                        resolve();
+                    }
+                }
+                animate();
             });
-            drawJerry(sprite);
+        }
 
-            // Reset to normal after blink
-            setTimeout(() => drawJerry(getCurrentSprite()), 200);
-
-            // Add shake effect
-            jerryContainer.classList.add('alert');
-            setTimeout(() => {
-                jerryContainer.classList.remove('alert');
-            }, 400); // match CSS animation duration
+        jerryContainer.addEventListener('click', async () => {
+            if (jerryTalking) return; // ignore if already animating
+            await forestAdventureAnimation(3000);
         });
 
         function saveJerryState() {
