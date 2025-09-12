@@ -2106,38 +2106,6 @@
         drawJerry(getCurrentSprite());
         }
 
-        // === Idle update loop ===
-        function updateJerry() {
-            breathTime += 0.05;
-            // Blinking (only if not cheering)
-            if (!tapModeActive && Math.random() < 0.02) {
-                blinkJerry();
-            }
-
-            // Breathing base scale
-            const baseScale = 1 + 0.02 * Math.sin(breathTime);
-
-            // Cheer swell
-            let cheerScale = 1;
-            let pomOffset = 0;
-            if (tapModeActive) {
-                const t = performance.now() / 400; // speed factor
-                cheerScale = 1 + 0.2 * Math.sin(t * Math.PI * 2);
-                pomOffset = 5 * Math.sin(t * Math.PI * 2); // pom-bounce: ±5px
-            }
-
-            // Apply combined transform only to Jerry sprite (not pom-poms)
-            jerrySprite.style.transform = `scale(${baseScale * cheerScale})`;
-
-            // Animate pom-poms vertically
-            if (pomLeft && pomRight) {
-                pomLeft.style.top = `${20 + pomOffset}px`;
-                pomRight.style.top = `${20 + pomOffset}px`;
-            }
-
-            requestAnimationFrame(updateJerry);
-        }
-
         // === Cheer toggle functions ===
         function startCheerJerry() {
             tapModeActive = true;
@@ -2176,6 +2144,38 @@
                 startCheerJerry();
             }
         });
+
+        // === Idle update loop ===
+        function updateJerry() {
+            breathTime += 0.05;
+            // Blinking (only if not cheering)
+            if (!tapModeActive && Math.random() < 0.02) {
+                blinkJerry();
+            }
+
+            // Breathing base scale
+            const baseScale = 1 + 0.02 * Math.sin(breathTime);
+
+            // Cheer swell
+            let cheerScale = 1;
+            let pomOffset = 0;
+            if (tapModeActive) {
+                const t = performance.now() / 400; // speed factor
+                cheerScale = 1 + 0.2 * Math.sin(t * Math.PI * 2);
+                pomOffset = 5 * Math.sin(t * Math.PI * 2); // pom-bounce: ±5px
+            }
+
+            // Apply combined transform only to Jerry sprite (not pom-poms)
+            jerryContainer.style.transform = `scale(${baseScale * cheerScale})`;
+
+            // Animate pom-poms vertically
+            if (pomLeft && pomRight) {
+                pomLeft.style.top = `${20 + pomOffset}px`;
+                pomRight.style.top = `${20 + pomOffset}px`;
+            }
+
+            requestAnimationFrame(updateJerry);
+        }
 
         updateJerry();
 
