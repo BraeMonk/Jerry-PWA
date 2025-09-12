@@ -3165,7 +3165,7 @@
             sprite.addEventListener("click", async () => {
                 await audioCtx.resume();
                 if (isPlaying) stopAllSources(); // stop current loop if playing
-                startBeat(5, 1, 3); // start a fresh 10-second loop
+                startChirpLoop(5, 1, 3); // start a fresh 10-second loop
             });
         });
         
