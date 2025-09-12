@@ -293,17 +293,16 @@
             z-index: 0;
         }
         
-        /* Pedestal as a subtle shadow or ground under Jerry */
-        .jerry-container::before {
-            content: '';
+        /* Pedestal / shadow above stats */
+        .jerry-shadow {
             position: absolute;
-            bottom: 0;
-            width: 120px;   /* slightly smaller than sprite width */
-            height: 20px;   /* thickness of pedestal */
-            background: rgba(0, 0, 0, 0.25); /* shadow/ground effect */
-            border-radius: 50%; /* rounded oval to mimic shadow/ground */
-            filter: blur(4px);  /* soft blur for realism */
-            z-index: 1; /* behind Jerry */
+            bottom: 100px;   /* adjust so it sits just above stats */
+            width: 120px;    /* slightly smaller than sprite */
+            height: 20px;    /* shadow thickness */
+            background: rgba(0, 0, 0, 0.25); /* subtle shadow */
+            border-radius: 50%; 
+            filter: blur(4px);
+            z-index: 1;
         }
         
         .jerry-sprite {
@@ -1166,6 +1165,7 @@
             <div class="jerry-container" id="jerryWrapper">
                 <div class="jerry-background" id="jerryBackground"></div>
                 <div class="jerry-sprite" id="jerrySprite"></div>
+                <div class="jerry-shadow"></div>
                 <div class="jerry-stats">
                     <div class="stat-bar">
                         <div class="stat-label">
