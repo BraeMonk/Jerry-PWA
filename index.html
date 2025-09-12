@@ -2096,26 +2096,27 @@
         drawJerry(getCurrentSprite());
         }
 
-        // === Main Update Loop ===
+        // updateJerry loop remains unchanged:
         function updateJerry() {
-        if (!jerryTalking) {
+            if (!jerryTalking && !forestActive) { // only block if talking
                 blinkJerry();
                 breatheJerry();
-        }
-        requestAnimationFrame(updateJerry);
+            }
+            requestAnimationFrame(updateJerry);
         }
 
-        // Start animation
-        drawJerry(); // initial draw
+        drawJerry();
         updateJerry();
 
+        let forestActive = false;
+
         async function forestAdventureAnimation(duration = 3000) {
-            jerryTalking = true;
+            if (jerryTalking || forestActive) return; // prevent overlapping
+            forestActive = true; // signal forest animation is running
 
             const startTime = performance.now();
             const leafCount = 6; // number of leaves flying around
             const leaves = [];
-            const originalTransform = jerryContainer.style.transform || '';
 
             // Create leaf elements
             for (let i = 0; i < leafCount; i++) {
@@ -2173,9 +2174,8 @@
                     } else {
                         // Cleanup leaves and reset
                         leaves.forEach(l => jerryContainer.removeChild(l.el));
-                        jerryContainer.style.transform = originalTransform;
-                        drawJerry(getCurrentSprite());
-                        jerryTalking = false;
+                        jerryContainer.style.transform = '';
+                        forestActive = false;
                         resolve();
                     }
                 }
@@ -2183,9 +2183,9 @@
             });
         }
 
-        jerryContainer.addEventListener('click', async () => {
-            if (jerryTalking) return; // ignore if already animating
-            await forestAdventureAnimation(3000);
+        // click handler
+        jerryContainer.addEventListener('click', () => {
+            forestAdventureAnimation(3000);
         });
 
         function saveJerryState() {
