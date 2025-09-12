@@ -2109,99 +2109,41 @@
         drawJerry();
         updateJerry();
 
-        // click handler
-        jerryContainer.addEventListener('click', () => {
-            forestAdventureAnimation(3000);
-        });
-
-        async function forestAdventureAnimation(duration = 3000) {
+        async function cheerJerry(duration = 2000) {
             if (jerryTalking || forestActive) return;
-            forestActive = true;
+            forestActive = true; // reuse this flag for animation lock
 
             const startTime = performance.now();
-            const leafCount = 6;
-            const treeCount = 5; // number of pixel trees
-            const grassCount = 8; // small grass patches
-            const leaves = [];
-            const trees = [];
-            const grasses = [];
 
-            // Create leaves
-            for (let i = 0; i < leafCount; i++) {
-                const leaf = document.createElement('div');
-                leaf.style.position = 'absolute';
-                leaf.style.width = '6px';
-                leaf.style.height = '6px';
-                leaf.style.backgroundColor = '#228B22';
-                leaf.style.borderRadius = '50%';
-                leaf.style.left = `${Math.random() * 140}px`;
-                leaf.style.top = `${Math.random() * 140}px`;
-                leaf.style.opacity = 0.7;
-                leaf.style.transform = `rotate(${Math.random() * 360}deg)`;
-                jerryContainer.appendChild(leaf);
-                leaves.push({ el: leaf, dx: Math.random() * 2 - 1, dy: Math.random() * 1 + 0.5 });
-            }
-
-            // Create pixel trees
-            for (let i = 0; i < treeCount; i++) {
-                const tree = document.createElement('div');
-                tree.style.position = 'absolute';
-                tree.style.width = '8px';
-                tree.style.height = '12px';
-                tree.style.backgroundColor = '#2E8B57';
-                tree.style.left = `${Math.random() * 140}px`;
-                tree.style.top = `${Math.random() * 140}px`;
-                jerryContainer.appendChild(tree);
-                trees.push(tree);
-            }
-
-            // Create pixel grass patches
-            for (let i = 0; i < grassCount; i++) {
-                const grass = document.createElement('div');
-                grass.style.position = 'absolute';
-                grass.style.width = '6px';
-                grass.style.height = '4px';
-                grass.style.backgroundColor = '#A9DFBF';
-                grass.style.left = `${Math.random() * 140}px`;
-                grass.style.top = `${Math.random() * 140 + 130}px`; // near bottom
-                jerryContainer.appendChild(grass);
-                grasses.push(grass);
-            }
+            // Create pom-poms
+            const pomLeft = document.createElement('div');
+            const pomRight = document.createElement('div');
+            [pomLeft, pomRight].forEach((pom, i) => {
+                pom.style.position = 'absolute';
+                pom.style.width = '10px';
+                pom.style.height = '10px';
+                pom.style.borderRadius = '50%';
+                pom.style.backgroundColor = '#FF0000';
+                pom.style.top = '20px';
+                pom.style.left = i === 0 ? '-12px' : `${baseSprite[0].length * 10 + 2}px`;
+                jerryContainer.appendChild(pom);
+            });
 
             return new Promise(resolve => {
                 function animate() {
                     const elapsed = performance.now() - startTime;
                     const progress = Math.min(elapsed / duration, 1);
 
-                    // Move leaves
-                    leaves.forEach(l => {
-                        l.el.style.left = `${parseFloat(l.el.style.left) + l.dx}px`;
-                        l.el.style.top = `${parseFloat(l.el.style.top) + l.dy}px`;
-                        l.el.style.transform = `rotate(${Math.random() * 360}deg)`;
-                    });
-
-                    // Slight tree sway
-                    trees.forEach((tree, idx) => {
-                        const sway = Math.sin(progress * Math.PI * 2 + idx) * 2;
-                        tree.style.transform = `translateX(${sway}px)`;
-                    });
-
-                    // Slight grass sway
-                    grasses.forEach((g, idx) => {
-                        const sway = Math.sin(progress * Math.PI * 3 + idx) * 1.5;
-                        g.style.transform = `translateX(${sway}px)`;
-                    });
-
-                    // Subtle background wobble for Jerry
-                    const offsetX = Math.sin(progress * Math.PI * 4) * 3;
-                    jerryContainer.style.marginLeft = `${offsetX}px`;
+                    // swell Jerry
+                    const scale = 1 + 0.2 * Math.sin(progress * Math.PI); // grows then shrinks
+                    jerryContainer.style.transform = `scale(${scale})`;
 
                     if (progress < 1) {
                         requestAnimationFrame(animate);
                     } else {
-                        // Cleanup all forest elements
-                        [...leaves, ...trees, ...grasses].forEach(el => jerryContainer.removeChild(el.el || el));
-                        jerryContainer.style.marginLeft = '';
+                        // cleanup
+                        [pomLeft, pomRight].forEach(p => jerryContainer.removeChild(p));
+                        jerryContainer.style.transform = ''; // reset
                         forestActive = false;
                         resolve();
                     }
@@ -2209,6 +2151,11 @@
                 animate();
             });
         }
+
+        // click handler
+        jerryContainer.addEventListener('click', () => {
+            cheerJerry(2000);
+        });
 
         function saveJerryState() {
             // Ensure lastFed exists before saving
