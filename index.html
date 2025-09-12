@@ -1961,6 +1961,7 @@
         // === Jerry Animation Controller ===
         let currentMood = "content";
         let jerryTalking = false;
+        let forestActive = false;
         let breathTime = 0;
 
         // Grab Jerry container
@@ -2108,7 +2109,10 @@
         drawJerry();
         updateJerry();
 
-        let forestActive = false;
+        // click handler
+        jerryContainer.addEventListener('click', () => {
+            forestAdventureAnimation(3000);
+        });
 
         async function forestAdventureAnimation(duration = 3000) {
             if (jerryTalking || forestActive) return; // prevent overlapping
@@ -2160,7 +2164,8 @@
                     // small horizontal bobbing
                     const offsetX = Math.sin(progress * Math.PI * 4) * 5; // side to side
                     const offsetY = Math.sin(progress * Math.PI * 2) * 2; // slight up/down
-                    jerryContainer.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                    const scale = 1 + 0.02 * Math.sin(breathTime); // breathing
+                    jerryContainer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 
                     // === Leaves movement ===
                     leaves.forEach(l => {
@@ -2182,11 +2187,6 @@
                 animate();
             });
         }
-
-        // click handler
-        jerryContainer.addEventListener('click', () => {
-            forestAdventureAnimation(3000);
-        });
 
         function saveJerryState() {
             // Ensure lastFed exists before saving
