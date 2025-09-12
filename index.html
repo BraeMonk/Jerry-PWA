@@ -2172,7 +2172,7 @@
                     } else {
                         // Cleanup leaves and reset
                         leaves.forEach(l => jerryContainer.removeChild(l.el));
-                        jerryContainer.style.transform = '';
+                        jerryContainer.style.transform = originalTransform;
                         drawJerry(getCurrentSprite());
                         jerryTalking = false;
                         resolve();
