@@ -3503,8 +3503,8 @@
                     }, 5000); // change every 5 seconds
                 } else {
                     // Static gradient
-                    jerryContainer.className = jerryContainer.className.replace(/\bbg-\w+\b/g, '');
-                    jerryContainer.classList.add(bgKey);
+                    jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
+                    jerryContainer.classList.add(BACKGROUNDS[bgKey]);
                 }
             }
 
