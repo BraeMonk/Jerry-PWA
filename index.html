@@ -2258,7 +2258,7 @@
 
         // === Helper Functions ===
         function getCurrentSprite() {
-        return baseSprite;
+            return JSON.parse(JSON.stringify(baseSprite));
         }
 
         // Redraw Jerry sprite
