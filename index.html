@@ -1252,17 +1252,15 @@
             border-radius: 4px;
         }
 
-        #halo {
+        #jerryHalo {
             position: absolute;
             width: 40px;
             height: 10px;
             border-radius: 50%;
-            background: gold;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: none; /* hidden until level >= 5 */
-            box-shadow: 0 0 10px gold;
+            background-color: gold;
+            top: -15px; /* above Jerry sprite */
+            left: 10px; /* center-ish */
+            z-index: 7; /* above Jerry sprite */
         }
         
         @media (max-width: 480px) {
