@@ -3479,31 +3479,24 @@
                     slideshowInterval = null;
                 }
                 
+                // Remove all other gradient classes first
+                jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
+
                 if (bgKey === 'default') {
-                    jerryContainer.style.background = '';
+                    // Just use default class
+                    jerryContainer.classList.add(BACKGROUNDS.default);
                 } else if (bgKey === 'all') {
-                    // Start slideshow cycling through all gradients
-                    const gradients = [
-                        'bg-wildBerry',
-                        'bg-finalFrontier',
-                        'bg-coolBreeze',
-                        'bg-sunsetGlow',
-                        'bg-mysticPurple',
-                        'bg-lemonZest',
-                        'bg-oceanDeep',
-                        'bg-neonLights'
-                    ];
+                    // Slideshow
+                    const gradients = Object.values(BACKGROUNDS).filter(c => c !== BACKGROUNDS.default);
                     let current = 0;
-                    jerryContainer.classList.remove(...gradients);
                     jerryContainer.classList.add(gradients[current]);
                     slideshowInterval = setInterval(() => {
                         jerryContainer.classList.remove(gradients[current]);
                         current = (current + 1) % gradients.length;
                         jerryContainer.classList.add(gradients[current]);
-                    }, 5000); // change every 5 seconds
+                    }, 5000);
                 } else {
                     // Static gradient
-                    jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
                     jerryContainer.classList.add(BACKGROUNDS[bgKey]);
                 }
             }
