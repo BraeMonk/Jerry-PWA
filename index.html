@@ -288,15 +288,12 @@
         .jerry-background {
             position: absolute;
             top: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
             width: 100%;
-            height: calc(100% - 120px); /* leave room for stats at bottom */
-            background-size: cover;
-            background-position: center bottom;
+            height: 100%; /* leave room for stats at bottom */
             z-index: 0;
-            pointer-events: none;
-            
+            pointer-events: none; /* don’t block Jerry clicks */
+            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc); /* initial gradient */
         }
         
         /* Pedestal / shadow above stats */
@@ -1300,8 +1297,8 @@
         
         <!-- Jerry Screen -->
         <div class="screen active" id="jerry">
-            <div class="jerry-background" id="jerryBackground"></div>
             <div class="jerry-container" id="jerryWrapper">
+                <div class="jerry-background" id="livingBG"></div>
                 <div class="jerry-sprite" id="jerrySprite"></div>
                 <div class="jerry-shadow"></div>
                 <div class="jerry-stats">
@@ -3442,73 +3439,89 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const jerryContainer = document.getElementById('jerryWrapper');
+            const livingBg = document.getElementById('livingBg'); // behind Jerry
             const bgOptions = document.querySelectorAll('.background-option');
 
-            // Gradient definitions
-            const GRADIENTS = {
-                default: '',
-                wildBerry: 'linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc)',
-                finalFrontier: 'linear-gradient(to top, #0f172a, #1e293b, #3b0764)',
-                coolBreeze: 'linear-gradient(to top, #3a7bd5, #00d2ff)',
-                sunsetGlow: 'linear-gradient(to top, #ff7e5f, #feb47b)',
-                mysticPurple: 'linear-gradient(to top, #7b2ff7, #f107a3)',
-                lemonZest: 'linear-gradient(to top, #f9d423, #ff4e50)',
-                oceanDeep: 'linear-gradient(to top, #2c3e50, #3498db)',
-                neonLights: 'linear-gradient(to top, #00f260, #0575e6)'
+            // Map keys to gradient RGB arrays
+            const BACKGROUNDS = {
+                default: null,
+                wildBerry: [[45,106,79],[149,213,178],[216,243,220]],
+                finalFrontier: [[15,23,42],[30,41,59],[59,7,100]],
+                coolBreeze: [[58,123,213],[0,210,255]],
+                sunsetGlow: [[255,126,95],[254,180,123]],
+                mysticPurple: [[123,47,247],[241,7,163]],
+                lemonZest: [[249,212,35],[255,78,80]],
+                oceanDeep: [[44,62,80],[52,152,219]],
+                neonLights: [[0,242,96],[5,117,230]]
             };
 
-            let slideshowInterval = null;
-            const SLIDE_DURATION = 5000; // 5 seconds
-            const FADE_DURATION = 4500; // slightly less than slide duration
+            let morphing = false;
+            let frameId = null;
 
-            // Set transition dynamically to match fade
-            jerryContainer.style.transition = `background ${FADE_DURATION}ms ease-in-out`;
+            // Interpolate between two RGB colors
+            function lerpColor(a, b, t) {
+                return a.map((v,i) => Math.round(v + (b[i]-v[i])*t));
+            }
 
-            // Load saved background
-            let savedBg = localStorage.getItem('jerryBackground') || 'default';
-            applyBackground(savedBg);
-            markSelected(savedBg);
+            function rgbToStr(rgb) {
+                return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+            }
 
-            // Swatch click events
+            function startLivingGradient() {
+                morphing = true;
+                const keys = Object.keys(BACKGROUNDS).filter(k => k !== 'default');
+                let current = 0;
+                let next = 1;
+                let t = 0;
+                const speed = 0.002; // adjust for faster/slower morph
+
+                function animate() {
+                    const gA = BACKGROUNDS[keys[current]];
+                    const gB = BACKGROUNDS[keys[next]];
+
+                    const colors = gA.map((c,i) => rgbToStr(lerpColor(c, gB[i] || c, t)));
+                    livingBg.style.background = `linear-gradient(to top, ${colors.join(', ')})`;
+
+                    t += speed;
+                    if(t >= 1){
+                        t = 0;
+                        current = next;
+                        next = (next + 1) % keys.length;
+                    }
+                    if(morphing) frameId = requestAnimationFrame(animate);
+                }
+                animate();
+            }
+
+            function stopLivingGradient() {
+                morphing = false;
+                if(frameId) cancelAnimationFrame(frameId);
+            }
+
+            // Handle swatch clicks
             bgOptions.forEach(option => {
                 option.addEventListener('click', () => {
-                    const selected = option.dataset.bg;
-                    applyBackground(selected);
-                    markSelected(selected);
-                    localStorage.setItem('jerryBackground', selected);
+                    const key = option.dataset.bg;
+                    stopLivingGradient();
+
+                    if(key === 'all'){
+                        startLivingGradient();
+                    } else if(key === 'default') {
+                        livingBg.style.background = '';
+                    } else if(BACKGROUNDS[key]) {
+                        const colors = BACKGROUNDS[key].map(rgbToStr);
+                        livingBg.style.background = `linear-gradient(to top, ${colors.join(', ')})`;
+                    }
+
+                    // Highlight selected swatch
+                    bgOptions.forEach(o => o.classList.toggle('selected', o.dataset.bg === key));
+                    localStorage.setItem('jerryBackground', key);
                 });
             });
 
-            function applyBackground(bgKey) {
-                // Stop slideshow if running
-                if (slideshowInterval) {
-                    clearInterval(slideshowInterval);
-                    slideshowInterval = null;
-                }
-
-                if (bgKey === 'default') {
-                    jerryContainer.style.background = '';
-                } else if (bgKey === 'all') {
-                    // Slideshow through all gradients
-                    const keys = Object.keys(GRADIENTS).filter(k => k !== 'default');
-                    let current = 0;
-                    jerryContainer.style.background = GRADIENTS[keys[current]];
-
-                    slideshowInterval = setInterval(() => {
-                        current = (current + 1) % keys.length;
-                        jerryContainer.style.background = GRADIENTS[keys[current]];
-                    }, SLIDE_DURATION);
-                } else {
-                    // Static gradient
-                    jerryContainer.style.background = GRADIENTS[bgKey];
-                }
-            }
-
-            function markSelected(bgKey) {
-                bgOptions.forEach(option => {
-                    option.classList.toggle('selected', option.dataset.bg === bgKey);
-                });
-            }
+            // Load saved selection on page load
+            const saved = localStorage.getItem('jerryBackground') || 'default';
+            document.querySelector(`.background-option[data-bg="${saved}"]`)?.click();
         });
         
         // =======================
