@@ -2242,25 +2242,7 @@
 
         // === Jerry Animation Controller ==
         const jerryContainer = document.getElementById('jerrySprite');
-        const blinkTargets = {
-            1: [
-                // existing 1-pixels (example from before)
-                [4,4],[4,10],[10,7]
-            ],
-            4: [
-                // Left eye block
-                [4,4],[4,5],[4,6],
-                [5,3],[5,4],[5,6],[5,7],
-                [6,3],[6,4],[6,5],[6,7],
-                [7,4],[7,5],[7,6],
-
-                // Right eye block
-                [4,10],[4,11],[4,12],
-                [5,9],[5,10],[5,12],[5,13],
-                [6,9],[6,10],[6,11],[6,12],[6,13],
-                [7,10],[7,11],[7,12]
-            ]
-        };
+        
 
         
         let currentMood = "content";
@@ -2332,18 +2314,45 @@
 
         // === Animations ===
 
-        function blinkJerry() {
-            const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+        const blinkTargets = {
+            1: [
+                // existing 1-pixels (example from before)
+                [4,4],[4,10],[10,7]
+            ],
+            4: [
+                // Left eye block
+                [4,4],[4,5],[4,6],
+                [5,3],[5,4],[5,6],[5,7],
+                [6,3],[6,4],[6,5],[6,7],
+                [7,4],[7,5],[7,6],
 
-            blinkTargets.forEach(([r, c]) => {
-                if (sprite[r] !== undefined && sprite[r][c] !== undefined) {
-                    sprite[r][c] = 3; // blink color
+                // Right eye block
+                [4,10],[4,11],[4,12],
+                [5,9],[5,10],[5,12],[5,13],
+                [6,9],[6,10],[6,11],[6,12],[6,13],
+                [7,10],[7,11],[7,12]
+            ]
+        };
+
+        const BLINK_DURATION = 150;
+
+        function blinkJerry() {
+            const currentSprite = getCurrentSprite(); // your function
+            const spriteCopy = JSON.parse(JSON.stringify(currentSprite));
+
+            // Set blink color (3) on all targets
+            blinkTargets.forEach(([r,c]) => {
+                if (spriteCopy[r] && spriteCopy[r][c] !== undefined) {
+                    spriteCopy[r][c] = 3; 
                 }
             });
 
-            drawJerry(sprite);
+            drawJerry(spriteCopy);
 
-            setTimeout(() => drawJerry(getCurrentSprite()), 200);
+            // Revert after short delay
+            setTimeout(() => {
+                drawJerry(currentSprite);
+            }, BLINK_DURATION);
         }
         
 
