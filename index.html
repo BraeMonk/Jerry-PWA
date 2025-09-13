@@ -2337,19 +2337,18 @@
         const BLINK_DURATION = 150;
 
         function blinkJerry() {
-            const currentSprite = getCurrentSprite(); // your function
+            const currentSprite = getCurrentSprite(); 
             const spriteCopy = JSON.parse(JSON.stringify(currentSprite));
 
-            // Set blink color (3) on all targets
-            blinkTargets.forEach(([r,c]) => {
-                if (spriteCopy[r] && spriteCopy[r][c] !== undefined) {
-                    spriteCopy[r][c] = 3; 
-                }
+            Object.values(blinkTargets).forEach(targetArray => {
+                targetArray.forEach(([r, c]) => {
+                    if (spriteCopy[r] && spriteCopy[r][c] !== undefined) {
+                        spriteCopy[r][c] = 3; // blink color
+                    }
+                });
             });
 
             drawJerry(spriteCopy);
-
-            // Revert after short delay
             setTimeout(() => {
                 drawJerry(currentSprite);
             }, BLINK_DURATION);
