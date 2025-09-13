@@ -2242,6 +2242,25 @@
 
         // === Jerry Animation Controller ==
         const jerryContainer = document.getElementById('jerrySprite');
+        const blinkTargets = {
+            1: [
+                // existing 1-pixels (example from before)
+                [4,4],[4,10],[10,7]
+            ],
+            4: [
+                // Left eye block
+                [4,4],[4,5],[4,6],
+                [5,3],[5,4],[5,6],[5,7],
+                [6,3],[6,4],[6,5],[6,7],
+                [7,4],[7,5],[7,6],
+
+                // Right eye block
+                [4,10],[4,11],[4,12],
+                [5,9],[5,10],[5,12],[5,13],
+                [6,9],[6,10],[6,11],[6,12],[6,13],
+                [7,10],[7,11],[7,12]
+            ]
+        };
 
         
         let currentMood = "content";
@@ -2313,29 +2332,17 @@
 
         // === Animations ===
 
-        // Blinking (Energy Dimming)
         function blinkJerry() {
             const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-       
-            // Target the specific pupil pixels (all are 1s - sparkles/light points)
-            const pupils = [[4, 4], [4, 10], [10, 7]]; // Using 0-indexed (your 5,5 = 4,4 etc.)
-        
-            pupils.forEach(([r, c]) => {
-                if (sprite[r] && sprite[r][c] === 1) {
-                    // Get surrounding color to blend the pupil into
-                    let surroundingColor = 0; // default to transparent
-                
-                    // Check adjacent pixels to find the surrounding color
-                    if (sprite[r-1] && sprite[r-1][c] !== 1) surroundingColor = sprite[r-1][c];
-                    else if (sprite[r][c-1] !== 1) surroundingColor = sprite[r][c-1];
-                    else if (sprite[r+1] && sprite[r+1][c] !== 1) surroundingColor = sprite[r+1][c];
-                    else if (sprite[r][c+1] !== 1) surroundingColor = sprite[r][c+1];
-                
-                    sprite[r][c] = surroundingColor; // Blink by hiding the sparkle
+
+            blinkTargets.forEach(([r, c]) => {
+                if (sprite[r] !== undefined && sprite[r][c] !== undefined) {
+                    sprite[r][c] = 3; // blink color
                 }
             });
-        
+
             drawJerry(sprite);
+
             setTimeout(() => drawJerry(getCurrentSprite()), 200);
         }
         
