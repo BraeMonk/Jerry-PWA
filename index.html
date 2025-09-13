@@ -1188,6 +1188,54 @@
         .jerry-container.bg-neonLights {
             background: linear-gradient(to top, #00f260, #0575e6);
         }
+
+        /* Background swatches inside the scroll menu */
+        .bg-swatch {
+            width: 60px;
+            height: 30px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        /* Match each gradient theme */
+        .swatch-default {
+            background: linear-gradient(to bottom, #f9fafb, #e5e7eb); /* light theme */
+        }
+        body.dark-theme .swatch-default {
+            background: linear-gradient(to bottom, #1f2937, #111827); /* dark theme */
+        }
+
+        .swatch-wildBerry {
+            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc);
+        }
+
+        .swatch-finalFrontier {
+            background: linear-gradient(to top, #0f172a, #1e293b, #3b0764);
+        }
+
+        .swatch-coolBreeze {
+            background: linear-gradient(to top, #3a7bd5, #00d2ff);
+        }
+
+        .swatch-sunsetGlow {
+            background: linear-gradient(to top, #ff7e5f, #feb47b);
+        }
+
+        .swatch-mysticPurple {
+            background: linear-gradient(to top, #7b2ff7, #f107a3);
+        }
+
+        .swatch-lemonZest {
+            background: linear-gradient(to top, #f9d423, #ff4e50);
+        }
+
+        .swatch-oceanDeep {
+            background: linear-gradient(to top, #2c3e50, #3498db);
+        }
+
+        .swatch-neonLights {
+            background: linear-gradient(to top, #00f260, #0575e6);
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1623,13 +1671,40 @@
                 <h3>Background Environment</h3>
                 <div class="background-scroll">
                     <div class="background-option" data-bg="default">
+                        <div class="bg-swatch swatch-default"></div>
                         <span>Default</span>
                     </div>
                     <div class="background-option" data-bg="wildBerry">
-                            <span>Wild Berry</span>
+                        <div class="bg-swatch swatch-wildBerry"></div>
+                        <span>Wild Berry</span>
                     </div>
                     <div class="background-option" data-bg="finalFrontier">
+                        <div class="bg-swatch swatch-finalFrontier"></div>
                         <span>Final Frontier</span>
+                    </div>
+                    <div class="background-option" data-bg="coolBreeze">
+                        <div class="bg-swatch swatch-coolBreeze"></div>
+                        <span>Cool Breeze</span>
+                    </div>
+                    <div class="background-option" data-bg="sunsetGlow">
+                        <div class="bg-swatch swatch-sunsetGlow"></div>
+                        <span>Sunset Glow</span>
+                    </div>
+                    <div class="background-option" data-bg="mysticPurple">
+                        <div class="bg-swatch swatch-mysticPurple"></div>
+                        <span>Mystic Purple</span>
+                    </div>
+                    <div class="background-option" data-bg="lemonZest">
+                        <div class="bg-swatch swatch-lemonZest"></div>
+                        <span>Lemon Zest</span>
+                    </div>
+                    <div class="background-option" data-bg="oceanDeep">
+                        <div class="bg-swatch swatch-oceanDeep"></div>
+                        <span>Ocean Deep</span>
+                    </div>
+                    <div class="background-option" data-bg="neonLights">
+                        <div class="bg-swatch swatch-neonLights"></div>
+                        <span>Neon Lights</span>
                     </div>
                 </div>
             </div>
