@@ -1251,6 +1251,19 @@
             );
             border-radius: 4px;
         }
+
+        #halo {
+            position: absolute;
+            width: 40px;
+            height: 10px;
+            border-radius: 50%;
+            background: gold;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none; /* hidden until level >= 5 */
+            box-shadow: 0 0 10px gold;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1300,6 +1313,7 @@
         <!-- Jerry Screen -->
         <div class="screen active" id="jerry">
             <div class="jerry-container" id="jerryWrapper">
+                <div id="halo"></div>
                 <div class="jerry-sprite" id="jerrySprite"></div>
                 <div class="jerry-shadow"></div>
                 <div class="jerry-stats">
@@ -2400,31 +2414,17 @@
 
         // Evolution overlay
         function evolveJerry(level) {
-            // Clone baseSprite so we don’t mutate directly
-            let evolved = JSON.parse(JSON.stringify(baseSprite));
-
+            // Update base sprite if needed (glowing eye, etc.)
+            baseSprite = JSON.parse(JSON.stringify(getCurrentSprite()));
             if (level >= 5) {
-                // Halo (color 2) in an oval shape above Jerry
-                // Top arc
-                evolved[0][5] = 2;
-                evolved[0][6] = 2;
-                evolved[0][7] = 2;
-
-                // Sides
-                evolved[1][4] = 2;
-                evolved[1][8] = 2;
-
-                // Bottom arc
-                evolved[2][5] = 2;
-                evolved[2][6] = 2;
-                evolved[2][7] = 2;
+                const halo = document.getElementById('halo');
+                if (halo) halo.style.display = 'block';
+            } else {
+                const halo = document.getElementById('halo');
+                if (halo) halo.style.display = 'none';
             }
 
-            // Save back to baseSprite so the halo persists
-            baseSprite = evolved;
- 
-            // Draw updated Jerry
-            drawJerry(baseSprite);
+            drawJerry(getCurrentSprite());
         }
 
         function triggerShake() {
