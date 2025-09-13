@@ -3467,7 +3467,10 @@
 
             // Load saved background on page load
             let savedBg = localStorage.getItem('jerryBackground');
-            if (!BACKGROUNDS[savedBg]) savedBg = 'default';
+            if (!BACKGROUNDS[savedBg]) {
+                savedBg = 'default';
+                localStorage.setItem('jerryBackground', savedBg);
+            }
             applyBackground(savedBg);
             markSelected(savedBg);
 
