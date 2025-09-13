@@ -3437,7 +3437,7 @@
             const jerryContainer = document.getElementById('jerryWrapper');
             const bgOptions = document.querySelectorAll('.background-option');
 
-            // Map of keys to CSS classes
+            // Map keys to CSS classes
             const BACKGROUNDS = {
                 default: 'bg-default',
                 wildBerry: 'bg-wildBerry',
@@ -3450,10 +3450,11 @@
                 neonLights: 'bg-neonLights'
             };
 
-            // Apply background
+            // Apply a background class
             function applyBackground(bgKey) {
-                // Remove all background classes first
+                // Remove all existing background classes
                 jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
+                // Add the new class
                 jerryContainer.classList.add(BACKGROUNDS[bgKey]);
             }
 
@@ -3464,12 +3465,12 @@
                 });
             }
 
-            // Load saved background
+            // Load saved background on page load
             const savedBg = localStorage.getItem('jerryBackground') || 'default';
             applyBackground(savedBg);
             markSelected(savedBg);
 
-            // Click listeners
+            // Click listeners for swatches
             bgOptions.forEach(option => {
                 option.addEventListener('click', () => {
                     const selected = option.dataset.bg;
