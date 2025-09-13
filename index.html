@@ -2400,15 +2400,31 @@
 
         // Evolution overlay
         function evolveJerry(level) {
-        baseSprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-        if (level >= 5) baseSprite[2][7] = 4; // glowing eye
-        if (level >= 10) baseSprite[0][6] = 2; // halo
-        drawJerry(getCurrentSprite());
-        }
+            // Clone baseSprite so we don’t mutate directly
+            let evolved = JSON.parse(JSON.stringify(baseSprite));
 
-        // Add safety check for jerryContainer
-        if (!jerryContainer) {
-        console.error('jerryContainer not found - animation will not work');
+            if (level >= 5) {
+                // Halo (color 2) in an oval shape above Jerry
+                // Top arc
+                evolved[0][5] = 2;
+                evolved[0][6] = 2;
+                evolved[0][7] = 2;
+
+                // Sides
+                evolved[1][4] = 2;
+                evolved[1][8] = 2;
+
+                // Bottom arc
+                evolved[2][5] = 2;
+                evolved[2][6] = 2;
+                evolved[2][7] = 2;
+            }
+
+            // Save back to baseSprite so the halo persists
+            baseSprite = evolved;
+ 
+            // Draw updated Jerry
+            drawJerry(baseSprite);
         }
 
         function triggerShake() {
