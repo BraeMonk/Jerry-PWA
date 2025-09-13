@@ -281,7 +281,7 @@
             z-index: 1;
             top: -15px;
             justify-content: center;
-            transition: background 3s ease-in-out;
+            transition: background 4.5s ease-in-out;
         }
 
         /* Background inside container, above stats */
@@ -3444,27 +3444,32 @@
             const jerryContainer = document.getElementById('jerryWrapper');
             const bgOptions = document.querySelectorAll('.background-option');
 
-            // Map of keys to CSS classes
-            const BACKGROUNDS = {
-                default: 'bg-default',
-                wildBerry: 'bg-wildBerry',
-                finalFrontier: 'bg-finalFrontier',
-                coolBreeze: 'bg-coolBreeze',
-                sunsetGlow: 'bg-sunsetGlow',
-                mysticPurple: 'bg-mysticPurple',
-                lemonZest: 'bg-lemonZest',
-                oceanDeep: 'bg-oceanDeep',
-                neonLights: 'bg-neonLights'
+            // Gradient definitions
+            const GRADIENTS = {
+                default: '',
+                wildBerry: 'linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc)',
+                finalFrontier: 'linear-gradient(to top, #0f172a, #1e293b, #3b0764)',
+                coolBreeze: 'linear-gradient(to top, #3a7bd5, #00d2ff)',
+                sunsetGlow: 'linear-gradient(to top, #ff7e5f, #feb47b)',
+                mysticPurple: 'linear-gradient(to top, #7b2ff7, #f107a3)',
+                lemonZest: 'linear-gradient(to top, #f9d423, #ff4e50)',
+                oceanDeep: 'linear-gradient(to top, #2c3e50, #3498db)',
+                neonLights: 'linear-gradient(to top, #00f260, #0575e6)'
             };
 
             let slideshowInterval = null;
+            const SLIDE_DURATION = 5000; // 5 seconds
+            const FADE_DURATION = 4500; // slightly less than slide duration
 
-            // Load saved background from localStorage
+            // Set transition dynamically to match fade
+            jerryContainer.style.transition = `background ${FADE_DURATION}ms ease-in-out`;
+
+            // Load saved background
             let savedBg = localStorage.getItem('jerryBackground') || 'default';
             applyBackground(savedBg);
             markSelected(savedBg);
 
-            // Click listeners for swatches
+            // Swatch click events
             bgOptions.forEach(option => {
                 option.addEventListener('click', () => {
                     const selected = option.dataset.bg;
@@ -3474,38 +3479,31 @@
                 });
             });
 
-            // Apply background or start slideshow
             function applyBackground(bgKey) {
-                // Stop any existing slideshow
+                // Stop slideshow if running
                 if (slideshowInterval) {
                     clearInterval(slideshowInterval);
                     slideshowInterval = null;
                 }
 
-                // Remove all background classes first
-                jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
-
                 if (bgKey === 'default') {
-                    // Just use the default background
-                    jerryContainer.classList.add(BACKGROUNDS.default);
+                    jerryContainer.style.background = '';
                 } else if (bgKey === 'all') {
                     // Slideshow through all gradients
-                    const gradients = Object.values(BACKGROUNDS).filter(c => c !== BACKGROUNDS.default);
+                    const keys = Object.keys(GRADIENTS).filter(k => k !== 'default');
                     let current = 0;
-                    jerryContainer.classList.add(gradients[current]);
+                    jerryContainer.style.background = GRADIENTS[keys[current]];
 
                     slideshowInterval = setInterval(() => {
-                        jerryContainer.classList.remove(gradients[current]);
-                        current = (current + 1) % gradients.length;
-                        jerryContainer.classList.add(gradients[current]);
-                    }, 5000); // Change every 5 seconds
+                        current = (current + 1) % keys.length;
+                        jerryContainer.style.background = GRADIENTS[keys[current]];
+                    }, SLIDE_DURATION);
                 } else {
                     // Static gradient
-                    jerryContainer.classList.add(BACKGROUNDS[bgKey]);
+                    jerryContainer.style.background = GRADIENTS[bgKey];
                 }
             }
 
-            // Highlight selected swatch in scroll view
             function markSelected(bgKey) {
                 bgOptions.forEach(option => {
                     option.classList.toggle('selected', option.dataset.bg === bgKey);
@@ -3548,6 +3546,7 @@
                 const isLightMode = document.body.classList.contains('light-theme');
                 splash.style.background = isLightMode ? '#f7ede5' : '#1a202c';
             }
+            
             // --- Theme ---
             const savedTheme = localStorage.getItem('hush_theme');
             if (savedTheme === 'light') document.body.classList.add('light-theme');
