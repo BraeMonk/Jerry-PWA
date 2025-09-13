@@ -1236,6 +1236,21 @@
         .swatch-neonLights {
             background: linear-gradient(to top, #00f260, #0575e6);
         }
+
+        .swatch-all {
+            background: repeating-linear-gradient(
+                45deg,
+                #2d6a4f,
+                #2d6a4f 5px,
+                #0f172a 5px,
+                #0f172a 10px,
+                #3a7bd5 10px,
+                #3a7bd5 15px,
+                #ff7e5f 15px,
+                #ff7e5f 20px
+            );
+            border-radius: 4px;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1704,6 +1719,10 @@
                     <div class="background-option" data-bg="neonLights">
                         <div class="bg-swatch swatch-neonLights"></div>
                         <span>Neon Lights</span>
+                    </div>
+                    <div class="background-option" data-bg="all">
+                        <div class="bg-swatch swatch-all"></div>
+                        <span>All</span>
                     </div>
                 </div>
             </div>
@@ -3451,10 +3470,42 @@
                 });
             });
 
-            // Apply background class
+            let slideshowInterval = null;
+
             function applyBackground(bgKey) {
-                jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
-                jerryContainer.classList.add(BACKGROUNDS[bgKey]);
+                // Clear any existing slideshow
+                if (slideshowInterval) {
+                    clearInterval(slideshowInterval);
+                    slideshowInterval = null;
+                }
+                
+                if (bgKey === 'default') {
+                    jerryContainer.style.background = '';
+                } else if (bgKey === 'all') {
+                    // Start slideshow cycling through all gradients
+                    const gradients = [
+                        'bg-wildBerry',
+                        'bg-finalFrontier',
+                        'bg-coolBreeze',
+                        'bg-sunsetGlow',
+                        'bg-mysticPurple',
+                        'bg-lemonZest',
+                        'bg-oceanDeep',
+                        'bg-neonLights'
+                    ];
+                    let current = 0;
+                    jerryContainer.classList.remove(...gradients);
+                    jerryContainer.classList.add(gradients[current]);
+                    slideshowInterval = setInterval(() => {
+                        jerryContainer.classList.remove(gradients[current]);
+                        current = (current + 1) % gradients.length;
+                        jerryContainer.classList.add(gradients[current]);
+                    }, 5000); // change every 5 seconds
+                } else {
+                    // Static gradient
+                    jerryContainer.className = jerryContainer.className.replace(/\bbg-\w+\b/g, '');
+                    jerryContainer.classList.add(bgKey);
+                }
             }
 
             // Highlight selected scroll option
