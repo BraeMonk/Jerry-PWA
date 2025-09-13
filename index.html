@@ -1259,9 +1259,17 @@
             border-radius: 50%;
             background-color: gold;
             top: -15px; /* above Jerry sprite */
-            left: 10px; /* center-ish */
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 7; /* above Jerry sprite */
+            animation: float 2s ease-in-out infinite;
         }
+            
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
         
         @media (max-width: 480px) {
             .app-container {
@@ -2415,7 +2423,7 @@
         function evolveJerry(level) {
             if (!jerryContainer) return;
 
-            // Remove any existing halo first
+            // Remove any existing halo
             const oldHalo = document.getElementById('jerryHalo');
             if (oldHalo) oldHalo.remove();
 
@@ -2423,19 +2431,18 @@
                 // Create halo div
                 const halo = document.createElement('div');
                 halo.id = 'jerryHalo';
+                // Minimal inline styles; CSS handles position, transform, and animation
                 halo.style.position = 'absolute';
                 halo.style.width = '40px';
                 halo.style.height = '8px';
-                halo.style.borderRadius = '50%';
                 halo.style.backgroundColor = 'gold';
-                halo.style.top = '-10px';
-                halo.style.left = '50%';
-                halo.style.transform = 'translateX(-50%)';
+                halo.style.borderRadius = '50%';
                 halo.style.zIndex = '10';
                 jerryContainer.appendChild(halo);
             }
 
-            drawJerry(getCurrentSprite()); // redraw sprite above halo
+            // Redraw Jerry sprite (sprite will be below the halo due to z-index)
+            drawJerry(getCurrentSprite());
         }
 
         function triggerShake() {
