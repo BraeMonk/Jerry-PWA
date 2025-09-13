@@ -15,11 +15,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Jerry">
     <!-- iOS Home Screen icons -->
-    <link rel="apple-touch-icon" href="./jerryIcon2.png.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./jerryIcon2.png.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./jerryIcon2.png.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="./jerryIcon2.png.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="./jerryIcon2.png.png">
+    <link rel="apple-touch-icon" href="./jerryIcon3.PNG">
+    <link rel="apple-touch-icon" sizes="180x180" href="./jerryIcon3.PNG">
+    <link rel="apple-touch-icon" sizes="152x152" href="./jerryIcon3.PNG">
+    <link rel="apple-touch-icon" sizes="120x120" href="./jerryIcon3.PNG">
+    <link rel="apple-touch-icon" sizes="167x167" href="./jerryIcon3.PNG">
     
     <style>
         * {
@@ -882,7 +882,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('./jerrySplash.png.png') no-repeat center center;
+            background: url('./jerrySplash2.PNG') no-repeat center center;
             background-size: cover;
             filter: blur(10px); /* adjust blur intensity */
             z-index: 0; /* behind everything */
@@ -1275,7 +1275,7 @@
 </head>
 <body>
     <div id="splashScreen">
-        <img src="./jerrySplash.png.png" alt="Splash" id="splashImage" />
+        <img src="./jerrySplash2.PNG" alt="Splash" id="splashImage" />
     </div>
     <div class="app-container">
         <div class="affirmation-banner" id="affirmationBanner">
@@ -2313,24 +2313,44 @@
 
         // === Animations ===
 
-        // Blinking
+        // Blinking (Energy Dimming)
         function blinkJerry() {
-        if (Math.random() < 0.003 && !jerryTalking) {
+            if (Math.random() < 0.003 && !jerryTalking) {
                 const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-                let eyes;
-                const bodyColor = 1; // blink = body color
+                let energyCores;
+                const dimColor = 3; // dim the bright energy cores (4) to ethereal form (3)
+        
                 switch (currentMood) {
-                case 'content': eyes = [[4, 5], [4, 10]]; break;
-                case 'lowInsight': eyes = [[4, 4], [4, 11]]; break;
-                case 'lowCalm': eyes = [[3, 4], [3, 11]]; break;
+                    case 'content': 
+                        // Dim the main energy cores
+                        energyCores = [[3, 3], [3, 4], [3, 5], [3, 9], [3, 10], [3, 11],
+                                       [4, 4], [4, 6], [4, 9], [4, 11],
+                                       [5, 3], [5, 4], [5, 5], [5, 6], [5, 8], [5, 9], [5, 10], [5, 11]]; 
+                        break;
+                    case 'lowInsight': 
+                        // This one has no energy cores (4), so maybe dim some ethereal parts (3) to mist (2)
+                        energyCores = [[3, 3], [3, 4], [3, 5], [3, 9], [3, 10], [3, 11]];
+                        const mistColor = 2;
+                        energyCores.forEach(([r, c]) => {
+                            if (sprite[r][c] === 3) sprite[r][c] = mistColor;
+                        });
+                        drawJerry(sprite);
+                        setTimeout(() => drawJerry(getCurrentSprite()), 200);
+                        return;
+                    case 'lowCalm': 
+                        // Dim the chaotic energy cores
+                        energyCores = [[2, 3], [2, 4], [2, 5], [2, 9], [2, 10], [2, 11],
+                                       [3, 3], [3, 5], [3, 9], [3, 11],
+                                       [4, 2], [4, 4], [4, 6], [4, 9], [4, 11], [4, 14]]; 
+                        break;
                 }
-                eyes.forEach(([r, c]) => {
-                sprite[r][c] = bodyColor;
-                sprite[r + 1][c] = bodyColor;
+        
+                energyCores.forEach(([r, c]) => {
+                    if (sprite[r][c] === 4) sprite[r][c] = dimColor;
                 });
                 drawJerry(sprite);
                 setTimeout(() => drawJerry(getCurrentSprite()), 200);
-        }
+            }
         }
 
         // Breathing (brightness + scale)
@@ -2419,7 +2439,7 @@
             breathTime += 0.05;
 
             // Blinking (only if not talking)
-            if (!jerryTalking && Math.random() < 0.02) {
+            if (!jerryTalking && Math.random() < 0.008) {
                 blinkJerry();
             }
 
