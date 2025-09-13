@@ -2334,29 +2334,28 @@
             ]
         };
 
-        const BLINK_DURATION = 500; // 1/2 second
+        const BLINK_DURATION = 150; // 1/2 second
 
         function blinkJerry() {
-            const currentSprite = getCurrentSprite(); // get current sprite
+            const currentSprite = getCurrentSprite();
             const spriteCopy = JSON.parse(JSON.stringify(currentSprite));
 
-            // Apply blink color (3) to all specified pixels
-            Object.values(blinkTargets).forEach(targetArray => {
-                targetArray.forEach(([r, c]) => {
-                    if (spriteCopy[r] && spriteCopy[r][c] !== undefined) {
-                        spriteCopy[r][c] = 3;
-                    }
-                });
+            // Shift blink pixels up (-1 row) and left (-1 col)
+            blinkTargets.forEach(([r, c]) => {
+                const newR = r - 1;
+                const newC = c - 1;
+                if (spriteCopy[newR] && spriteCopy[newR][newC] !== undefined) {
+                    spriteCopy[newR][newC] = 3; // blink color
+                }
             });
-            drawJerry(spriteCopy); // show blink
 
-            // Revert back after duration
+            drawJerry(spriteCopy);
+
             setTimeout(() => {
                 drawJerry(currentSprite);
             }, BLINK_DURATION);
         }
         
-
         // Breathing (brightness + scale)
         function breatheJerry() {
             breathTime += 0.05;
