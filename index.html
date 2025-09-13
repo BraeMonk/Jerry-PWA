@@ -2412,19 +2412,30 @@
         drawJerry(getCurrentSprite());
         }
 
-        // Evolution overlay
         function evolveJerry(level) {
-            // Update base sprite if needed (glowing eye, etc.)
-            baseSprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+            if (!jerryContainer) return;
+
+            // Remove any existing halo first
+            const oldHalo = document.getElementById('jerryHalo');
+            if (oldHalo) oldHalo.remove();
+
             if (level >= 5) {
-                const halo = document.getElementById('halo');
-                if (halo) halo.style.display = 'block';
-            } else {
-                const halo = document.getElementById('halo');
-                if (halo) halo.style.display = 'none';
+                // Create halo div
+                const halo = document.createElement('div');
+                halo.id = 'jerryHalo';
+                halo.style.position = 'absolute';
+                halo.style.width = '40px';
+                halo.style.height = '8px';
+                halo.style.borderRadius = '50%';
+                halo.style.backgroundColor = 'gold';
+                halo.style.top = '-10px';
+                halo.style.left = '50%';
+                halo.style.transform = 'translateX(-50%)';
+                halo.style.zIndex = '10';
+                jerryContainer.appendChild(halo);
             }
 
-            drawJerry(getCurrentSprite());
+            drawJerry(getCurrentSprite()); // redraw sprite above halo
         }
 
         function triggerShake() {
@@ -2464,6 +2475,13 @@
 
             // Apply transform: shake + breathing
             jerryContainer.style.transform = `translateX(${shakeOffset}px) scale(${baseScale})`;
+
+            // Animate halo (if it exists)
+            const halo = document.getElementById('jerryHalo');
+            if (halo) {
+                const floatOffset = 2 * Math.sin(breathTime); // 2px up/down
+                halo.style.top = `${-10 + floatOffset}px`;
+            }
 
             requestAnimationFrame(updateJerry);
         }
