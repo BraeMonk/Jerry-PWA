@@ -2116,8 +2116,10 @@
         document.getElementById('levelLabel').textContent = `Level ${appState.jerry.level}`;
         document.getElementById('xpLabel').textContent = `XP: ${appState.jerry.xp} / ${appState.jerry.xpToNext}`;
 
-        // Update Jerry sprite based on needs
-        updateJerrySprite();
+            // Update Jerry sprite based on needs
+            updateJerrySprite();
+            evolveJerry(appState.jerry.level);
+            
         }
 
         // Replaced updateJerrySprite with a single, reliable update function
@@ -2490,7 +2492,6 @@
         if (jerryContainer) {
             updateJerry();
             scheduleBlink();
-            evolveJerry(appState.jerry.level);
         }
 
         function scheduleBlink() {
