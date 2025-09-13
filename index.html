@@ -2340,8 +2340,8 @@
             const currentSprite = getCurrentSprite();
             const spriteCopy = JSON.parse(JSON.stringify(currentSprite));
 
-            // Shift blink pixels up (-1 row) and left (-1 col)
-            blinkTargets.forEach(([r, c]) => {
+            const blinkPixels = blinkTargets[4]; // Use the full eye block
+            blinkPixels.forEach(([r, c]) => {
                 const newR = r - 1;
                 const newC = c - 1;
                 if (spriteCopy[newR] && spriteCopy[newR][newC] !== undefined) {
@@ -2355,6 +2355,7 @@
                 drawJerry(currentSprite);
             }, BLINK_DURATION);
         }
+
         
         // Breathing (brightness + scale)
         function breatheJerry() {
