@@ -2315,31 +2315,30 @@
 
         // Blinking (Energy Dimming)
         function blinkJerry() {
-            if (Math.random() < 0.008 && !jerryTalking) {
-                const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+            const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
        
-                // Target the specific pupil pixels (all are 1s - sparkles/light points)
-                const pupils = [[4, 4], [4, 10], [10, 7]]; // Using 0-indexed (your 5,5 = 4,4 etc.)
+            // Target the specific pupil pixels (all are 1s - sparkles/light points)
+            const pupils = [[4, 4], [4, 10], [10, 7]]; // Using 0-indexed (your 5,5 = 4,4 etc.)
         
-                pupils.forEach(([r, c]) => {
-                    if (sprite[r] && sprite[r][c] === 1) {
-                        // Get surrounding color to blend the pupil into
-                        let surroundingColor = 0; // default to transparent
+            pupils.forEach(([r, c]) => {
+                if (sprite[r] && sprite[r][c] === 1) {
+                    // Get surrounding color to blend the pupil into
+                    let surroundingColor = 0; // default to transparent
                 
-                        // Check adjacent pixels to find the surrounding color
-                        if (sprite[r-1] && sprite[r-1][c] !== 1) surroundingColor = sprite[r-1][c];
-                        else if (sprite[r][c-1] !== 1) surroundingColor = sprite[r][c-1];
-                        else if (sprite[r+1] && sprite[r+1][c] !== 1) surroundingColor = sprite[r+1][c];
-                        else if (sprite[r][c+1] !== 1) surroundingColor = sprite[r][c+1];
+                    // Check adjacent pixels to find the surrounding color
+                    if (sprite[r-1] && sprite[r-1][c] !== 1) surroundingColor = sprite[r-1][c];
+                    else if (sprite[r][c-1] !== 1) surroundingColor = sprite[r][c-1];
+                    else if (sprite[r+1] && sprite[r+1][c] !== 1) surroundingColor = sprite[r+1][c];
+                    else if (sprite[r][c+1] !== 1) surroundingColor = sprite[r][c+1];
                 
-                        sprite[r][c] = surroundingColor; // Blink by hiding the sparkle
-                    }
-                });
+                    sprite[r][c] = surroundingColor; // Blink by hiding the sparkle
+                }
+            });
         
-                drawJerry(sprite);
-                setTimeout(() => drawJerry(getCurrentSprite()), 200);
-            }
+            drawJerry(sprite);
+            setTimeout(() => drawJerry(getCurrentSprite()), 200);
         }
+        
 
         // Breathing (brightness + scale)
         function breatheJerry() {
@@ -2426,10 +2425,6 @@
 
             breathTime += 0.05;
 
-            // Blinking (only if not talking)
-            if (Math.random() < 0.02) {
-                blinkJerry();
-            }
 
             // Breathing scale
             const baseScale = 1 + 0.02 * Math.sin(breathTime);
@@ -2443,6 +2438,15 @@
         // Only start the animation loop if jerryContainer exists
         if (jerryContainer) {
             updateJerry();
+            scheduleBlink();
+        }
+
+        function scheduleBlink() {
+            const delay = 2000 + Math.random() * 2000; // 2–4 seconds
+            setTimeout(() => {
+                blinkJerry();
+                scheduleBlink(); // repeat indefinitely
+            }, delay);
         }
 
         function saveJerryState() {
