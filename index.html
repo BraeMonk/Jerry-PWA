@@ -1139,6 +1139,21 @@
             border-radius: 4px;
             margin-bottom: 5px;
         }
+
+        /* Default just follows light/dark theme */
+        .jerry-container.bg-default {
+            background: none;
+        }
+
+        /* Wild Berry theme — foresty greens + berry purple tint */
+        .jerry-container.bg-wildBerry {
+            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc);
+        }
+
+        /* Final Frontier theme — dark space with a cosmic gradient */
+        .jerry-container.bg-finalFrontier {
+            background: linear-gradient(to top, #0f172a, #1e293b, #3b0764);
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1577,11 +1592,9 @@
                         <span>Default</span>
                     </div>
                     <div class="background-option" data-bg="wildBerry">
-                        <img src="./wildBerry.PNG" alt="Wild Berry" class="bg-preview">
                             <span>Wild Berry</span>
                     </div>
                     <div class="background-option" data-bg="finalFrontier">
-                        <img src="./finalFrontier.jpg" alt="Final Frontier" class="bg-preview">
                         <span>Final Frontier</span>
                     </div>
                 </div>
@@ -3300,13 +3313,13 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
-            const jerryBgDiv = document.getElementById('jerryBackground');
+            const jerryContainer = document.getElementById('jerryWrapper');
             const bgOptions = document.querySelectorAll('.background-option');
 
             const BACKGROUNDS = {
-                default: '',
-                wildBerry: 'wildBerry.PNG',
-                finalFrontier: 'finalFrontier.jpg'
+                default: 'bg-default',
+                wildBerry: 'bg-wildBerry',
+                finalFrontier: 'bg-finalFrontier'
             };
 
             // Load saved background
@@ -3324,13 +3337,10 @@
                 });
             });
 
-            // Set background image dynamically
+            // Apply background class
             function applyBackground(bgKey) {
-                if (bgKey === 'default') {
-                    jerryBgDiv.style.backgroundImage = '';
-                } else {
-                    jerryBgDiv.style.backgroundImage = `url('${BACKGROUNDS[bgKey]}')`;
-                }
+                jerryContainer.classList.remove(...Object.values(BACKGROUNDS));
+                jerryContainer.classList.add(BACKGROUNDS[bgKey]);
             }
 
             // Highlight selected scroll option
