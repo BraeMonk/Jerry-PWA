@@ -2315,39 +2315,27 @@
 
         // Blinking (Energy Dimming)
         function blinkJerry() {
-            if (Math.random() < 0.003 && !jerryTalking) {
+            if (Math.random() < 0.008 && !jerryTalking) {
                 const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
-                let energyCores;
-                const dimColor = 3; // dim the bright energy cores (4) to ethereal form (3)
+       
+                // Target the specific pupil pixels (all are 1s - sparkles/light points)
+                const pupils = [[4, 4], [4, 10], [10, 7]]; // Using 0-indexed (your 5,5 = 4,4 etc.)
         
-                switch (currentMood) {
-                    case 'content': 
-                        // Dim the main energy cores
-                        energyCores = [[3, 3], [3, 4], [3, 5], [3, 9], [3, 10], [3, 11],
-                                       [4, 4], [4, 6], [4, 9], [4, 11],
-                                       [5, 3], [5, 4], [5, 5], [5, 6], [5, 8], [5, 9], [5, 10], [5, 11]]; 
-                        break;
-                    case 'lowInsight': 
-                        // This one has no energy cores (4), so maybe dim some ethereal parts (3) to mist (2)
-                        energyCores = [[3, 3], [3, 4], [3, 5], [3, 9], [3, 10], [3, 11]];
-                        const mistColor = 2;
-                        energyCores.forEach(([r, c]) => {
-                            if (sprite[r][c] === 3) sprite[r][c] = mistColor;
-                        });
-                        drawJerry(sprite);
-                        setTimeout(() => drawJerry(getCurrentSprite()), 200);
-                        return;
-                    case 'lowCalm': 
-                        // Dim the chaotic energy cores
-                        energyCores = [[2, 3], [2, 4], [2, 5], [2, 9], [2, 10], [2, 11],
-                                       [3, 3], [3, 5], [3, 9], [3, 11],
-                                       [4, 2], [4, 4], [4, 6], [4, 9], [4, 11], [4, 14]]; 
-                        break;
-                }
-        
-                energyCores.forEach(([r, c]) => {
-                    if (sprite[r][c] === 4) sprite[r][c] = dimColor;
+                pupils.forEach(([r, c]) => {
+                    if (sprite[r] && sprite[r][c] === 1) {
+                        // Get surrounding color to blend the pupil into
+                        let surroundingColor = 0; // default to transparent
+                
+                        // Check adjacent pixels to find the surrounding color
+                        if (sprite[r-1] && sprite[r-1][c] !== 1) surroundingColor = sprite[r-1][c];
+                        else if (sprite[r][c-1] !== 1) surroundingColor = sprite[r][c-1];
+                        else if (sprite[r+1] && sprite[r+1][c] !== 1) surroundingColor = sprite[r+1][c];
+                        else if (sprite[r][c+1] !== 1) surroundingColor = sprite[r][c+1];
+                
+                        sprite[r][c] = surroundingColor; // Blink by hiding the sparkle
+                    }
                 });
+        
                 drawJerry(sprite);
                 setTimeout(() => drawJerry(getCurrentSprite()), 200);
             }
