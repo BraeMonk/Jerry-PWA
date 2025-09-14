@@ -2449,7 +2449,7 @@
 
         
         // === Persistent base sprite (includes evolutions/mood) ===
-        let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
+        let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSprite || 'default']));
 
         // === Helper Functions ===
         function getCurrentSprite() {
