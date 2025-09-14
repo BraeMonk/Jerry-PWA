@@ -1704,8 +1704,17 @@
             </div>
 
             <button class="btn" onclick="saveSettings()">Save Settings</button>
+
+            <div style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px;">Sprite</h3>
+            </div>
+            <!-- Rest of your existing settings content -->
             <div class="form-group" style="margin-top: 20px;">
-                <label class="form-label" for="spriteStyle">Jerry Sprite Style:</label>
+                <label class="form-label">Sprite Preview</label>
+                <div id="spritePreview" style="width: 100px; height: 100px; position: relative; background: #f0f0f0; border: 1px solid #ccc;"></div>
+            </div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label class="form-label" for="spriteStyle">Sprite Style:</label>
                 <select class="form-input" id="spriteStyle">
                     <option value="default">Jerry</option>
                     <option value="cornelius">Cornelius</option>
@@ -1717,12 +1726,6 @@
                     <option value="ember">Ember</option>
                     <option value="wisp">Wisp</option>
                 </select>
-            </div>
-
-            <!-- Rest of your existing settings content -->
-            <div class="form-group" style="margin-top: 20px;">
-                <label class="form-label">Sprite Preview</label>
-                <div id="spritePreview" style="width: 100px; height: 100px; position: relative; background: #f0f0f0; border: 1px solid #ccc;"></div>
             </div>
             <div class="form-group">
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
@@ -1737,7 +1740,7 @@
             </div>
             <!-- Background Environment Selection -->
             <div id="backgroundSettings">
-                <h3>Environment</h3>
+                <h3>Sprite Environment:</h3>
                 <div class="background-scroll">
                     <div class="background-option" data-bg="default">
                         <span>🚫</span>
