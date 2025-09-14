@@ -1693,6 +1693,13 @@
             </div>
 
             <button class="btn" onclick="saveSettings()">Save Settings</button>
+            <div class="form-group" style="margin-top: 20px;">
+    <label class="form-label" for="spriteStyle">Jerry Sprite Style:</label>
+    <select class="form-input" id="spriteStyle">
+        <option value="default">Classic Jerry</option>
+        <option value="cornelius">Cornelius</option>
+    </select>
+</div>
 
             <!-- Rest of your existing settings content -->
             <div class="form-group" style="margin-top: 20px;">
@@ -1892,7 +1899,8 @@
         const PREMIUM_API_KEY = 'GITHUB_SECRET_PREMIUM_API_KEY';
 
         const jerrySprites = {
-            content: [ // Happy, energetic Jerry - lots of sparkles and bright energy
+            default: [],
+            cornelius: [ // Happy, energetic Jerry - lots of sparkles and bright energy
                 [0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0],
                 [0,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0],
                 [0,0,2,3,3,3,2,0,2,3,3,3,2,0,0,0],
@@ -1910,44 +1918,6 @@
                 [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             ],
-
-            lowInsight: [ // Dim, fading Jerry - fewer sparkles, dimmer energy
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,2,2,2,0,0,0,2,2,2,0,0,0,0],
-                [0,0,2,3,3,3,2,0,2,3,3,3,2,0,0,0],
-                [0,2,3,3,3,3,3,2,3,3,3,3,3,2,0,0]
-                [0,3,3,3,0,3,3,3,3,3,0,3,3,3,0,0],
-                [0,3,3,3,3,3,3,3,3,3,3,3,3,3,0,0],
-                [0,2,3,3,3,3,3,2,3,3,3,3,3,2,0,0]
-                [0,0,2,3,3,3,2,0,2,3,3,3,2,0,0,0],
-                [0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0],
-                [0,0,0,0,2,2,3,3,3,2,2,0,0,0,0,0],
-                [0,0,0,0,2,3,3,0,3,3,2,0,0,0,0,0],
-                [0,0,0,0,0,2,3,3,3,2,0,0,0,0,0,0],
-                [0,0,0,0,0,2,2,2,2,2,0,0,0,0,0,0],
-                [0,0,0,0,0,0,2,2,2,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-            ],
-
-            lowCalm: [ // Chaotic Jerry - erratic energy, aggressive sparkles
-                [1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0],
-                [0,1,2,2,2,2,1,0,1,2,2,2,2,1,0,1],
-                [0,2,3,4,4,4,3,2,3,4,4,4,3,2,0,0],
-                [1,3,4,4,1,4,4,3,4,4,1,4,4,3,1,0],
-                [2,4,4,1,4,1,4,4,4,1,4,1,4,4,2,0],
-                [1,4,1,4,4,4,1,4,1,4,4,4,1,4,1,0],
-                [0,3,4,4,4,4,4,3,4,4,4,4,4,3,0,0],
-                [1,2,3,4,1,4,3,2,3,4,1,4,3,2,1,0],
-                [0,1,2,3,3,3,2,1,2,3,3,3,2,1,0,0],
-                [1,0,1,2,4,4,4,4,4,4,4,2,1,0,1,0],
-                [0,0,0,1,3,4,1,4,1,4,3,1,0,0,0,0],
-                [0,1,0,0,2,4,4,4,4,4,2,0,0,1,0,0],
-                [1,0,0,0,1,3,2,2,2,3,1,0,0,0,1,0],
-                [0,0,1,0,0,2,1,2,1,2,0,0,1,0,0,0],
-                [0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0],
-                [1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0]
-            ]
         };
 
         // Color meanings:
@@ -2291,10 +2261,11 @@
         let breathTime = 0;
         let shakeOffset = 0;
         let shakeActive = false;
+        let currentSpriteStyle = 'default';
 
         
         // === Persistent base sprite (includes evolutions/mood) ===
-        let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentMood]));
+        let baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
 
         // === Helper Functions ===
         function getCurrentSprite() {
@@ -2566,6 +2537,27 @@
             });
         }
 
+        const spriteStyleSelect = document.getElementById('spriteStyle')
+
+        spriteStyleSelect.addEventListener('change', (e) => {
+            const selectedStyle = e.target.value;
+            if (jerrySprites[selectedStyle]) {
+                currentSpriteStyle = selectedStyle;
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
+                drawJerry(getCurrentSprite());
+                localStorage.setItem('jerrySpriteStyle', selectedStyle);
+            }
+        });
+
+        // On load
+        const savedStyle = localStorage.getItem('jerrySpriteStyle');
+        if (savedStyle && jerrySprites[savedStyle]) {
+            currentSpriteStyle = savedStyle;
+            baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
+            spriteStyleSelect.value = savedStyle;
+            drawJerry(getCurrentSprite());
+        }
+        
         // === Chat Functions ===
         async function sendMessage() {
             const input = document.getElementById('chatInput');
