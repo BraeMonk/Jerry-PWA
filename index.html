@@ -541,7 +541,8 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.3s ease;
-            z-input: 10;
+            z-index: 10;
+            position: relative;
         }
         
         .form-input:focus {
@@ -874,6 +875,7 @@
             z-index: 10000;              
             transition: opacity 0.5s ease; 
             overflow: hidden; /* needed for pseudo-element */
+            pointer-events: none;
         }
 
         /* Blurred background */
@@ -888,6 +890,7 @@
             background-size: cover;
             filter: blur(10px); /* adjust blur intensity */
             z-index: 0; /* behind everything */
+            pointer-events: none;
         }
 
         /* Splash image stays above the blurred background */
