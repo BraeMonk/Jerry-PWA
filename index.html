@@ -1276,6 +1276,7 @@
             transform: translateX(-50%);
             z-index: 7; /* above Jerry sprite */
             animation: float 2s ease-in-out infinite;
+            pointer-events: none;
         }
             
         @keyframes float {
@@ -3677,6 +3678,7 @@
                         // Use requestAnimationFrame to ensure opacity=1 is rendered first
                         requestAnimationFrame(() => {
                             splash.style.opacity = '0';  // trigger fade
+                            splash.style.pointerEvents = 'none';
                         });
                         // Remove splash after transition completes
                         splash.addEventListener('transitionend', () => splash.remove(), { once: true });
@@ -3779,7 +3781,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     const swCode = `
-                        const CACHE_NAME = 'jerry-pwa-v7';
+                        const CACHE_NAME = 'jerry-pwa-v8';
                         const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
                             event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
