@@ -1694,12 +1694,12 @@
 
             <button class="btn" onclick="saveSettings()">Save Settings</button>
             <div class="form-group" style="margin-top: 20px;">
-    <label class="form-label" for="spriteStyle">Jerry Sprite Style:</label>
-    <select class="form-input" id="spriteStyle">
-        <option value="default">Classic Jerry</option>
-        <option value="cornelius">Cornelius</option>
-    </select>
-</div>
+                <label class="form-label" for="spriteStyle">Jerry Sprite Style:</label>
+                <select class="form-input" id="spriteStyle">
+                    <option value="default">Classic Jerry</option>
+                    <option value="cornelius">Cornelius</option>
+                </select>
+            </div>
 
             <!-- Rest of your existing settings content -->
             <div class="form-group" style="margin-top: 20px;">
@@ -2144,8 +2144,8 @@
         }
         
         // Pass the correct data to the rendering functions
-        const spriteData = jerrySprites[spriteType];
-        const spriteTheme = appState.spriteTheme;
+        const spriteData = jerrySprites[currentSpriteStyle];
+        const spriteTheme = appState.spriteTheme || 'default';
 
         renderJerrySprite(spriteData, spriteTheme);
         renderSpritePreview(spriteData, spriteTheme);
