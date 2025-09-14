@@ -1695,7 +1695,7 @@
                     <option value="default">Default</option>
                     <option value="chaotic">Chaotic</option>
                     <option value="neutral">Neutral</option>
-                    <option value="dreamy">Dreamy</option>
+                    <option value="dreamy">Noir</option>
                     <option value="forest">Forest</option>
                     <option value="neon">Neon</option>
                 </select>
@@ -2173,10 +2173,12 @@
                 ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' } // deep purple body, lavender eyes, darker outline, soft features
                 : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' }, // lavender body, deep purple eyes, soft features, darker outline
                 
-                // DREAMY: Soft, ethereal pastels, calming vibe
-                dreamy: isLightMode
-                ? { 0: 'transparent', 1: '#FFC0CB', 2: '#FFF0F5', 3: '#FF69B4', 4: '#FFD6E8' }  // pink body, lavender eyes, darker pink outline, soft features
-                : { 0: 'transparent', 1: '#FFF0F5', 2: '#FFC0CB', 3: '#FFD6E8', 4: '#FF69B4' }, // soft lavender body, pink eyes, subtle features, dark outline
+                // NOIR: Monochrome, mysterious, cinematic
+                noir: isLightMode
+                    ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF' }  
+                    // dark grey body, light grey eyes, black outline, white accents
+                    : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000' },
+                    //light grey body, dark grey eyes, white outline, black accents
             
                 // FOREST: Earthy, natural, grounded
                 forest: isLightMode
@@ -2221,10 +2223,12 @@
                 neutral: isLightMode
                 ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
                 : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
-                // DREAMY: Soft, ethereal pastels, calming vibe
-                dreamy: isLightMode
-                ? { 0: 'transparent', 1: '#FFC0CB', 2: '#FFF0F5', 3: '#FF69B4', 4: '#FFD6E8' }  // pink body, lavender eyes, darker pink outline, soft features
-                : { 0: 'transparent', 1: '#FFF0F5', 2: '#FFC0CB', 3: '#FFD6E8', 4: '#FF69B4' }, // soft lavender body, pink eyes, subtle features, dark outline
+                // NOIR: Monochrome, mysterious, cinematic
+                noir: isLightMode
+                    ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF' }  
+                    // dark grey body, light grey eyes, black outline, white accents
+                    : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000' },
+                    // light grey body, dark grey eyes, white outline, black accents
                 // FOREST: Earthy, natural, grounded
                 forest: isLightMode
                 ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }  // green body, light mint eyes, dark outline, soft highlights
@@ -2299,10 +2303,10 @@
                 neutral: isLightMode
                 ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
                 : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
-                // DREAMY: Soft, ethereal pastels, calming vibe
-                dreamy: isLightMode
-                ? { 0: 'transparent', 1: '#FFC0CB', 2: '#FFF0F5', 3: '#FF69B4', 4: '#FFD6E8' }  // pink body, lavender eyes, darker pink outline, soft features
-                : { 0: 'transparent', 1: '#FFF0F5', 2: '#FFC0CB', 3: '#FFD6E8', 4: '#FF69B4' }, // soft lavender body, pink eyes, subtle features, dark outline
+                // NOIR: Monochrome, mysterious, cinematic
+                noir: isLightMode
+                    ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF' }  //dark grey body, light grey eyes, black outline, white accents
+                    : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000' },  // light grey body, dark grey eyes, white outline, black accents
             
                 // FOREST: Earthy, natural, grounded
                 forest: isLightMode
