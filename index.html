@@ -3796,7 +3796,11 @@
                             splash.style.pointerEvents = 'none';
                         });
                         // Remove splash after transition completes
-                        splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+                        splash.addEventListener('transitionend', () => {
+                            splash.remove();
+                            updateJerryNeeds();
+                            updateJerryUI();
+                        }, { once: true });
                     }, 3000);
                 };
 
@@ -3838,7 +3842,6 @@
                 }
             });
 
-            updateJerryNeeds();
 
             // Start real-time decay
             setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
@@ -3858,7 +3861,6 @@
             }
 
             // --- Initial rendering ---
-            updateJerryUI();
             updateAffirmationBanner('jerry');
             updateThemeColor();
 
