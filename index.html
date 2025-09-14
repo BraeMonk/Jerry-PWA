@@ -541,8 +541,6 @@
             font-size: 14px;
             outline: none;
             transition: border-color 0.3s ease;
-            z-index: 10;
-            position: relative;
         }
         
         .form-input:focus {
@@ -1284,7 +1282,14 @@
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-5px); }
         }
-        
+
+        .form-input,
+        .form-textarea,
+        #journalInput,
+        .chat-input {
+            position: relative;
+            z-index: 100; /* safely above any sprites/backgrounds */
+        }
         
         @media (max-width: 480px) {
             .app-container {
