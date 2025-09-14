@@ -3829,10 +3829,12 @@
             // --- Splash fade ---
             const fadeSplash = async () => {
                 if (!splash) return;
+
                 splash.style.opacity = '1';
                 splash.style.pointerEvents = 'auto';
                 const isLightMode = document.body.classList.contains('light-theme');
                 splash.style.background = isLightMode ? '#f7ede5' : '#1a202c';
+                splash.style.transition = 'opacity 0.5s ease';
 
                 if (splashImg && !splashImg.complete) {
                     await new Promise(resolve => {
@@ -3841,10 +3843,14 @@
                     });
                 }
 
-                await delay(3000); // wait 3s
-                splash.style.transition = 'opacity 0.5s ease';
+                await delay(3000); // wait 3 seconds visible
+
+                // Wait one animation frame to ensure the browser applied opacity=1
+                await new Promise(requestAnimationFrame);
+
                 splash.style.opacity = '0';
                 splash.style.pointerEvents = 'none';
+
                 await delay(500); // wait for fade
                 splash.remove();
             };
