@@ -265,6 +265,8 @@
             display: none;
             padding: 20px;
             min-height: calc(100vh - 120px);
+            -webkit-overflow-scrolling: touch;
+            overflow-y: auto;
         }
         
         .screen.active {
@@ -441,7 +443,7 @@
             border-radius: 20px;
             color: #e2e8f0;
             outline: none;
-            font-size: 14px;
+            font-size: 16px;
 
             resize: none;               /* prevent manual resizing */
             overflow-y: auto;           /* scroll when text exceeds box height */
