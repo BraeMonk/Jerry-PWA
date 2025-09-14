@@ -2368,7 +2368,7 @@
         }
 
         function renderSpritePreview(spriteData, spriteTheme) {
-            const previewContainer = document.getElementById('spritePreview');
+            const previewContainer = document.getElementById('jerryWrapper');
             previewContainer.innerHTML = ''; // clear previous pixels
             if (!spriteData) return;
 
@@ -2464,7 +2464,7 @@
         }
 
         function drawJerry(spriteData = baseSprite) {
-            const jerryContainer = document.getElementById('jerrWrapper');
+            const jerryContainer = document.getElementById('jerryWrapper');
             jerryContainer.innerHTML = '';
 
             const isLightMode = document.body.classList.contains('light-theme');
