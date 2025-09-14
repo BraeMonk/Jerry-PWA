@@ -2408,6 +2408,20 @@
             document.getElementById('xpLabel').textContent = `XP: ${appState.jerry.xp} / ${appState.jerry.xpToNext}`;
 
             updateJerrySprite();
+
+            // Center Jerry in the wrapper
+            const wrapper = document.getElementById('jerryWrapper');
+            const sprite = document.getElementById('jerrySprite');
+            if (wrapper && sprite) {
+                const wrapperWidth = wrapper.clientWidth;
+                const wrapperHeight = wrapper.clientHeight;
+                const spriteWidth = sprite.offsetWidth;
+                const spriteHeight = sprite.offsetHeight;
+
+                sprite.style.position = 'absolute';
+                sprite.style.left = `${(wrapperWidth - spriteWidth) / 2}px`;
+                sprite.style.top = `${(wrapperHeight - spriteHeight - wrapper.querySelector('.jerry-stats').offsetHeight) / 2}px`;
+            }
         }
 
         // === Animations ===
@@ -3692,6 +3706,7 @@
 
                 if (splashImg.complete) {
                     fadeSplash(); // image cached, start fade timer
+                    updateJerryUI();
                 } else {
                     splashImg.addEventListener('load', fadeSplash);
                     splashImg.addEventListener('error', fadeSplash);
@@ -3748,7 +3763,6 @@
             }
 
             // --- Initial rendering ---
-            updateJerryUI();
             setupChat();
             setupThemeToggle();
             updateAffirmationBanner('jerry');
