@@ -3796,10 +3796,7 @@
                             splash.style.pointerEvents = 'none';
                         });
                         // Remove splash after transition completes
-                        splash.addEventListener('transitionend', () => {
-                            splash.remove();
-                            updateJerryNeeds();
-                            updateJerryUI();
+                        splash.addEventListener('transitionend', () =>                          splash.remove();
                         }, { once: true });
                     }, 3000);
                 };
@@ -3859,8 +3856,97 @@
                     updateJerrySprite(); // updates main sprite and preview immediately
                 });
             }
+            // --- Initial rendering ---
+
+        // =======================
+        // App Initialization
+        // =======================
+        function initializeApp() {
+            const splash = document.getElementById('splashScreen');
+            const splashImg = document.getElementById('splashImage');
+
+            if (splash && splashImg) {
+                // Ensure splash is fully visible immediately
+                splash.style.opacity = '1';
+                splash.style.transition = 'opacity 0.5s ease';
+
+                const fadeSplash = () => {
+                    // Wait 3 seconds before starting fade
+                    setTimeout(() => {
+                        // Use requestAnimationFrame to ensure opacity=1 is rendered first
+                        requestAnimationFrame(() => {
+                            splash.style.opacity = '0';  // trigger fade
+                            splash.style.pointerEvents = 'none';
+                        });
+                        // Remove splash after transition completes
+                        splash.addEventListener('transitionend', () => {
+                            splash.remove();
+                        }, { once: true });
+                    }, 3000);
+                };
+
+                if (splashImg.complete) {
+                    fadeSplash(); // image cached, start fade timer
+                } else {
+                    splashImg.addEventListener('load', fadeSplash);
+                    splashImg.addEventListener('error', fadeSplash);
+                }
+
+                // Set background based on theme
+                const isLightMode = document.body.classList.contains('light-theme');
+                splash.style.background = isLightMode ? '#f7ede5' : '#1a202c';
+            }
+            
+            // --- Theme ---
+            const savedTheme = localStorage.getItem('hush_theme');
+            if (savedTheme === 'light') document.body.classList.add('light-theme');
+
+            // --- Load bot name ---
+            appState.botName = localStorage.getItem('botName') || 'Jerry';
+            const nameInput = document.getElementById('botName');
+            if (nameInput) {
+                nameInput.value = appState.botName;
+                nameInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                appState.botName = val || 'Jerry';
+                localStorage.setItem('botName', appState.botName);
+                });
+            }
+        
+            // --- Load Jerry state FIRST ---
+            loadJerryState();
+
+            // Ensure lastFed exists for every need
+            ['clarity', 'insight', 'calm'].forEach(need => {
+                if (!appState.jerry.lastFed[need]) {
+                    appState.jerry.lastFed[need] = Date.now() - (10 * 60 * 1000 + 1000); // just past grace period
+                }
+            });
+
+
+            // Start real-time decay
+            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
+        
+            // --- Load settings FIRST ---
+            loadSettings();
+
+            // --- Wire up instant sprite theme updates ---
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+            if (spriteThemeSelect) {
+                spriteThemeSelect.addEventListener('change', (e) => {
+                    const value = e.target.value;
+                    appState.spriteTheme = value;
+                    localStorage.setItem('spriteTheme', value);
+                    updateJerrySprite(); // updates main sprite and preview immediately
+                });
+            }
+            // ✅ Only runs once splash is fully gone
+            updateJerryUI();
+            updateJerry();
+            scheduleBlink();
 
             // --- Initial rendering ---
+        
             updateAffirmationBanner('jerry');
             updateThemeColor();
 
