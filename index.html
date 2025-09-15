@@ -2688,11 +2688,13 @@
                 }
             });
 
+            if (!appState.jerry) appState.jerry = { name: 'Jerry', currentSprite: 'default', lastFed: {} };
+
             // On load, restore saved style
             const savedStyle = localStorage.getItem('jerrySpriteStyle');
             if (savedStyle && jerrySprites[savedStyle]) {
                 appState.jerry.currentSprite = savedStyle;
-                spriteStyleSelect.value = savedStyle;
+                if(spriteStyleSelect) spriteStyleSelect.value = savedStyle;
             }
         }
 
