@@ -2208,30 +2208,30 @@
         function updateJerryNeeds() {
             const now = Date.now();
             const decayRates = { clarity: 6, insight: 24, calm: 12 }; // hours to fully deplete
-            const gracePeriod = 10 * 60 * 1000; // 10 minutes in ms
+            const gracePeriod = 10 * 60 * 1000; // 10 minutes
 
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
-                const elapsedMs = now - lastFed;
-            
-                // Decay starts after grace period
-                const decayStart = lastFed + gracePeriod;
-                const elapsedSinceDecay = Math.max(0, now - decayStart);
+                const elapsedSinceLastFed = now - lastFed - gracePeriod;
                 const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
-                appState.jerry.needs[need] = Math.max(0, 100 - (elapsedSinceDecay / totalDecayMs) * 100);
+
+                // Only decay if past grace period
+                if (elapsedSinceLastFed > 0) {
+                    appState.jerry.needs[need] = Math.max(0, 100 - (elapsedSinceLastFed / totalDecayMs) * 100);
+                } else {
+                    appState.jerry.needs[need] = 100; // still in grace period
+                }
             });
 
-            // Track mood but don't try to change sprite based on i
+            // Track mood
             const minNeed = Math.min(...Object.values(appState.jerry.needs));
             let newMood = 'content';
             if (minNeed < 50) {
                 if (appState.jerry.needs.insight === minNeed) newMood = 'lowInsight';
                 else if (appState.jerry.needs.calm === minNeed) newMood = 'lowCalm';
             }
-
-            // Just track the mood, don't change sprite
             currentMood = newMood;
-    
+
             updateJerryUI();
             saveJerryState();
         }
