@@ -1314,6 +1314,34 @@
             background: url('./galactic.jpg') no-repeat center center;
             background-size: cover;
         }
+
+        .jerry-container.bg-spooky {
+            background: url('./Spooky.jpg') no-repeat center center;
+            background-size: cover;
+            /* optional subtle overlay so text stays readable */
+            background-blend-mode: overlay;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Swatch for Woods */
+        .swatch-spooky {
+            background: url('./Spooky.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .jerry-container.bg-dreamland {
+            background: url('./dreamLand.jpg') no-repeat center center;
+            background-size: cover;
+            /* optional subtle overlay so text stays readable */
+            background-blend-mode: overlay;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Swatch for Woods */
+        .swatch-dreamland {
+            background: url('./dreamLand.jpg') no-repeat center center;
+            background-size: cover;
+        }
         
         .swatch-all {
             background: repeating-linear-gradient(
@@ -1882,6 +1910,14 @@
                     <div class="background-option" data-bg="galactic">
                         <div class="bg-swatch swatch-galactic"></div>
                         <span>Galactic</span>
+                    </div>
+                    <div class="background-option" data-bg="spooky">
+                        <div class="bg-swatch swatch-spooky"></div>
+                        <span>Spooky</span>
+                    </div>
+                    <div class="background-option" data-bg="dreamland">
+                        <div class="bg-swatch swatch-dreamland"></div>
+                        <span>Dreamy</span>
                     </div>
                 </div>
             </div>
@@ -3902,7 +3938,9 @@
                 aurora: 'bg-aurora',
                 ember: 'bg-ember',
                 woods: 'bg-woods',
-                galactic: 'bg-galactic'
+                galactic: 'bg-galactic',
+                spooky: 'bg-spooky',
+                dreamland: 'bg-dreamland'
             };
 
             // Apply a background class
