@@ -2245,10 +2245,15 @@
         function feedJerry(need, amount = 50) {
         appState.jerry.needs[need] = Math.min(100, appState.jerry.needs[need] + amount);
         appState.jerry.lastFed[need] = Date.now();
-        addXP(10);
+        addXP(20);
         saveJerryState();
         updateJerryUI();
         }
+
+        function feedAllJerry(amount) {
+            ['clarity', 'insight', 'calm'].forEach(need => feedJerry(need, amount));
+        }
+
 
         function addXP(amount) {
         appState.jerry.xp += amount;
@@ -3287,11 +3292,14 @@
             appState.journal.push(entry);
             saveToLocalStorage('hush_journal', appState.journal);
 
+            feedAllJerry();
+            addXP(50);
+
+            showNotification('Journal Saved!', 'success');
+            
             input.value = '';
             renderJournalEntries();
 
-            showNotification('Journal Saved!', 'success');
-            // Optional: switch to Entries tab automatically
             switchTab('jerry');
         }
 
