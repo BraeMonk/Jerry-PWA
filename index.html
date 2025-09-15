@@ -2681,22 +2681,18 @@
         // --- Sprite Style ---
         const spriteStyleSelect = document.getElementById('spriteStyle');
         if (spriteStyleSelect) {
+            
+            if (appState.jerry.currentSprite && jerrySprites[appState.jerry.currentSprite]) {
+                spriteStyleSelect.value = appState.jerry.currentSprite;
+            }
             spriteStyleSelect.addEventListener('change', (e) => {
                 const selectedStyle = e.target.value;
                 if (jerrySprites[selectedStyle]) {
                     appState.jerry.currentSprite = selectedStyle;
-                    localStorage.setItem('jerrySpriteStyle', selectedStyle);
                     saveJerryState();
                     updateJerrySprite(); // redraw main + preview
                 }
             });
-
-            // On load, restore saved style
-            const savedStyle = localStorage.getItem('jerrySpriteStyle');
-            if (savedStyle && jerrySprites[savedStyle]) {
-                appState.jerry.currentSprite = savedStyle;
-                if(spriteStyleSelect) spriteStyleSelect.value = savedStyle;
-            }
         }
 
         // --- Sprite Theme ---
@@ -2721,7 +2717,6 @@
 
         baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry.currentSprite || 'default']));
         updateJerrySprite();
-
         
         // === Chat Functions ===
         async function sendMessage() {
