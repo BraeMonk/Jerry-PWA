@@ -3773,7 +3773,11 @@
             if (savedTheme === 'light') document.body.classList.add('light-theme');
 
             // --- Load Jerry state ---
-            await loadJerryStateAsync?.() ?? loadJerryState(); // use async version if available
+            if (typeof loadJerryStateAsync === 'function') {
+                await loadJerryStateAsync();
+            } else {
+                loadJerryState();
+            } // use async version if available
             // === Initialize base sprite after Jerry state is ready ===
             baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry?.currentSprite || 'default']));
 
@@ -3784,8 +3788,12 @@
                 }
             });
 
-            // --- Load settings ---
-            await loadSettingsAsync?.() ?? loadSettings();
+            if (typeof loadSettingsAsync === 'function') {
+                await loadSettingsAsync();
+            } else {
+                loadSettings();
+            }
+
 
             // --- Load bot name ---
             appState.botName = localStorage.getItem('botName') || 'Jerry';
