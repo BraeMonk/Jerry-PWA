@@ -2370,17 +2370,21 @@
         function renderSpritePreview(spriteData, spriteTheme) {
             if (!spriteData) return;
             const previewContainer = document.getElementById('spritePreview');
-            previewContainer.innerHTML = '';
+            previewContainer.innerHTML = ''; // clear previous pixels
 
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
             const colors = colorSets[spriteTheme] || colorSets['default'];
 
+            // Make preview a fixed-size box showing sprite pixels
             const rows = spriteData.length;
             const cols = spriteData[0].length;
             previewContainer.style.position = 'relative';
             previewContainer.style.width = `${cols * 10}px`;
             previewContainer.style.height = `${rows * 10}px`;
+            previewContainer.style.border = 'none'; // optional, to see the preview box
+            previewContainer.style.background = 'transparent'; // or transparent depending on theme
+            previewContainer.style.boxSizing = 'border-box';
 
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
