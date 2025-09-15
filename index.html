@@ -2712,6 +2712,10 @@
                 appState.spriteTheme = 'default';
             }
         }
+
+        baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry.currentSprite || 'default']));
+        updateJerrySprite();
+
         
         // === Chat Functions ===
         async function sendMessage() {
@@ -3772,22 +3776,6 @@
                 });
             }
 
-            // --- Wire up sprite theme ---
-            // --- Initialize sprite theme ---
-            const spriteThemeSelect = document.getElementById('spriteTheme');
-            const savedSpriteTheme = localStorage.getItem('spriteTheme') || 'default';
-            appState.spriteTheme = savedSpriteTheme;
-
-            if (spriteThemeSelect) {
-                spriteThemeSelect.value = savedSpriteTheme; // match UI
-                spriteThemeSelect.addEventListener('change', (e) => {
-                    const value = e.target.value;
-                    appState.spriteTheme = value;
-                    localStorage.setItem('spriteTheme', value);
-                    updateJerrySprite();
-                });
-            }
-
             //async function fadeSplash() {
                 //const splash = document.getElementById('splashScreen');
                 //const splashImg = document.getElementById('splashImage');
@@ -3825,7 +3813,6 @@
 
             // --- Initialize UI ---
             // --- Initialize base sprite and render both main + preview ---
-            baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry.currentSprite || 'default']));
             updateJerrySprite();
             scheduleBlink();
             updateAffirmationBanner('jerry');
