@@ -2686,6 +2686,7 @@
                 if (jerrySprites[selectedStyle]) {
                     appState.jerry.currentSprite = selectedStyle;
                     localStorage.setItem('jerrySpriteStyle', selectedStyle);
+                    saveJerryState();
                     updateJerrySprite(); // redraw main + preview
                 }
             });
