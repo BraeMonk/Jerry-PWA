@@ -2643,13 +2643,15 @@
             }
 
             ['clarity', 'insight', 'calm'].forEach(need => {
-                if (!appState.jerry.lastFed[need]) {
+                // Only assign if undefined
+                if (typeof appState.jerry.lastFed[need] === 'undefined') {
                     appState.jerry.lastFed[need] = Date.now();
                 }
             });
+
             saveToLocalStorage('hush_jerry_state', appState.jerry);
         }
-
+        
         function loadJerryState() {
             const defaultJerryState = {
                 needs: { clarity: 100, insight: 100, calm: 100 },
