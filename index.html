@@ -1551,7 +1551,7 @@
             <h2 style="margin-bottom: 16px;">Journal</h2>
             <!-- New Entry Input -->
             <textarea id="journalInput" placeholder="Write your thoughts here..." rows="5"></textarea>
-            <button class="btn" id="saveJournalEntry">Save Entry</button>
+            <button id="saveJournalEntry">Save Entry</button>
         </div>
 
         <!-- Hush Timer Screen -->
@@ -3295,7 +3295,6 @@
             switchTab('jerry');
         }
 
-        // Wire up save button
         document.addEventListener('DOMContentLoaded', () => {
             const saveBtn = document.getElementById('saveJournalBtn');
             if (saveBtn) {
