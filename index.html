@@ -3753,8 +3753,13 @@
             }
 
             // --- Wire up sprite theme ---
+            // --- Initialize sprite theme ---
             const spriteThemeSelect = document.getElementById('spriteTheme');
+            const savedSpriteTheme = localStorage.getItem('spriteTheme') || 'default';
+            appState.spriteTheme = savedSpriteTheme;
+
             if (spriteThemeSelect) {
+                spriteThemeSelect.value = savedSpriteTheme; // match UI
                 spriteThemeSelect.addEventListener('change', (e) => {
                     const value = e.target.value;
                     appState.spriteTheme = value;
@@ -3799,8 +3804,7 @@
             //await fadeSplash();
 
             // --- Initialize UI ---
-            updateJerryUI();
-            renderSpritePreview();
+            updateJerrySprite();
             scheduleBlink();
             updateAffirmationBanner('jerry');
             updateThemeColor();
