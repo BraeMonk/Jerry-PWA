@@ -3953,7 +3953,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     const swCode = `
-                        const CACHE_NAME = 'jerry-pwa-v9';
+                        const CACHE_NAME = 'jerry-pwa-v10';
                         const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
                             event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
