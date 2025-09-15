@@ -1250,6 +1250,24 @@
             background: linear-gradient(to top, #00f260, #0575e6);
         }
 
+        /* 🌸 Petal — soft lavenders, peaches, and mint greens */
+        .jerry-container.bg-petal {
+            background: linear-gradient(to top, #E6E6FA, #FFE5B4, #98FB98);
+        }
+
+        .swatch-petal {
+            background: linear-gradient(to top, #E6E6FA, #FFE5B4, #98FB98);
+        }
+
+        /* 🌙 Eclipse — silvers, muted blues, and soft purples */
+        .jerry-container.bg-eclipse {
+            background: linear-gradient(to top, #2F4F4F, #708090, #B0C4DE, #C0C0C0);
+        }
+
+        .swatch-eclipse {
+            background: linear-gradient(to top, #2F4F4F, #708090, #B0C4DE, #C0C0C0);
+        }
+
         .swatch-all {
             background: repeating-linear-gradient(
                 45deg,
@@ -1744,6 +1762,7 @@
                     <option value="blossom">Blossom</option>
                     <option value="volt">Volt</option>
                     <option value="retro">Retro</option>
+                    <option value="lunar">Lunar</option>
                 </select>
             </div>
             <!-- Background Environment Selection -->
@@ -1788,6 +1807,15 @@
                     <div class="background-option" data-bg="noir">
                         <div class="bg-swatch swatch-noir"></div>
                         <span>Noir</span>
+                    </div>
+                    <div class="background-option" data-bg="petal">
+                        <div class="bg-swatch swatch-petal"></div>
+                        <span>Petal</span>
+                    </div>
+
+                    <div class="background-option" data-bg="eclipse">
+                        <div class="bg-swatch swatch-eclipse"></div>
+                        <span>Eclipse</span>
                     </div>
                 </div>
             </div>
@@ -2380,14 +2408,17 @@
                     ? { 0: 'transparent', 1: '#2C003E', 2: '#E0B0FF', 3: '#12001A', 4: '#8A2BE2' }
                     : { 0: 'transparent', 1: '#8A2BE2', 2: '#E0B0FF', 3: '#2C003E', 4: '#12001A' },
                 blossom: isLightMode
-                    ? { 0: 'transparent', 1: '#FFB6C1', 2: '#FFFFFF', 3: '#C71585', 4: '#FFD1DC' }
-                    : { 0: 'transparent', 1: '#FFD1DC', 2: '#FFB6C1', 3: '#FFFFFF', 4: '#C71585' },
+                    ? { 0: 'transparent', 1: '#E6E6FA', 2: '#FFE5B4', 3: '#98FB98', 4: '#FFFFFF' }
+                    : { 0: 'transparent', 1: '#D8BFD8', 2: '#FFB07C', 3: '#66CDAA', 4: '#E6E6FA' }, 
                 volt: isLightMode
                     ? { 0: 'transparent', 1: '#FFD700', 2: '#FFFFFF', 3: '#FF8C00', 4: '#FFFF66' }
                     : { 0: 'transparent', 1: '#FFFF66', 2: '#FFD700', 3: '#FFFFFF', 4: '#FF8C00' },
                 retro: isLightMode
                     ? { 0: 'transparent', 1: '#FF69B4', 2: '#00CED1', 3: '#8B008B', 4: '#FFD700' }
-                    : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
+                    : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' },
+                lunar: isLightMode
+                    ? { 0: 'transparent', 1: '#F8F8FF', 2: '#C0C0C0', 3: '#B0C4DE', 4: '#E6E6FA' } 
+                    : { 0: 'transparent', 1: '#2F4F4F', 2: '#708090', 3: '#B0C4DE', 4: '#C0C0C0' } 
             };
         }
 
@@ -3799,7 +3830,9 @@
                 lemonZest: 'bg-lemonZest',
                 oceanDeep: 'bg-oceanDeep',
                 neonLights: 'bg-neonLights',
-                noir: 'bg-noir'
+                noir: 'bg-noir',
+                petal: 'bg-petal',
+                eclipse: 'bg-eclipse'
             };
 
             // Apply a background class
