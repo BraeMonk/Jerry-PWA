@@ -3457,6 +3457,18 @@
             });
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const entryFilter = document.getElementById('entryFilter');
+            if (entryFilter) {
+                entryFilter.addEventListener('change', () => {
+                    loadEntries();
+                });
+            }
+
+            // Initial load
+            loadEntries();
+        });
+
         function loadHistory() {
         const historyList = document.getElementById('historyList');
         historyList.innerHTML = '';
