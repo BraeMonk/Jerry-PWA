@@ -1399,25 +1399,25 @@
                 <div class="form-group">
                     <div class="form-label">How are you feeling emotionally?</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setCheckinResponse('emotion', 'Good')">Good</button>
-                        <button class="rating-btn" onclick="setCheckinResponse('emotion', 'Okay')">Okay</button>
-                        <button class="rating-btn" onclick="setCheckinResponse('emotion', 'Bad')">Bad</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'emotion', 'Good')">Good</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'emotion', 'Okay')">Okay</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'emotion', 'Bad')">Bad</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label">How is your body feeling?</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setCheckinResponse('physical', 'Energetic')">Energetic</button>
-                        <button class="rating-btn" onclick="setCheckinResponse('physical', 'Tired')">Tired</button>
-                        <button class="rating-btn" onclick="setCheckinResponse('physical', 'Pain')">Pain</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'physical', 'Energetic')">Energetic</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'physical', 'Tired')">Tired</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'physical', 'Pain')">Pain</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label">How is your mind today?</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setCheckinResponse('mental', 'Clear')">Clear</button>
-                        <button class="rating-btn" onclick="setCheckinResponse('mental', 'Foggy')">Foggy</button>
-                        <button class="rating-btn" onclick="setCheckinResponse('mental', 'Overwhelmed')">Overwhelmed</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'mental', 'Clear')">Clear</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'mental', 'Foggy')">Foggy</button>
+                        <button class="rating-btn" onclick="setCheckinResponse(this, 'mental', 'Overwhelmed')">Overwhelmed</button>
                     </div>
                 </div>
                 <button class="btn" onclick="completeCheckin()">Complete Check-in</button>
@@ -1480,45 +1480,45 @@
                 <div class="form-group">
                     <div class="form-label">Rate the intensity of your ANGER (0-5)</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setDBTRating('anger', 0)">0</button>
-                        <button class="rating-btn" onclick="setDBTRating('anger', 1)">1</button>
-                        <button class="rating-btn" onclick="setDBTRating('anger', 2)">2</button>
-                        <button class="rating-btn" onclick="setDBTRating('anger', 3)">3</button>
-                        <button class="rating-btn" onclick="setDBTRating('anger', 4)">4</button>
-                        <button class="rating-btn" onclick="setDBTRating('anger', 5)">5</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'anger', 0)">0</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'anger', 1)">1</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'anger', 2)">2</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'anger', 3)">3</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'anger', 4)">4</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'anger', 5)">5</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label">Rate the intensity of your SADNESS (0-5)</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setDBTRating('sadness', 0)">0</button>
-                        <button class="rating-btn" onclick="setDBTRating('sadness', 1)">1</button>
-                        <button class="rating-btn" onclick="setDBTRating('sadness', 2)">2</button>
-                        <button class="rating-btn" onclick="setDBTRating('sadness', 3)">3</button>
-                        <button class="rating-btn" onclick="setDBTRating('sadness', 4)">4</button>
-                        <button class="rating-btn" onclick="setDBTRating('sadness', 5)">5</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'sadness', 0)">0</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'sadness', 1)">1</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'sadness', 2)">2</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'sadness', 3)">3</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'sadness', 4)">4</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'sadness', 5)">5</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label">Rate the intensity of your FEAR (0-5)</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setDBTRating('fear', 0)">0</button>
-                        <button class="rating-btn" onclick="setDBTRating('fear', 1)">1</button>
-                        <button class="rating-btn" onclick="setDBTRating('fear', 2)">2</button>
-                        <button class="rating-btn" onclick="setDBTRating('fear', 3)">3</button>
-                        <button class="rating-btn" onclick="setDBTRating('fear', 4)">4</button>
-                        <button class="rating-btn" onclick="setDBTRating('fear', 5)">5</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'fear', 0)">0</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'fear', 1)">1</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'fear', 2)">2</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'fear', 3)">3</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'fear', 4)">4</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'fear', 5)">5</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="form-label">Rate the intensity of your SHAME (0-5)</div>
                     <div class="rating-group">
-                        <button class="rating-btn" onclick="setDBTRating('shame', 0)">0</button>
-                        <button class="rating-btn" onclick="setDBTRating('shame', 1)">1</button>
-                        <button class="rating-btn" onclick="setDBTRating('shame', 2)">2</button>
-                        <button class="rating-btn" onclick="setDBTRating('shame', 3)">3</button>
-                        <button class="rating-btn" onclick="setDBTRating('shame', 4)">4</button>
-                        <button class="rating-btn" onclick="setDBTRating('shame', 5)">5</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'shame', 0)">0</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'shame', 1)">1</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'shame', 2)">2</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'shame', 3)">3</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'shame', 4)">4</button>
+                        <button class="rating-btn" onclick="setDBTRating(this, 'shame', 5)">5</button>
                     </div>
                 </div>
                 
@@ -3075,19 +3075,23 @@
         return "I'm here to listen. Tell me what's on your mind.";
         }
 
-        /// Check-in Functions
-        function setCheckinResponse(event, category, choice) {
-            // Save choice
+        // Check-in Functions
+        function setCheckinResponse(button, category, choice) {
             appState.checkinData[category] = choice;
 
-            // Update button states
+            // Remove 'active' from all buttons in the same category
             const buttons = document.querySelectorAll(`[onclick*="${category}"]`);
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active'); // safer than event.target
+
+            // Set active class on tapped button
+            button.classList.add('active');
         }
 
         function completeCheckin() {
-            if (Object.keys(appState.checkinData).length < 3) {
+            const requiredFields = ['emotion', 'physical', 'mental'];
+            const missing = requiredFields.filter(f => !appState.checkinData[f]);
+
+            if (missing.length > 0) {
                 showNotification('Please answer all questions before continuing.', 'error');
                 return;
             }
@@ -3095,9 +3099,9 @@
             const entry = {
                 timestamp: new Date().toISOString(),
                 type: 'Check-in',
-                data: { ...appState.checkinData }
+                data: { ...appState.checkinData
             };
-
+            
             appState.entries.unshift(entry);
             saveToLocalStorage('hush_entries', appState.entries);
 
@@ -3106,23 +3110,24 @@
 
             showNotification('Check-in completed! Jerry gained clarity.');
 
-            // Reset form
+            // Reset for
             appState.checkinData = {};
             document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('active'));
 
-            // Switch to Jerry tab
+            // Switch back to Jerry tab
             switchTab('jerry');
+
+            // Refresh entries screen if needed
+            loadEntries();
         }
 
+        // =====================
         // CBT Functions
+        // =====================
         function completeCBT() {
-            const situationInput = document.getElementById('cbtSituation');
-            const emotionsInput = document.getElementById('cbtEmotions');
-            const thoughtsInput = document.getElementById('cbtThoughts');
-
-            const situation = situationInput?.value.trim();
-            const emotions = emotionsInput?.value.trim();
-            const thoughts = thoughtsInput?.value.trim();
+            const situation = document.getElementById('cbtSituation').value.trim();
+            const emotions = document.getElementById('cbtEmotions').value.trim();
+            const thoughts = document.getElementById('cbtThoughts').value.trim();
 
             if (!situation || !emotions || !thoughts) {
                 showNotification('Please fill in all fields.', 'error');
@@ -3135,7 +3140,6 @@
                 distortions.push(checkbox.nextElementSibling.textContent);
             });
 
-            // Build entry
             const entry = {
                 timestamp: new Date().toISOString(),
                 type: 'CBT',
@@ -3147,62 +3151,63 @@
                 }
             };
 
-            // Save entry
             appState.entries.unshift(entry);
             saveToLocalStorage('hush_entries', appState.entries);
 
-            // Reward Jerry
             feedJerry('insight', 50);
             addXP(20);
 
             showNotification('CBT session completed! Jerry gained insight.');
             
             // Reset form
-            if (situationInput) situationInput.value = '';
-            if (emotionsInput) emotionsInput.value = '';
-            if (thoughtsInput) thoughtsInput.value = '';
-            document.querySelectorAll('#cbtDistortions input').forEach(checkbox => checkbox.checked = false);
-            // Switch to Jerry tab
+            document.getElementById('cbtSituation').value = '';
+            document.getElementById('cbtEmotions').value = '';
+            document.getElementById('cbtThoughts').value = '';
+            document.querySelectorAll('#cbtDistortions input').forEach(cb => cb.checked = false);
+
+            // Switch back to Jerry tab
             switchTab('jerry');
+
+            // Refresh entries
+            loadEntries();
         }
 
-        // Add event listener for the button
-        document.addEventListener('DOMContentLoaded', () => {
-            const cbtButton = document.getElementById('completeCBTBtn');
-            if (cbtButton) {
-                cbtButton.addEventListener('click', completeCBT);
-            }
-        });
-
+       // =====================
         // DBT Functions
-        // DBT Functions
-        function setDBTRating(event, emotion, value) {
+        // =====================
+        function setDBTRating(button, emotion, value) {
             appState.dbtData[emotion] = value;
 
-            // Update button states
+            // Remove 'active' from all buttons in this emotion group
             const buttons = document.querySelectorAll(`[onclick*="${emotion}"]`);
             buttons.forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+
+            // Set active class on tapped button
+            button.classList.add('active');
         }
 
         function completeDBT() {
             const requiredRatings = ['anger', 'sadness', 'fear', 'shame'];
-            const missingRatings = requiredRatings.filter(rating => appState.dbtData[rating] === undefined);
+            const missing = requiredRatings.filter(r => appState.dbtData[r] === undefined);
 
-            if (missingRatings.length > 0) {
+            if (missing.length > 0) {
                 showNotification('Please rate all emotions.', 'error');
                 return;
             }
 
+            // Get selected skills
             const skills = [];
-            document.querySelectorAll('#dbtSkills input:checked').forEach(checkbox => {
-                skills.push(checkbox.nextElementSibling.textContent);
+            document.querySelectorAll('#dbtSkills input:checked').forEach(cb => {
+                skills.push(cb.nextElementSibling.textContent);
             });
 
             const entry = {
                 timestamp: new Date().toISOString(),
                 type: 'DBT',
-                data: { ...appState.dbtData, skills }
+                data: {
+                    ...appState.dbtData,
+                    skills
+                }
             };
 
             appState.entries.unshift(entry);
@@ -3216,10 +3221,13 @@
             // Reset form
             appState.dbtData = {};
             document.querySelectorAll('#dbt .rating-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('#dbtSkills input').forEach(checkbox => checkbox.checked = false);
+            document.querySelectorAll('#dbtSkills input').forEach(cb => cb.checked = false);
 
-            // Switch to Jerry tab
+            // Switch back to Jerry tab
             switchTab('jerry');
+
+            // Refresh entries
+            loadEntries();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
