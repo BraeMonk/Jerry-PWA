@@ -1925,6 +1925,8 @@
 
         const PREMIUM_API_KEY = 'GITHUB_SECRET_PREMIUM_API_KEY';
 
+        let currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
+
         const jerrySprites = {
             default: [
                 [0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0],
@@ -2299,73 +2301,10 @@
 
         // Fixed rendering functions to accept and use parameters
         function renderJerrySprite(spriteData, spriteTheme) {
-        const container = document.getElementById('jerrySprite');
-        container.innerHTML = '';
-
-        const isLightMode = document.body.classList.contains('light-theme');
-
-        const colorSets = {
-                default: isLightMode
-                    ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
-                    : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
-                chaotic: isLightMode
-                    ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
-                    : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
-                neutral: isLightMode
-                    ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
-                    : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
-                noir: isLightMode
-                    ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF' }
-                    : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000' },
-                forest: isLightMode
-                    ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }
-                    : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20' },
-                neon: isLightMode
-                    ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF' }
-                    : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099' },
-                solar: isLightMode
-                    ? { 0: 'transparent', 1: '#FF8C00', 2: '#FFF5CC', 3: '#CC7000', 4: '#FFD580' }
-                    : { 0: 'transparent', 1: '#FFD580', 2: '#FF8C00', 3: '#FFF5CC', 4: '#CC7000' },
-                glacial: isLightMode
-                    ? { 0: 'transparent', 1: '#5DADE2', 2: '#EBF5FB', 3: '#154360', 4: '#AED6F1' }
-                    : { 0: 'transparent', 1: '#AED6F1', 2: '#5DADE2', 3: '#EBF5FB', 4: '#154360' },
-                cosmic: isLightMode
-                    ? { 0: 'transparent', 1: '#2C003E', 2: '#E0B0FF', 3: '#12001A', 4: '#8A2BE2' }
-                    : { 0: 'transparent', 1: '#8A2BE2', 2: '#E0B0FF', 3: '#2C003E', 4: '#12001A' },
-                blossom: isLightMode
-                    ? { 0: 'transparent', 1: '#FFB6C1', 2: '#FFFFFF', 3: '#C71585', 4: '#FFD1DC' }
-                    : { 0: 'transparent', 1: '#FFD1DC', 2: '#FFB6C1', 3: '#FFFFFF', 4: '#C71585' },
-                volt: isLightMode
-                    ? { 0: 'transparent', 1: '#FFD700', 2: '#FFFFFF', 3: '#FF8C00', 4: '#FFFF66' }
-                    : { 0: 'transparent', 1: '#FFFF66', 2: '#FFD700', 3: '#FFFFFF', 4: '#FF8C00' },
-                retro: isLightMode
-                    ? { 0: 'transparent', 1: '#FF69B4', 2: '#00CED1', 3: '#8B008B', 4: '#FFD700' }
-                    : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
-            };
-
-        const colors = colorSets[spriteTheme || 'default'];
-
-        spriteData.forEach((row, y) => {
-                row.forEach((pixel, x) => {
-                if (pixel > 0) {
-                        const pixelDiv = document.createElement('div');
-                        pixelDiv.className = 'pixel';
-                        pixelDiv.style.backgroundColor = colors[pixel];
-                        pixelDiv.style.left = `${x * 10}px`;
-                        pixelDiv.style.top = `${y * 10}px`;
-                        container.appendChild(pixelDiv);
-                }
-                });
-        });
-        }
-
-        function renderSpritePreview() {
-            const previewContainer = document.getElementById('spritePreview');
-            previewContainer.innerHTML = ''; // clear previous pixels
-            if (!baseSprite) return;
+            const container = document.getElementById('jerrySprite');
+            container.innerHTML = '';
 
             const isLightMode = document.body.classList.contains('light-theme');
-            const spriteTheme = appState.spriteTheme || 'default';
 
             const colorSets = {
                 default: isLightMode
@@ -2406,9 +2345,75 @@
                     : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
             };
 
-            const colors = colorSets[spriteTheme || 'default'];
+            const colors = colorSets[spriteTheme || localStorage.getItem('jerrySpriteStyle') || 'default'];
 
-            // Auto-size container
+            spriteData.forEach((row, y) => {
+                row.forEach((pixel, x) => {
+                    if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        container.appendChild(pixelDiv);
+                    }
+                });
+            });
+        }
+
+        function renderSpritePreview() {
+            const previewContainer = document.getElementById('spritePreview');
+            previewContainer.innerHTML = ''; // clear previous pixels
+            const currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
+            const spriteData = jerrySprites[currentSpriteStyle];
+            if (!spriteData) return;
+
+            const isLightMode = document.body.classList.contains('light-theme');
+
+            const colorSets = {
+                default: isLightMode
+                    ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
+                    : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
+                chaotic: isLightMode
+                    ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
+                    : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
+                neutral: isLightMode
+                    ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
+                    : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
+                noir: isLightMode
+                    ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF' }
+                    : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000' },
+                forest: isLightMode
+                    ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }
+                    : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20' },
+                neon: isLightMode
+                    ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF' }
+                    : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099' },
+                solar: isLightMode
+                    ? { 0: 'transparent', 1: '#FF8C00', 2: '#FFF5CC', 3: '#CC7000', 4: '#FFD580' }
+                    : { 0: 'transparent', 1: '#FFD580', 2: '#FF8C00', 3: '#FFF5CC', 4: '#CC7000' },
+                glacial: isLightMode
+                    ? { 0: 'transparent', 1: '#5DADE2', 2: '#EBF5FB', 3: '#154360', 4: '#AED6F1' }
+                    : { 0: 'transparent', 1: '#AED6F1', 2: '#5DADE2', 3: '#EBF5FB', 4: '#154360' },
+                cosmic: isLightMode
+                    ? { 0: 'transparent', 1: '#2C003E', 2: '#E0B0FF', 3: '#12001A', 4: '#8A2BE2' }
+                    : { 0: 'transparent', 1: '#8A2BE2', 2: '#E0B0FF', 3: '#2C003E', 4: '#12001A' },
+                blossom: isLightMode
+                    ? { 0: 'transparent', 1: '#FFB6C1', 2: '#FFFFFF', 3: '#C71585', 4: '#FFD1DC' }
+                    : { 0: 'transparent', 1: '#FFD1DC', 2: '#FFB6C1', 3: '#FFFFFF', 4: '#C71585' },
+                volt: isLightMode
+                    ? { 0: 'transparent', 1: '#FFD700', 2: '#FFFFFF', 3: '#FF8C00', 4: '#FFFF66' }
+                    : { 0: 'transparent', 1: '#FFFF66', 2: '#FFD700', 3: '#FFFFFF', 4: '#FF8C00' },
+                retro: isLightMode
+                    ? { 0: 'transparent', 1: '#FF69B4', 2: '#00CED1', 3: '#8B008B', 4: '#FFD700' }
+                    : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
+            };
+
+            const colors = colorSets[currentSpriteStyle || 'default'];
+
             const rows = spriteData.length;
             const cols = spriteData[0].length;
             previewContainer.style.position = 'relative';
