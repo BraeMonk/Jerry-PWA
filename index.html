@@ -2656,7 +2656,8 @@
                 lastFed: { clarity: Date.now(), insight: Date.now(), calm: Date.now() },
                 level: 1,
                 xp: 0,
-                xpToNext: 100
+                xpToNext: 100,
+                currentSprite: 'default'
             };
     
             const saved = getFromLocalStorage('hush_jerry_state');
@@ -2664,6 +2665,7 @@
                 // Merge saved state with defaults, but keep saved lastFed
                 appState.jerry = { ...defaultJerryState, ...saved };
                 appState.jerry.lastFed = { ...defaultJerryState.lastFed, ...saved.lastFed };
+                appState.jerry.currentSprite = saved.currentSprite || defaultJerryState.currentSprite;
             } else {
                 appState.jerry = defaultJerryState;
             }
@@ -2687,8 +2689,6 @@
                     updateJerrySprite(); // redraw main + preview
                 }
             });
-
-            if (!appState.jerry) appState.jerry = { name: 'Jerry', currentSprite: 'default', lastFed: {} };
 
             // On load, restore saved style
             const savedStyle = localStorage.getItem('jerrySpriteStyle');
