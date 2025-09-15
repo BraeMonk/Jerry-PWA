@@ -2213,17 +2213,12 @@
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
                 const elapsedMs = now - lastFed;
-
-                if (elapsedMs < gracePeriod) {
-                    // Still in grace period: keep at 100
-                    appState.jerry.needs[need] = 100;
-                } else {
-                    // Decay starts after grace period
-                    const decayStart = lastFed + gracePeriod;
-                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // convert hours to ms
-                    const percentRemaining = Math.max(0, 100 - ((now - decayStart) / totalDecayMs) * 100);
-                    appState.jerry.needs[need] = percentRemaining;
-                }
+            
+                // Decay starts after grace period
+                const decayStart = lastFed + gracePeriod;
+                const elapsedSinceDecay = Math.max(0, now - decayStart);
+                const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
+                appState.jerry.needs[need] = Math.max(0, 100 - (elapsedSinceDecay / totalDecayMs) * 100);
             });
 
             // Track mood but don't try to change sprite based on i
