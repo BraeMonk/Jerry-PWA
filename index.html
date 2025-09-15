@@ -2406,26 +2406,29 @@
                     : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
             };
 
-            const colors = colorSets[spriteTheme];
+            const colors = colorSets[spriteTheme || 'default'];
 
             // Auto-size container
-            const rows = baseSprite.length;
-            const cols = baseSprite[0].length;
+            const rows = spriteData.length;
+            const cols = spriteData[0].length;
             previewContainer.style.position = 'relative';
             previewContainer.style.width = `${cols * 10}px`;
             previewContainer.style.height = `${rows * 10}px`;
+            previewContainer.style.border = 'none';
 
-            baseSprite.forEach((row, y) => {
+            spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
-                    const pixelDiv = document.createElement('div');
-                    pixelDiv.className = 'pixel';
-                    pixelDiv.style.position = 'absolute';
-                    pixelDiv.style.width = '10px';
-                    pixelDiv.style.height = '10px';
-                    pixelDiv.style.backgroundColor = colors[pixel];
-                    pixelDiv.style.left = `${x * 10}px`;
-                    pixelDiv.style.top = `${y * 10}px`;
-                    previewContainer.appendChild(pixelDiv);
+                    if (pixel > 0) {
+                        const pixelDiv = document.createElement('div');
+                        pixelDiv.className = 'pixel';
+                        pixelDiv.style.position = 'absolute';
+                        pixelDiv.style.width = '10px';
+                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.left = `${x * 10}px`;
+                        pixelDiv.style.top = `${y * 10}px`;
+                        previewContainer.appendChild(pixelDiv);
+                    }
                 });
             });
         }
