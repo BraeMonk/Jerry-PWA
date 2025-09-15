@@ -2345,7 +2345,7 @@
                     : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
             };
 
-            const colors = colorSets[spriteTheme || localStorage.getItem('jerrySpriteStyle') || 'default'];
+            const colors = colorSets[spriteTheme] || colorSets['default'];
 
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
@@ -2367,9 +2367,6 @@
         function renderSpritePreview() {
             const previewContainer = document.getElementById('spritePreview');
             previewContainer.innerHTML = ''; // clear previous pixels
-            const styleToUse= currentSpriteStyle || 'default';
-            const spriteData = jerrySprites[styleToUse];
-            if (!spriteData) return;
 
             const isLightMode = document.body.classList.contains('light-theme');
 
@@ -2412,7 +2409,8 @@
                     : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
             };
 
-            const colors = colorSets[styleToUse];
+            const colors = colorSets[spriteTheme] || colorSets['default'];
+            if (!spriteData) return
 
             const rows = spriteData.length;
             const cols = spriteData[0].length;
