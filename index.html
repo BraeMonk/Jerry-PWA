@@ -1314,9 +1314,9 @@
     </style>
 </head>
 <body>
-    <!--- <div id="splashScreen">
+    <div id="splashScreen">
         <img src="./jerrySplash2.PNG" alt="Splash" id="splashImage" />
-    </div> --->
+    </div>
     <div class="app-container">
         <div class="affirmation-banner" id="affirmationBanner">
             Your feelings are valid, even the difficult ones.
@@ -3763,6 +3763,40 @@
                 });
             });
         });
+
+        async function fadeSplash() {
+            const splash = document.getElementById('splashScreen');
+            const splashImg = document.getElementById('splashImage');
+            if (!splash) return;
+
+            // Make splash visible immediately
+            splash.style.opacity = '1';
+            splash.style.pointerEvents = 'auto';
+            splash.style.transition = 'opacity 0.5s ease';
+            splash.style.background = document.body.classList.contains('light-theme') ? '#f7ede5' : '#1a202c';
+
+            // Wait for splash image to load or fail
+            if (splashImg && !splashImg.complete) {
+                await new Promise(resolve => {
+                    splashImg.addEventListener('load', resolve, { once: true });
+                    splashImg.addEventListener('error', resolve, { once: true });
+                });
+            }
+
+            // Keep splash on screen for 3 seconds
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            // Fade out
+            splash.style.opacity = '0';
+            splash.style.pointerEvents = 'none';
+
+            // Wait for CSS transition to finish
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Remove splash from DOM to prevent blocking
+            splash.remove();
+        }
+
         
         // =======================
         // Async App Initialization
@@ -3800,7 +3834,6 @@
                 loadSettings();
             }
 
-
             // --- Load bot name ---
             appState.botName = localStorage.getItem('botName') || 'Jerry';
             const nameInput = document.getElementById('botName');
@@ -3812,41 +3845,6 @@
                     localStorage.setItem('botName', appState.botName);
                 });
             }
-
-            //async function fadeSplash() {
-                //const splash = document.getElementById('splashScreen');
-                //const splashImg = document.getElementById('splashImage');
-                //if (!splash) return;
-
-                // Make sure it's visible initially
-                //splash.style.opacity = '1';
-                //splash.style.pointerEvents = 'auto';
-                //splash.style.transition = 'opacity 0.5s ease';
-                //splash.style.background = document.body.classList.contains('light-theme') ? '#f7ede5' : '#1a202c';
-
-                // Wait for splash image to load (or fail)
-                //if (splashImg && !splashImg.complete) {
-                    //await new Promise(resolve => {
-                        //splashImg.addEventListener('load', resolve, { once: true });
-                        //splashImg.addEventListener('error', resolve, { once: true });
-                    //});
-                //}
-
-                // Keep splash on screen for 3 seconds
-                //await new Promise(resolve => setTimeout(resolve, 3000));
-
-                // Trigger fade
-                //splash.style.opacity = '0';
-                //splash.style.pointerEvents = 'none';
-
-                // Wait for CSS transition to finish
-                //await new Promise(resolve => setTimeout(resolve, 500));
-
-                // Remove splash from DOM to prevent blocking
-                //splash.remove();
-            //}
-
-            //await fadeSplash();
 
             // --- Initialize UI ---
             // --- Initialize base sprite and render both main + preview ---
@@ -3900,8 +3898,12 @@
             }
         }
 
-        // Initialize app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        // Initialize splash and app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            await fadeSplash();  // show splash first
+            await initializeApp();  // then initialize the app
+        });
+
     </script>
 </body>
 </html>
