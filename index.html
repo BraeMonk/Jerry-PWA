@@ -2235,6 +2235,10 @@
             updateJerryUI();
             saveJerryState();
         }
+
+        function initializeJerryDecay() {
+            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
+        }
             
 
         function feedJerry(need, amount = 50) {
@@ -2684,6 +2688,7 @@
                 const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
                 appState.jerry.needs[need] = Math.max(0, 100 - (elapsedSinceLastFed / totalDecayMs) * 100);
             });
+            updateJerryNeeds();
         }
 
         // --- Sprite Style ---
@@ -3876,6 +3881,8 @@
             // --- Initialize UI ---
             // --- Initialize base sprite and render both main + preview ---
             updateJerrySprite();
+            updateJerryUI();
+            initializeJerryDecay();
             scheduleBlink();
             updateAffirmationBanner('jerry');
             updateThemeColor();
@@ -3889,7 +3896,6 @@
             verifySubscriptionOnLoad();
 
             // --- Intervals ---
-            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
             setInterval(updateJerrySprite, 3000);
             setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
