@@ -2282,21 +2282,24 @@
         updateJerrySprite();
         }
 
-        // Replaced updateJerrySprite with a single, reliable update function
         function updateJerrySprite() {
-            // Get current selected sprite style
-            const currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
+            // Get current sprite style and theme
+            const currentSpriteStyle = appState.jerry.currentSprite || 'default';
             const spriteTheme = appState.spriteTheme || 'default';
-    
-            // Use the selected sprite data
+
+            // Get the sprite data
             const spriteData = jerrySprites[currentSpriteStyle] || jerrySprites['default'];
-    
-            // Update the base sprite
+
+            // Update persistent base sprite
             baseSprite = JSON.parse(JSON.stringify(spriteData));
-    
-            // Render both main sprite and preview
-            renderJerrySprite(spriteData, spriteTheme);
-            renderSpritePreview(spriteData, spriteTheme);
+
+            // Render main sprite and previe
+            renderJerrySprite(baseSprite, spriteTheme);
+            renderSpritePreview(baseSprite, spriteTheme);
+
+            // Save state
+            localStorage.setItem('jerrySpriteStyle', currentSpriteStyle);
+            localStorage.setItem('spriteTheme', spriteTheme);
         }
 
         function getColorSets(isLightMode) {
@@ -2670,27 +2673,44 @@
             });
         }
 
-        const spriteStyleSelect = document.getElementById('spriteStyle')
+        // --- Sprite Style ---
+        const spriteStyleSelect = document.getElementById('spriteStyle');
+        if (spriteStyleSelect) {
+            spriteStyleSelect.addEventListener('change', (e) => {
+                const selectedStyle = e.target.value;
+                if (jerrySprites[selectedStyle]) {
+                    appState.jerry.currentSprite = selectedStyle;
+                    localStorage.setItem('jerrySpriteStyle', selectedStyle);
+                    updateJerrySprite(); // redraw main + preview
+                }
+            });
 
-        spriteStyleSelect.addEventListener('change', (e) => {
-            const selectedStyle = e.target.value;
-            if (jerrySprites[selectedStyle]) {
-                currentSpriteStyle = selectedStyle;
-                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
-                drawJerry(getCurrentSprite());
-                renderSpritePreview();
-                localStorage.setItem('jerrySpriteStyle', selectedStyle);
+            // On load, restore saved style
+            const savedStyle = localStorage.getItem('jerrySpriteStyle');
+            if (savedStyle && jerrySprites[savedStyle]) {
+                appState.jerry.currentSprite = savedStyle;
+                spriteStyleSelect.value = savedStyle;
             }
-        });
+        }
 
-        // On load
-        const savedStyle = localStorage.getItem('jerrySpriteStyle');
-        if (savedStyle && jerrySprites[savedStyle]) {
-            currentSpriteStyle = savedStyle;
-            baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
-            spriteStyleSelect.value = savedStyle;
-            drawJerry(getCurrentSprite());
-            renderSpritePreview();
+        // --- Sprite Theme ---
+        const spriteThemeSelect = document.getElementById('spriteTheme');
+        if (spriteThemeSelect) {
+            spriteThemeSelect.addEventListener('change', (e) => {
+                const selectedTheme = e.target.value;
+                appState.spriteTheme = selectedTheme;
+                localStorage.setItem('spriteTheme', selectedTheme);
+                updateJerrySprite(); // redraw main + preview
+            });
+
+            // On load, restore saved theme
+            const savedTheme = localStorage.getItem('spriteTheme');
+            if (savedTheme) {
+                appState.spriteTheme = savedTheme;
+                spriteThemeSelect.value = savedTheme;
+            } else {
+                appState.spriteTheme = 'default';
+            }
         }
         
         // === Chat Functions ===
@@ -3804,6 +3824,8 @@
             //await fadeSplash();
 
             // --- Initialize UI ---
+            // --- Initialize base sprite and render both main + preview ---
+            baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry.currentSprite || 'default']));
             updateJerrySprite();
             scheduleBlink();
             updateAffirmationBanner('jerry');
