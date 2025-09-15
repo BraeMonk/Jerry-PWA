@@ -2203,7 +2203,7 @@
         }
 
         // Real-time Jerry Needs Decay
-        const NEEDS_TICK_INTERVAL = 2000; // 2 seconds
+        const NEEDS_TICK_INTERVAL = 500; // 500 ms
 
         function updateJerryNeeds() {
             const now = Date.now();
@@ -3886,7 +3886,7 @@
             verifySubscriptionOnLoad();
 
             // --- Intervals ---
-            setInterval(updateJerryNeeds, Math.max(NEEDS_TICK_INTERVAL, 1000));
+            setInterval(updateJerryNeeds, NEEDS_TICK_INTERVAL);
             setInterval(updateJerrySprite, 3000);
             setInterval(() => {
                 if (appState.currentTab === 'jerry' || appState.currentTab === 'checkin') {
