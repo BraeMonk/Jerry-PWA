@@ -3789,6 +3789,8 @@
 
             // --- Load Jerry state ---
             await loadJerryStateAsync?.() ?? loadJerryState(); // use async version if available
+            // === Initialize base sprite after Jerry state is ready ===
+            baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry?.currentSprite || 'default']));
 
             // Ensure lastFed exists
             ['clarity', 'insight', 'calm'].forEach(need => {
