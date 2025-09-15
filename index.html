@@ -3075,139 +3075,151 @@
         return "I'm here to listen. Tell me what's on your mind.";
         }
 
-        // Check-in Functions
-        function setCheckinResponse(category, choice) {
-        appState.checkinData[category] = choice;
+        /// Check-in Functions
+        function setCheckinResponse(event, category, choice) {
+            // Save choice
+            appState.checkinData[category] = choice;
 
-        // Update button states
-        const buttons = document.querySelectorAll(`[onclick*="${category}"]`);
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+            // Update button states
+            const buttons = document.querySelectorAll(`[onclick*="${category}"]`);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active'); // safer than event.target
         }
 
         function completeCheckin() {
-        if (Object.keys(appState.checkinData).length < 3) {
+            if (Object.keys(appState.checkinData).length < 3) {
                 showNotification('Please answer all questions before continuing.', 'error');
                 return;
-        }
+            }
 
-        const entry = {
+            const entry = {
                 timestamp: new Date().toISOString(),
                 type: 'Check-in',
                 data: { ...appState.checkinData }
-        };
+            };
 
-        appState.entries.unshift(entry);
-        saveToLocalStorage('hush_entries', appState.entries);
+            appState.entries.unshift(entry);
+            saveToLocalStorage('hush_entries', appState.entries);
 
-        feedJerry('clarity', 50);
-        addXP(10);
+            feedJerry('clarity', 50);
+            addXP(10);
 
-        showNotification('Check-in completed! Jerry gained clarity.');
+            showNotification('Check-in completed! Jerry gained clarity.');
 
-        // Reset form
-        appState.checkinData = {};
-        document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('active'));
+            // Reset form
+            appState.checkinData = {};
+            document.querySelectorAll('.rating-btn').forEach(btn => btn.classList.remove('active'));
 
-        // Switch to Jerry tab
-        switchTab('jerry');
+            // Switch to Jerry tab
+            switchTab('jerry');
         }
 
         // CBT Functions
         function completeCBT() {
-        const situation = document.getElementById('cbtSituation').value.trim();
-        const emotions = document.getElementById('cbtEmotions').value.trim();
-        const thoughts = document.getElementById('cbtThoughts').value.trim();
+            const situationInput = document.getElementById('cbtSituation');
+            const emotionsInput = document.getElementById('cbtEmotions');
+            const thoughtsInput = document.getElementById('cbtThoughts');
 
-        if (!situation || !emotions || !thoughts) {
+            const situation = situationInput?.value.trim();
+            const emotions = emotionsInput?.value.trim();
+            const thoughts = thoughtsInput?.value.trim();
+
+            if (!situation || !emotions || !thoughts) {
                 showNotification('Please fill in all fields.', 'error');
                 return;
-        }
+            }
 
-        // Get selected distortions
-        const distortions = [];
-        document.querySelectorAll('#cbtDistortions input:checked').forEach(checkbox => {
+            // Get selected distortions
+            const distortions = [];
+            document.querySelectorAll('#cbtDistortions input:checked').forEach(checkbox => {
                 distortions.push(checkbox.nextElementSibling.textContent);
-        });
+            });
 
-        const entry = {
+            // Build entry
+            const entry = {
                 timestamp: new Date().toISOString(),
                 type: 'CBT',
                 data: {
-                situation,
-                emotions,
-                thoughts,
-                distortions
+                    situation,
+                    emotions,
+                    thoughts,
+                    distortions
                 }
-        };
+            };
 
-        appState.entries.unshift(entry);
-        saveToLocalStorage('hush_entries', appState.entries);
+            // Save entry
+            appState.entries.unshift(entry);
+            saveToLocalStorage('hush_entries', appState.entries);
 
-        feedJerry('insight', 50);
-        addXP(20);
+            // Reward Jerry
+            feedJerry('insight', 50);
+            addXP(20);
 
-        showNotification('CBT session completed! Jerry gained insight.');
-
-        // Reset form
-        document.getElementById('cbtSituation').value = '';
-        document.getElementById('cbtEmotions').value = '';
-        document.getElementById('cbtThoughts').value = '';
-        document.querySelectorAll('#cbtDistortions input').forEach(checkbox => checkbox.checked = false);
-
-        // Switch to Jerry tab
-        switchTab('jerry');
+            showNotification('CBT session completed! Jerry gained insight.');
+            
+            // Reset form
+            if (situationInput) situationInput.value = '';
+            if (emotionsInput) emotionsInput.value = '';
+            if (thoughtsInput) thoughtsInput.value = '';
+            document.querySelectorAll('#cbtDistortions input').forEach(checkbox => checkbox.checked = false);
+            // Switch to Jerry tab
+            switchTab('jerry');
         }
 
-        // DBT Functions
-        function setDBTRating(emotion, value) {
-        appState.dbtData[emotion] = value;
+        // Add event listener for the button
+        document.addEventListener('DOMContentLoaded', () => {
+            const cbtButton = document.getElementById('completeCBTBtn');
+            if (cbtButton) {
+                cbtButton.addEventListener('click', completeCBT);
+            }
+        });
 
-        // Update button states
-        const buttons = document.querySelectorAll(`[onclick*="${emotion}"]`);
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        // DBT Functions
+        // DBT Functions
+        function setDBTRating(event, emotion, value) {
+            appState.dbtData[emotion] = value;
+
+            // Update button states
+            const buttons = document.querySelectorAll(`[onclick*="${emotion}"]`);
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
 
         function completeDBT() {
-        const requiredRatings = ['anger', 'sadness', 'fear', 'shame'];
-        const missingRatings = requiredRatings.filter(rating => appState.dbtData[rating] === undefined);
+            const requiredRatings = ['anger', 'sadness', 'fear', 'shame'];
+            const missingRatings = requiredRatings.filter(rating => appState.dbtData[rating] === undefined);
 
-        if (missingRatings.length > 0) {
+            if (missingRatings.length > 0) {
                 showNotification('Please rate all emotions.', 'error');
                 return;
-        }
+            }
 
-        // Get selected skills
-        const skills = [];
-        document.querySelectorAll('#dbtSkills input:checked').forEach(checkbox => {
+            const skills = [];
+            document.querySelectorAll('#dbtSkills input:checked').forEach(checkbox => {
                 skills.push(checkbox.nextElementSibling.textContent);
-        });
+            });
 
-        const entry = {
+            const entry = {
                 timestamp: new Date().toISOString(),
                 type: 'DBT',
-                data: {
-                ...appState.dbtData,
-                skills
-                }
-        };
+                data: { ...appState.dbtData, skills }
+            };
 
-        appState.entries.unshift(entry);
-        saveToLocalStorage('hush_entries', appState.entries);
+            appState.entries.unshift(entry);
+            saveToLocalStorage('hush_entries', appState.entries);
 
-        feedJerry('calm', 50);
-        addXP(20);
+            feedJerry('calm', 50);
+            addXP(20);
 
-        showNotification('DBT session completed! Jerry feels calmer.');
+            showNotification('DBT session completed! Jerry feels calmer.');
 
-        // Reset form
-        appState.dbtData = {};
-        document.querySelectorAll('#dbt .rating-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('#dbtSkills input').forEach(checkbox => checkbox.checked = false);
+            // Reset form
+            appState.dbtData = {};
+            document.querySelectorAll('#dbt .rating-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('#dbtSkills input').forEach(checkbox => checkbox.checked = false);
 
-        // Switch to Jerry tab
-        switchTab('jerry');
+            // Switch to Jerry tab
+            switchTab('jerry');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
