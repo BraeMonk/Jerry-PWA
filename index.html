@@ -2213,18 +2213,15 @@
                 const elapsedMs = now - lastFed;
 
                 if (elapsedMs < gracePeriod) {
-                    // Grace period: stay full
                     appState.jerry.needs[need] = 100;
                 } else {
-                    // Calculate percent remaining based on total elapsed time
-                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // ms until empty
+                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
                     const percentRemaining = Math.max(0, 100 - (elapsedMs / totalDecayMs) * 100);
-
                     appState.jerry.needs[need] = percentRemaining;
                 }
             });
 
-            // Mood based on lowest need
+            // Track mood but don't try to change sprite based on i
             const minNeed = Math.min(...Object.values(appState.jerry.needs));
             let newMood = 'content';
             if (minNeed < 50) {
@@ -2232,7 +2229,9 @@
                 else if (appState.jerry.needs.calm === minNeed) newMood = 'lowCalm';
             }
 
-            setMood(newMood);
+            // Just track the mood, don't change sprite
+            currentMood = newMood;
+    
             updateJerryUI();
             saveJerryState();
         }
@@ -2283,24 +2282,19 @@
 
         // Replaced updateJerrySprite with a single, reliable update function
         function updateJerrySprite() {
-        const needs = appState.jerry.needs;
-        let spriteType = 'content';
-
-        const minNeed = Math.min(needs.clarity, needs.insight, needs.calm);
-        if (minNeed < 50) {
-                if (needs.insight === minNeed) {
-                spriteType = 'lowInsight';
-                } else if (needs.calm === minNeed) {
-                spriteType = 'lowCalm';
-                }
-        }
-        
-        // Pass the correct data to the rendering functions
-        const spriteData = jerrySprites[spriteType];
-        const spriteTheme = appState.spriteTheme;
-
-        renderJerrySprite(spriteData, spriteTheme);
-        renderSpritePreview(spriteData, spriteTheme);
+            // Get current selected sprite style
+            const currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
+            const spriteTheme = appState.spriteTheme || 'default';
+    
+            // Use the selected sprite data
+            const spriteData = jerrySprites[currentSpriteStyle] || jerrySprites['default'];
+    
+            // Update the base sprite
+            baseSprite = JSON.parse(JSON.stringify(spriteData));
+    
+            // Render both main sprite and preview
+            renderJerrySprite(spriteData, spriteTheme);
+            renderSpritePreview(spriteData, spriteTheme);
         }
 
         // Fixed rendering functions to accept and use parameters
@@ -2578,11 +2572,14 @@
 
         // Mood switching
         function setMood(mood) {
-        if (jerrySprites[mood]) {
-                currentMood = mood;
-                baseSprite = JSON.parse(JSON.stringify(jerrySprites[mood]));
+            // Always use the currently selected sprite style, ignore mood variations
+            const currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
+    
+            if (jerrySprites[currentSpriteStyle]) {
+                currentMood = mood; // track mood but don't change sprite
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
                 drawJerry(getCurrentSprite());
-        }
+            }
         }
 
         // Talking animation
