@@ -2637,13 +2637,10 @@
         }
 
         function saveJerryState() {
-            // Ensure lastFed exists before saving
-            if (!appState.jerry.lastFed) {
-                appState.jerry.lastFed = {};
-            }
+            // Only ensure lastFed exists for undefined needs, don't overwrite existing timestamps
+            if (!appState.jerry.lastFed) appState.jerry.lastFed = {};
 
             ['clarity', 'insight', 'calm'].forEach(need => {
-                // Only assign if undefined
                 if (typeof appState.jerry.lastFed[need] === 'undefined') {
                     appState.jerry.lastFed[need] = Date.now();
                 }
@@ -2651,7 +2648,7 @@
 
             saveToLocalStorage('hush_jerry_state', appState.jerry);
         }
-        
+
         function loadJerryState() {
             const defaultJerryState = {
                 needs: { clarity: 100, insight: 100, calm: 100 },
@@ -2661,22 +2658,34 @@
                 xpToNext: 100,
                 currentSprite: 'default'
             };
-    
+
             const saved = getFromLocalStorage('hush_jerry_state');
+
             if (saved) {
-                // Merge saved state with defaults, but keep saved lastFed
+                // Merge saved state with defaults, but keep saved lastFed intact
                 appState.jerry = { ...defaultJerryState, ...saved };
-                appState.jerry.lastFed = { ...defaultJerryState.lastFed, ...saved.lastFed };
+                appState.jerry.lastFed = { ...defaultJerryState.lastFed, ...saved.lastFed }; // only fill missing keys
                 appState.jerry.currentSprite = saved.currentSprite || defaultJerryState.currentSprite;
             } else {
                 appState.jerry = defaultJerryState;
             }
 
-            // Ensure lastFed exists for all needs (for any missing keys)
+            // Ensure lastFed exists for any missing needs
             ['clarity', 'insight', 'calm'].forEach(need => {
-                if (!appState.jerry.lastFed[need]) {
+                if (typeof appState.jerry.lastFed[need] === 'undefined') {
                     appState.jerry.lastFed[need] = Date.now();
                 }
+            });
+
+            // Apply immediate decay based on real elapsed time since lastFed
+            const now = Date.now();
+            const decayRates = { clarity: 6, insight: 24, calm: 12 }; // hours to fully deplete
+            const gracePeriod = 10 * 60 * 1000; // 10 minutes
+
+            Object.keys(appState.jerry.needs).forEach(need => {
+                const elapsedSinceLastFed = Math.max(0, now - appState.jerry.lastFed[need] - gracePeriod);
+                const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
+                appState.jerry.needs[need] = Math.max(0, 100 - (elapsedSinceLastFed / totalDecayMs) * 100);
             });
         }
 
