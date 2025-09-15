@@ -3825,16 +3825,18 @@
                 });
             }
 
-            // --- Splash fade ---
-            const fadeSplash = async () => {
+            async function fadeSplash() {
+                const splash = document.getElementById('splashScreen');
+                const splashImg = document.getElementById('splashImage');
                 if (!splash) return;
 
+                // Make sure it's visible initially
                 splash.style.opacity = '1';
                 splash.style.pointerEvents = 'auto';
-                const isLightMode = document.body.classList.contains('light-theme');
-                splash.style.background = isLightMode ? '#f7ede5' : '#1a202c';
                 splash.style.transition = 'opacity 0.5s ease';
+                splash.style.background = document.body.classList.contains('light-theme') ? '#f7ede5' : '#1a202c';
 
+                // Wait for splash image to load (or fail)
                 if (splashImg && !splashImg.complete) {
                     await new Promise(resolve => {
                         splashImg.addEventListener('load', resolve, { once: true });
@@ -3842,17 +3844,19 @@
                     });
                 }
 
-                await delay(3000); // wait 3 seconds visible
+                // Keep splash on screen for 3 seconds
+                await new Promise(resolve => setTimeout(resolve, 3000));
 
-                // Wait one animation frame to ensure the browser applied opacity=1
-                await new Promise(requestAnimationFrame);
-
+                // Trigger fade
                 splash.style.opacity = '0';
                 splash.style.pointerEvents = 'none';
 
-                await delay(500); // wait for fade
+                // Wait for CSS transition to finish
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Remove splash from DOM to prevent blocking
                 splash.remove();
-            };
+            }
 
             await fadeSplash();
 
