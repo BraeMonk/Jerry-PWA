@@ -2208,17 +2208,20 @@
         function updateJerryNeeds() {
             const now = Date.now();
             const decayRates = { clarity: 6, insight: 24, calm: 12 }; // hours to fully deplete
-            const gracePeriod = 10 * 60 * 1000; // 10 minutes
+            const gracePeriod = 10 * 60 * 1000; // 10 minutes in ms
 
             Object.keys(appState.jerry.needs).forEach(need => {
                 const lastFed = appState.jerry.lastFed[need] || now;
                 const elapsedMs = now - lastFed;
 
                 if (elapsedMs < gracePeriod) {
+                    // Still in grace period: keep at 100
                     appState.jerry.needs[need] = 100;
                 } else {
-                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000;
-                    const percentRemaining = Math.max(0, 100 - (elapsedMs / totalDecayMs) * 100);
+                    // Decay starts after grace period
+                    const decayStart = lastFed + gracePeriod;
+                    const totalDecayMs = decayRates[need] * 60 * 60 * 1000; // convert hours to ms
+                    const percentRemaining = Math.max(0, 100 - ((now - decayStart) / totalDecayMs) * 100);
                     appState.jerry.needs[need] = percentRemaining;
                 }
             });
