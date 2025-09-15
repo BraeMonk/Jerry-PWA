@@ -2367,8 +2367,8 @@
         function renderSpritePreview() {
             const previewContainer = document.getElementById('spritePreview');
             previewContainer.innerHTML = ''; // clear previous pixels
-            const currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
-            const spriteData = jerrySprites[currentSpriteStyle];
+            const styleToUse= currentSpriteStyle || 'default';
+            const spriteData = jerrySprites[styleToUse];
             if (!spriteData) return;
 
             const isLightMode = document.body.classList.contains('light-theme');
@@ -2412,7 +2412,7 @@
                     : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' }
             };
 
-            const colors = colorSets[currentSpriteStyle || 'default'];
+            const colors = colorSets[styleToUse];
 
             const rows = spriteData.length;
             const cols = spriteData[0].length;
@@ -2750,6 +2750,7 @@
                 currentSpriteStyle = selectedStyle;
                 baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
                 drawJerry(getCurrentSprite());
+                renderSpritePreview();
                 localStorage.setItem('jerrySpriteStyle', selectedStyle);
             }
         });
@@ -2761,6 +2762,7 @@
             baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
             spriteStyleSelect.value = savedStyle;
             drawJerry(getCurrentSprite());
+            renderSpritePreview();
         }
         
         // === Chat Functions ===
