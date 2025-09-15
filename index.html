@@ -3289,6 +3289,8 @@
 
             input.value = '';
             renderJournalEntries();
+
+            showNotification('Journal Saved!', 'success');
             // Optional: switch to Entries tab automatically
             switchTab('jerry');
         }
@@ -3518,18 +3520,24 @@
         // Settings Loader/Saver
         // =======================
         function loadSettings() {
-        // Basic settings
-        document.getElementById('apiKey').value = appState.apiKey || '';
-        document.getElementById('botName').value = appState.botName || 'Jerry';
+            // Basic settings
+            document.getElementById('apiKey').value = appState.apiKey || '';
+            document.getElementById('botName').value = appState.botName || 'Jerry';
 
-        // Theme
-        const storedTheme = localStorage.getItem('spriteTheme') || 'default';
-        appState.spriteTheme = storedTheme;
-        document.getElementById('spriteTheme').value = appState.spriteTheme;
+            // Theme
+            const storedTheme = localStorage.getItem('spriteTheme') || 'default';
+            appState.spriteTheme = storedTheme;
+            document.getElementById('spriteTheme').value = appState.spriteTheme;
 
-        // API option
-        const apiOption = localStorage.getItem('jerry_api_option') || 'own';
-        document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
+            // API option
+            const apiOption = localStorage.getItem('jerry_api_option') || 'own';
+            document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
+
+            const spriteStyleSelect = document.getElementById('spriteStyle');
+            if (spriteStyleSelect) {
+                spriteStyleSelect.value = appState.jerry.currentSprite || 'default';
+            }
+   
 
         // Wire up event handlers
         setupApiOptionHandlers();
