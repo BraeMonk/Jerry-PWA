@@ -2660,12 +2660,9 @@
             };
 
             const saved = getFromLocalStorage('hush_jerry_state');
-
-            if (saved) {
-                // Merge saved state with defaults, but keep saved lastFed intact
+            if (saved && saved.lastFed) {
                 appState.jerry = { ...defaultJerryState, ...saved };
-                appState.jerry.lastFed = { ...defaultJerryState.lastFed, ...saved.lastFed }; // only fill missing keys
-                appState.jerry.currentSprite = saved.currentSprite || defaultJerryState.currentSprite;
+                appState.jerry.lastFed = { ...saved.lastFed }; // <— don’t mix with default lastFed
             } else {
                 appState.jerry = defaultJerryState;
             }
