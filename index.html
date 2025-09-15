@@ -3296,11 +3296,11 @@
             addXP(30);
 
             showNotification('Journal Saved!', 'success');
+
+            switchTab('jerry');
             
             input.value = '';
             renderJournalEntries();
-
-            switchTab('jerry');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
