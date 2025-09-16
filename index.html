@@ -1416,10 +1416,11 @@
         #petPreview .pet-sprite {
             background: transparent;
             border: none;
+            display: grid;
+            grid-gap: 0;                  /* no gaps between pixels */
             width: 100%;
             height: 100%;
-            display: grid;          /* grid of pixels */
-            animation: petIdle 2s infinite alternate;
+            image-rendering: pixelated;   /* optional for crisp scaling */
         }
 
         #petPreview {
