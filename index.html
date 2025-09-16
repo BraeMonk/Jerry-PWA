@@ -2958,23 +2958,6 @@
             updateJerryNeeds();
         }
 
-        const petSprite = document.getElementById('petSprite');
-        const petSound = new Audio('./mechanical_purr.mp3');
-        
-        petSprite.addEventListener('click', () => {
-
-            // Play sound
-            petSound.currentTime = 0;
-            petSound.play();
-
-            // Quick click animation
-            petSprite.style.transform = 'scale(1.2)';
-            setTimeout(() => {
-                petSprite.style.transform = '';
-            }, 200);
-        });
-
-
         const petSprites = {
             miniJerry: [
                 [0,0,2,2,2,2,0,0],
@@ -3104,6 +3087,7 @@
 
             // Add click animation & sound
             spriteDiv.addEventListener('click', () => {
+                const petSound = new Audio('./mechanical_purr.mp3');
                 petSound.currentTime = 0;
                 petSound.play();
                 spriteDiv.style.transform = 'scale(1.2)';
