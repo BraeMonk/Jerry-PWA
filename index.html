@@ -2959,9 +2959,10 @@
         }
 
         const petSprite = document.getElementById('petSprite');
+        const petSound = new Audio('./mechanical_purr.mp3');
         
         petSprite.addEventListener('click', () => {
-            const petSound = new Audio('./mechanical_purr.mp3');
+
             // Play sound
             petSound.currentTime = 0;
             petSound.play();
@@ -2973,13 +2974,16 @@
             }, 200);
         });
 
-        // Optional: randomized idle chirps every 3-6 seconds
-        setInterval(() => {
-            if (Math.random() > 0.6) {  // ~40% chance
+        function randomChirp() {
+            if (Math.random() > 0.6) {
                 petSound.currentTime = 0;
                 petSound.play();
             }
-        }, Math.random() * 3000 + 3000);
+            const delay = Math.random() * 3000 + 3000; // 3-6s
+            setTimeout(randomChirp, delay);
+        }
+
+        randomChirp(); // start the loop
 
         const petSprites = {
             miniJerry: [
@@ -3091,7 +3095,7 @@
         // Render a pet sprite from array + theme colors
         function renderPetSprite(spriteArray, colors) {
             const spriteDiv = document.createElement('div');
-            spriteDiv.classList.add('pet-sprite', 'pulse'); // <-- pulse animation applied
+            spriteDiv.classList.add('pet-sprite', 'pulse');
             spriteDiv.style.display = 'grid';
             spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, 1fr)`;
             spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, 1fr)`;
@@ -3107,6 +3111,15 @@
                     spriteDiv.appendChild(px);
                 }
             }
+
+            // Add click animation & sound
+            spriteDiv.addEventListener('click', () => {
+                petSound.currentTime = 0;
+                petSound.play();
+                spriteDiv.style.transform = 'scale(1.2)';
+                setTimeout(() => spriteDiv.style.transform = '', 200);
+            });
+
             return spriteDiv;
         }
 
@@ -3122,50 +3135,42 @@
             const spriteData = petSprites[style];
             const themeColors = petThemes[theme];
             if (spriteData && themeColors) {
-                const petSprite = renderPetSprite(spriteData, themeColors);
-                preview.appendChild(petSprite);
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors);
+                preview.appendChild(petSpriteDiv);
             }
         }
 
-        // Update the sticky pet on the page
         function updateStickyPet() {
             const style = document.getElementById('petStyle').value;
             const theme = document.getElementById('petTheme').value;
             const petContainer = document.getElementById('petContainer');
             petContainer.innerHTML = '';
 
-            if (style === 'none') return; // disabled
+            if (style === 'none') return;
 
             const spriteData = petSprites[style];
             const themeColors = petThemes[theme];
             if (spriteData && themeColors) {
-                const petSprite = renderPetSprite(spriteData, themeColors);
-                petContainer.appendChild(petSprite);
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors);
+                petContainer.appendChild(petSpriteDiv);
             }
         }
 
-        // Save current pet selection
         function savePetSettings() {
-            const petSettings = {
+            const settings = {
                 style: document.getElementById('petStyle').value,
                 theme: document.getElementById('petTheme').value
             };
-            localStorage.setItem('petSettings', JSON.stringify(petSettings));
+            localStorage.setItem('petSettings', JSON.stringify(settings));
         }
 
-        // Load pet settings on startup
         function loadPetSettings() {
-            const saved = JSON.parse(localStorage.getItem('petSettings'));
+            const saved = JSON.parse(localStorage.getItem('petSettings')) || {};
             const styleSelect = document.getElementById('petStyle');
             const themeSelect = document.getElementById('petTheme');
 
-            if (saved && saved.style && saved.style !== 'none') {
-                styleSelect.value = saved.style;
-                themeSelect.value = saved.theme;
-            } else {
-                styleSelect.value = 'none';
-                themeSelect.value = 'default';
-            }
+            styleSelect.value = saved.style || 'none';
+            themeSelect.value = saved.theme || 'default';
 
             renderPetPreview();
             updateStickyPet();
