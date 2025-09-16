@@ -1964,7 +1964,7 @@
                 </div>
             </div>
             <div style="margin-top: 40px;">
-                <h3 style="margin-bottom: 15px;">Pet Sprite</h3>
+                <h3 style="margin-bottom: 15px;">Pet</h3>
             </div>
 
             <div class="form-group" style="margin-top: 20px;">
@@ -1986,6 +1986,7 @@
                     <option value="gem">Crisp</option>
                     <option value="beetle">Bob</option>
                     <option value="star">Nightlight</option>
+                    <option value="peepaw">Pee-Paw</option>
                 </select>
             </div>
 
@@ -3086,7 +3087,18 @@
                 [0,0,2,3,4,3,2,0],
                 [0,0,0,2,3,2,0,0],
                 [0,0,0,0,2,0,0,0]
-            ]
+            ],
+
+            peepaw: [
+                [0,0,0,5,5,0,0,0],   // top of crown
+                [0,0,0,6,6,0,0,0],   // shaded top edges
+                [0,0,3,3,3,3,0,0],   // main crown
+                [0,0,0,1,0,0,0,0],   // single cyclops eye (1)
+                [0,0,3,3,3,3,0,0],   // main crown continues
+                [0,0,4,4,4,4,0,0],   // ribbon across brim
+                [0,0,5,5,5,5,0,0],   // brim
+                [0,0,0,0,0,0,0,0] 
+            ] 
         };
 
         // Get the current light/dark mode state
