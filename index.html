@@ -1377,6 +1377,46 @@
             position: relative;
             z-index: 100; /* safely above any sprites/backgrounds */
         }
+
+        #petContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .pet-sprite {
+            width: 100%;
+            height: 100%;
+            display: grid;         /* JS sets grid anyway */
+            animation: petIdle 2s infinite alternate;
+        }
+
+        .pet-sprite.pulse {
+            animation: petIdle 2s infinite alternate, pulse 1s infinite;
+        }
+
+        @keyframes petIdle {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #petPreview .pet-sprite {
+            width: 100%;
+            height: 100%;
+            display: grid;          /* grid of pixels */
+            animation: petIdle 2s infinite alternate;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1421,6 +1461,11 @@
             <button class="radial-item" onclick="switchTab('hush', event)">🤫</button>
             <button class="radial-item" onclick="switchTab('entries', event)">🗂</button>
             <button class="radial-item" onclick="switchTab('settings', event)">⚙️</button>
+        </div>
+
+        <!-- Pet Sprite -->
+        <div id="petContainer">
+            <div class="pet-sprite" id="petSprite"></div>
         </div>
         
         <!-- Jerry Screen -->
@@ -1903,6 +1948,48 @@
                         <span>Flare</span>
                     </div>
                 </div>
+            </div>
+            <div style="margin-top: 40px;">
+                <h3 style="margin-bottom: 15px;">Pet Sprite</h3>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label class="form-label">Pet Preview</label>
+                <div id="petPreview" style="width: 60px; height: 60px; position: relative; background: #f0f0f0; border: 1px solid #ccc;"></div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label class="form-label" for="petStyle">Pet Style:</label>
+                <select class="form-input" id="petStyle">
+                    <option value="none">🚫</option>
+                    <option value="miniJerry">Mini Jerry</option>
+                    <option value="puff">Puff</option>
+                    <option value="spark">Spark</option>
+                    <option value="buddy">Buddy</option>
+                    <option value="orb">Orb</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="petTheme">Pet Theme:</label>
+                <select class="form-input" id="petTheme">
+        
+                    <!-- same themes as sprite -->
+                    <option value="default">Default</option>
+                    <option value="chaotic">Chaotic</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="noir">Noir</option>
+                    <option value="forest">Forest</option>
+                    <option value="neon">Neon</option>
+                    <option value="solar">Solar</option>
+                    <option value="glacial">Glacial</option>
+                    <option value="cosmic">Cosmic</option>
+                    <option value="blossom">Blossom</option>
+                    <option value="volt">Volt</option>
+                    <option value="retro">Retro</option>
+                    <option value="lunar">Lunar</option>
+                    <option value="binary">Binary</option>
+                </select>
             </div>
             <div style="margin-top: 30px;">
                 <button class="def-button" id="openDBTOverlay">Cheat Sheet</button>
@@ -2871,6 +2958,233 @@
             updateJerryNeeds();
         }
 
+        const petSprite = document.getElementById('petSprite');
+        
+        petSprite.addEventListener('click', () => {
+            // Play sound
+            petSound.currentTime = 0;
+            petSound.play();
+
+            // Quick click animation
+            petSprite.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                petSprite.style.transform = '';
+            }, 200);
+        });
+
+        // Optional: randomized idle chirps every 3-6 seconds
+        setInterval(() => {
+            if (Math.random() > 0.6) {  // ~40% chance
+                petSound.currentTime = 0;
+                petSound.play();
+            }
+        }, Math.random() * 3000 + 3000);
+
+        const petSprites = {
+            miniJerry: [
+                [0,0,2,2,2,2,0,0],
+                [0,2,1,1,1,1,2,0],
+                [2,1,0,0,0,0,1,2],
+                [2,1,0,2,2,0,1,2],
+                [2,1,0,0,0,0,1,2],
+                [2,1,0,0,0,0,1,2]
+                [0,2,1,1,1,1,2,0],
+                [0,0,2,2,2,2,0,0]
+            ],
+        
+            puff: [
+                [0,0,3,3,3,3,0,0],
+                [0,3,3,3,3,3,3,0],
+                [3,3,0,3,3,0,3,3],
+                [3,3,3,3,3,3,3,3],
+                [3,3,3,0,0,3,3,3],
+                [0,3,3,3,3,3,3,0],
+                [0,0,3,3,3,3,0,0],
+                [0,0,0,3,3,0,0,0]
+            ],
+        
+            spark: [
+                [0,0,4,0,0,4,0,0],
+                [0,4,0,4,4,0,4,0],
+                [4,0,4,4,4,4,0,4],
+                [0,4,4,4,4,4,4,0],
+                [0,4,4,4,4,4,4,0],
+                [4,0,4,4,4,4,0,4],
+                [0,4,0,4,4,0,4,0],
+                [0,0,4,0,0,4,0,0]
+            ],
+        
+            buddy: [
+                [0,5,5,0,0,5,5,0],
+                [0,5,0,5,5,0,5,0],
+                [0,5,5,5,5,5,5,0],
+                [0,5,1,5,5,1,5,0],
+                [0,5,5,5,5,5,5,0],
+                [0,0,5,0,0,5,0,0],
+                [0,0,5,0,0,5,0,0],
+                [0,0,5,5,5,5,0,0]
+            ],
+            
+            orb: [
+                [0,0,6,6,6,6,0,0],
+                [0,6,6,6,6,6,6,0],
+                [6,6,0,6,6,0,6,6],
+                [6,6,6,6,6,6,6,6],
+                [6,6,6,6,6,6,6,6],
+                [6,6,0,6,6,0,6,6],
+                [0,6,6,6,6,6,6,0],
+                [0,0,6,6,6,6,0,0]
+            ]
+        };
+
+        // Map sprite themes → colors (same as Jerry’s themes)
+        const petThemes = {
+            default: isLightMode
+                    ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88' }
+                    : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0' },
+                chaotic: isLightMode
+                    ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347' }
+                    : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000' },
+                neutral: isLightMode
+                    ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF' }
+                    : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082' },
+                noir: isLightMode
+                    ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF' }
+                    : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000' },
+                forest: isLightMode
+                    ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA' }
+                    : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20' },
+                neon: isLightMode
+                    ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF' }
+                    : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099' },
+                solar: isLightMode
+                    ? { 0: 'transparent', 1: '#FF8C00', 2: '#FFF5CC', 3: '#CC7000', 4: '#FFD580' }
+                    : { 0: 'transparent', 1: '#FFD580', 2: '#FF8C00', 3: '#FFF5CC', 4: '#CC7000' },
+                glacial: isLightMode
+                    ? { 0: 'transparent', 1: '#5DADE2', 2: '#EBF5FB', 3: '#154360', 4: '#AED6F1' }
+                    : { 0: 'transparent', 1: '#AED6F1', 2: '#5DADE2', 3: '#EBF5FB', 4: '#154360' },
+                cosmic: isLightMode
+                    ? { 0: 'transparent', 1: '#2C003E', 2: '#E0B0FF', 3: '#12001A', 4: '#8A2BE2' }
+                    : { 0: 'transparent', 1: '#8A2BE2', 2: '#E0B0FF', 3: '#2C003E', 4: '#12001A' },
+                blossom: isLightMode
+                    ? { 0: 'transparent', 1: '#E6E6FA', 2: '#FFE5B4', 3: '#98FB98', 4: '#FFFFFF' }
+                    : { 0: 'transparent', 1: '#D8BFD8', 2: '#FFB07C', 3: '#66CDAA', 4: '#E6E6FA' }, 
+                volt: isLightMode
+                    ? { 0: 'transparent', 1: '#FFD700', 2: '#FFFFFF', 3: '#FF8C00', 4: '#FFFF66' }
+                    : { 0: 'transparent', 1: '#FFFF66', 2: '#FFD700', 3: '#FFFFFF', 4: '#FF8C00' },
+                retro: isLightMode
+                    ? { 0: 'transparent', 1: '#FF69B4', 2: '#00CED1', 3: '#8B008B', 4: '#FFD700' }
+                    : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' },
+                lunar: isLightMode
+                    ? { 0: 'transparent', 1: '#F8F8FF', 2: '#C0C0C0', 3: '#B0C4DE', 4: '#E6E6FA' } 
+                    : { 0: 'transparent', 1: '#2F4F4F', 2: '#708090', 3: '#B0C4DE', 4: '#C0C0C0' },
+                binary: isLightMode
+                    ? { 0: 'transparent', 1: '#708090', 2: '#B22222', 3: '#32CD32', 4: '#D3D3D3' }
+                    : { 0: 'transparent', 1: '#000000', 2: '#00FF00', 3: '#008000', 4: '#AAFFAA' }
+        };
+
+        // =====================
+        // Sprite Rendering
+        // =====================
+
+        // Render a pet sprite from array + theme colors
+        function renderPetSprite(spriteArray, colors) {
+            const spriteDiv = document.createElement('div');
+            spriteDiv.classList.add('pet-sprite', 'pulse'); // <-- pulse animation applied
+            spriteDiv.style.display = 'grid';
+            spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, 1fr)`;
+            spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, 1fr)`;
+            spriteDiv.style.width = '100%';
+            spriteDiv.style.height = '100%';
+
+            for (let y = 0; y < spriteArray.length; y++) {
+                for (let x = 0; x < spriteArray[y].length; x++) {
+                    const px = document.createElement('div');
+                    px.style.backgroundColor = colors[spriteArray[y][x]] || 'transparent';
+                    px.style.width = '100%';
+                    px.style.height = '100%';
+                    spriteDiv.appendChild(px);
+                }
+            }
+            return spriteDiv;
+        }
+
+        // Render the pet preview in settings
+        function renderPetPreview() {
+            const style = document.getElementById('petStyle').value;
+            const theme = document.getElementById('petTheme').value;
+            const preview = document.getElementById('petPreview');
+            preview.innerHTML = '';
+
+            if (style === 'none') return;
+
+            const spriteData = petSprites[style];
+            const themeColors = petThemes[theme];
+            if (spriteData && themeColors) {
+                const petSprite = renderPetSprite(spriteData, themeColors);
+                preview.appendChild(petSprite);
+            }
+        }
+
+        // Update the sticky pet on the page
+        function updateStickyPet() {
+            const style = document.getElementById('petStyle').value;
+            const theme = document.getElementById('petTheme').value;
+            const petContainer = document.getElementById('petContainer');
+            petContainer.innerHTML = '';
+
+            if (style === 'none') return; // disabled
+
+            const spriteData = petSprites[style];
+            const themeColors = petThemes[theme];
+            if (spriteData && themeColors) {
+                const petSprite = renderPetSprite(spriteData, themeColors);
+                petContainer.appendChild(petSprite);
+            }
+        }
+
+        // Save current pet selection
+        function savePetSettings() {
+            const petSettings = {
+                style: document.getElementById('petStyle').value,
+                theme: document.getElementById('petTheme').value
+            };
+            localStorage.setItem('petSettings', JSON.stringify(petSettings));
+        }
+
+        // Load pet settings on startup
+        function loadPetSettings() {
+            const saved = JSON.parse(localStorage.getItem('petSettings'));
+            const styleSelect = document.getElementById('petStyle');
+            const themeSelect = document.getElementById('petTheme');
+
+            if (saved && saved.style && saved.style !== 'none') {
+                styleSelect.value = saved.style;
+                themeSelect.value = saved.theme;
+            } else {
+                styleSelect.value = 'none';
+                themeSelect.value = 'default';
+            }
+
+            renderPetPreview();
+            updateStickyPet();
+        }
+
+        // =====================
+        // Event Listeners
+        // =====================
+        document.getElementById('petStyle').addEventListener('change', () => {
+            renderPetPreview();
+            updateStickyPet();
+            savePetSettings();
+        });
+
+        document.getElementById('petTheme').addEventListener('change', () => {
+            renderPetPreview();
+            updateStickyPet();
+            savePetSettings();
+        });
+        
         // --- Sprite Style ---
         const spriteStyleSelect = document.getElementById('spriteStyle');
         if (spriteStyleSelect) {
@@ -4113,6 +4427,12 @@
                         .then(() => console.log('ServiceWorker registration successful'))
                         .catch(() => console.log('ServiceWorker registration failed'));
                 });
+            }
+            // --- Load pet after everything else is ready ---
+            if (typeof loadPetSettings === 'function') {
+                loadPetSettings();
+            } else {
+                console.warn("Pet system not found — skipping.");
             }
         }
 
