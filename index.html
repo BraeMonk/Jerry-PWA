@@ -3085,11 +3085,8 @@
                 }
             }
 
-            // Add click animation & sound
+            // Quick click animation only (no audio)
             spriteDiv.addEventListener('click', () => {
-                const petSound = new Audio('./mechanical_purr.mp3');
-                petSound.currentTime = 0;
-                petSound.play();
                 spriteDiv.style.transform = 'scale(1.2)';
                 setTimeout(() => spriteDiv.style.transform = '', 200);
             });
