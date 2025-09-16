@@ -3172,11 +3172,19 @@
         spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, 1fr)`;
         spriteDiv.style.width = '100%';
         spriteDiv.style.height = '100%';
+        spriteDiv.style.background = 'transparent';
 
         for (let y = 0; y < spriteArray.length; y++) {
             for (let x = 0; x < spriteArray[y].length; x++) {
+                const pixelValue = spriteArray[y][x];
                 const px = document.createElement('div');
-                px.style.backgroundColor = colors[spriteArray[y][x]] || 'transparent';
+
+                if (pixelValue !== 0) {
+                    px.style.backgroundColor = colors[pixelValue];
+                } else {
+                    px.style.backgroundColor = 'transparent';
+                }
+
                 px.style.width = '100%';
                 px.style.height = '100%';
                 spriteDiv.appendChild(px);
