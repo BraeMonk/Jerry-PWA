@@ -4359,6 +4359,7 @@
             updateJerrySprite();
             updateJerryUI();
             initializeJerryDecay();
+            loadPetSettings();
             scheduleBlink();
             updateAffirmationBanner('jerry');
             updateThemeColor();
@@ -4411,7 +4412,6 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await fadeSplash();  // show splash first
             await initializeApp();  // then initialize the app
-            loadPetSettings();
         });
 
     </script>
