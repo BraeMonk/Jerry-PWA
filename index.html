@@ -2961,6 +2961,7 @@
         const petSprite = document.getElementById('petSprite');
         
         petSprite.addEventListener('click', () => {
+            const petSound = new Audio('./mechanical_purr.mp3');
             // Play sound
             petSound.currentTime = 0;
             petSound.play();
