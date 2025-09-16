@@ -2959,337 +2959,310 @@
         }
 
         const petSprites = {
-miniJerry: [
-[0,0,2,2,2,2,0,0],
-[0,2,1,1,1,1,2,0],
-[2,1,0,0,0,0,1,2],
-[2,1,0,2,2,0,1,2],
-[2,1,0,0,0,0,1,2],
-[2,1,0,0,0,0,1,2],
-[0,2,1,1,1,1,2,0],
-[0,0,2,2,2,2,0,0]
-],
+            miniJerry: [
+                [0,0,2,2,2,2,0,0],
+                [0,2,1,1,1,1,2,0],
+                [2,1,0,0,0,0,1,2],
+                [2,1,0,2,2,0,1,2],
+                [2,1,0,0,0,0,1,2],
+                [2,1,0,0,0,0,1,2],
+                [0,2,1,1,1,1,2,0],
+                [0,0,2,2,2,2,0,0]
+            ],
 
-```
-puff: [
-    [0,0,3,3,3,3,0,0],
-    [0,3,3,3,3,3,3,0],
-    [3,3,0,3,3,0,3,3],
-    [3,3,3,3,3,3,3,3],
-    [3,3,3,0,0,3,3,3],
-    [0,3,3,3,3,3,3,0],
-    [0,0,3,3,3,3,0,0],
-    [0,0,0,3,3,0,0,0]
-],
+            puff: [
+                [0,0,3,3,3,3,0,0],
+                [0,3,3,3,3,3,3,0],
+                [3,3,0,3,3,0,3,3],
+                [3,3,3,3,3,3,3,3],
+                [3,3,3,0,0,3,3,3],
+                [0,3,3,3,3,3,3,0],
+                [0,0,3,3,3,3,0,0],
+                [0,0,0,3,3,0,0,0]
+            ],
 
-spark: [
-    [0,0,4,0,0,4,0,0],
-    [0,4,0,4,4,0,4,0],
-    [4,0,4,4,4,4,0,4],
-    [0,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,0],
-    [4,0,4,4,4,4,0,4],
-    [0,4,0,4,4,0,4,0],
-    [0,0,4,0,0,4,0,0]
-],
+            spark: [
+                [0,0,4,0,0,4,0,0],
+                [0,4,0,4,4,0,4,0],
+                [4,0,4,4,4,4,0,4],
+                [0,4,4,4,4,4,4,0],
+                [0,4,4,4,4,4,4,0],
+                [4,0,4,4,4,4,0,4],
+                [0,4,0,4,4,0,4,0],
+                [0,0,4,0,0,4,0,0]
+            ],
 
-buddy: [
-    [0,5,5,0,0,5,5,0],
-    [0,5,0,5,5,0,5,0],
-    [0,5,5,5,5,5,5,0],
-    [0,5,1,5,5,1,5,0],
-    [0,5,5,5,5,5,5,0],
-    [0,0,5,0,0,5,0,0],
-    [0,0,5,0,0,5,0,0],
-    [0,0,5,5,5,5,0,0]
-],
+            buddy: [
+                [0,5,5,0,0,5,5,0],
+                [0,5,0,5,5,0,5,0],
+                [0,5,5,5,5,5,5,0],
+                [0,5,1,5,5,1,5,0],
+                [0,5,5,5,5,5,5,0],
+                [0,0,5,0,0,5,0,0],
+                [0,0,5,0,0,5,0,0],
+                [0,0,5,5,5,5,0,0]
+            ],
 
-orb: [
-    [0,0,6,6,6,6,0,0],
-    [0,6,6,6,6,6,6,0],
-    [6,6,0,6,6,0,6,6],
-    [6,6,6,6,6,6,6,6],
-    [6,6,6,6,6,6,6,6],
-    [6,6,0,6,6,0,6,6],
-    [0,6,6,6,6,6,6,0],
-    [0,0,6,6,6,6,0,0]
-]
-```
+            orb: [
+                [0,0,6,6,6,6,0,0],
+                [0,6,6,6,6,6,6,0],
+                [6,6,0,6,6,0,6,6],
+                [6,6,6,6,6,6,6,6],
+                [6,6,6,6,6,6,6,6],
+                [6,6,0,6,6,0,6,6],
+                [0,6,6,6,6,6,6,0],
+                [0,0,6,6,6,6,0,0]
+            ]
 
-};
+        };
 
-// Get the current light/dark mode state
-function isLightModeActive() {
-// Check for a theme class on body, or localStorage, or system preference
-const body = document.body;
-const savedTheme = localStorage.getItem(‘theme’);
+        // Get the current light/dark mode state
+        function isLightModeActive() {
+        // Check for a theme class on body, or localStorage, or system preference
+        const body = document.body;
+        const savedTheme = localStorage.getItem('theme');
 
-```
-if (savedTheme) {
-    return savedTheme === 'light';
-}
+        if (savedTheme) {
+            return savedTheme === 'light';
+        }
 
-// Check for theme classes
-if (body.classList.contains('light-theme') || body.classList.contains('light-mode')) {
-    return true;
-}
-if (body.classList.contains('dark-theme') || body.classList.contains('dark-mode')) {
-    return false;
-}
-
-// Fall back to system preference
-return !window.matchMedia('(prefers-color-scheme: dark)').matches;
-```
-
-}
-
-// Get pet theme colors based on current mode
-function getPetThemeColors(themeName) {
-const isLightMode = isLightModeActive();
-
-```
-const petThemes = {
-    default: isLightMode
-        ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88', 5: '#8B5E3C', 6: '#FFD8A6' }
-        : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0', 5: '#4a90e2', 6: '#ffffff' },
-    chaotic: isLightMode
-        ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347', 5: '#8B0000', 6: '#FF4500' }
-        : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000', 5: '#FF4500', 6: '#8B0000' },
-    neutral: isLightMode
-        ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF', 5: '#6A0DAD', 6: '#E0CFFF' }
-        : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082', 5: '#E0CFFF', 6: '#6A0DAD' },
-    noir: isLightMode
-        ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF', 5: '#333333', 6: '#DDDDDD' }
-        : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000', 5: '#DDDDDD', 6: '#333333' },
-    forest: isLightMode
-        ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA', 5: '#2E8B57', 6: '#A9DFBF' }
-        : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20', 5: '#A9DFBF', 6: '#2E8B57' },
-    neon: isLightMode
-        ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF', 5: '#FF00FF', 6: '#00FFFF' }
-        : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099', 5: '#00FFFF', 6: '#FF00FF' },
-    solar: isLightMode
-        ? { 0: 'transparent', 1: '#FF8C00', 2: '#FFF5CC', 3: '#CC7000', 4: '#FFD580', 5: '#FF8C00', 6: '#FFF5CC' }
-        : { 0: 'transparent', 1: '#FFD580', 2: '#FF8C00', 3: '#FFF5CC', 4: '#CC7000', 5: '#FFD580', 6: '#FF8C00' },
-    glacial: isLightMode
-        ? { 0: 'transparent', 1: '#5DADE2', 2: '#EBF5FB', 3: '#154360', 4: '#AED6F1', 5: '#5DADE2', 6: '#EBF5FB' }
-        : { 0: 'transparent', 1: '#AED6F1', 2: '#5DADE2', 3: '#EBF5FB', 4: '#154360', 5: '#AED6F1', 6: '#5DADE2' },
-    cosmic: isLightMode
-        ? { 0: 'transparent', 1: '#2C003E', 2: '#E0B0FF', 3: '#12001A', 4: '#8A2BE2', 5: '#2C003E', 6: '#E0B0FF' }
-        : { 0: 'transparent', 1: '#8A2BE2', 2: '#E0B0FF', 3: '#2C003E', 4: '#12001A', 5: '#8A2BE2', 6: '#E0B0FF' },
-    blossom: isLightMode
-        ? { 0: 'transparent', 1: '#E6E6FA', 2: '#FFE5B4', 3: '#98FB98', 4: '#FFFFFF', 5: '#E6E6FA', 6: '#FFE5B4' }
-        : { 0: 'transparent', 1: '#D8BFD8', 2: '#FFB07C', 3: '#66CDAA', 4: '#E6E6FA', 5: '#D8BFD8', 6: '#FFB07C' }, 
-    volt: isLightMode
-        ? { 0: 'transparent', 1: '#FFD700', 2: '#FFFFFF', 3: '#FF8C00', 4: '#FFFF66', 5: '#FFD700', 6: '#FFFFFF' }
-        : { 0: 'transparent', 1: '#FFFF66', 2: '#FFD700', 3: '#FFFFFF', 4: '#FF8C00', 5: '#FFFF66', 6: '#FFD700' },
-    retro: isLightMode
-        ? { 0: 'transparent', 1: '#FF69B4', 2: '#00CED1', 3: '#8B008B', 4: '#FFD700', 5: '#FF69B4', 6: '#00CED1' }
-        : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B', 5: '#00CED1', 6: '#FF69B4' },
-    lunar: isLightMode
-        ? { 0: 'transparent', 1: '#F8F8FF', 2: '#C0C0C0', 3: '#B0C4DE', 4: '#E6E6FA', 5: '#F8F8FF', 6: '#C0C0C0' } 
-        : { 0: 'transparent', 1: '#2F4F4F', 2: '#708090', 3: '#B0C4DE', 4: '#C0C0C0', 5: '#2F4F4F', 6: '#708090' },
-    binary: isLightMode
-        ? { 0: 'transparent', 1: '#708090', 2: '#B22222', 3: '#32CD32', 4: '#D3D3D3', 5: '#708090', 6: '#B22222' }
-        : { 0: 'transparent', 1: '#000000', 2: '#00FF00', 3: '#008000', 4: '#AAFFAA', 5: '#000000', 6: '#00FF00' }
-};
-
-return petThemes[themeName] || petThemes.default;
-```
-
-}
-
-// =====================
-// Sprite Rendering
-// =====================
-
-// Render a pet sprite from array + theme colors
-function renderPetSprite(spriteArray, colors) {
-const spriteDiv = document.createElement(‘div’);
-spriteDiv.classList.add(‘pet-sprite’, ‘pulse’);
-spriteDiv.style.display = ‘grid’;
-spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, 1fr)`;
-spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, 1fr)`;
-spriteDiv.style.width = ‘100%’;
-spriteDiv.style.height = ‘100%’;
-
-```
-for (let y = 0; y < spriteArray.length; y++) {
-    for (let x = 0; x < spriteArray[y].length; x++) {
-        const px = document.createElement('div');
-        px.style.backgroundColor = colors[spriteArray[y][x]] || 'transparent';
-        px.style.width = '100%';
-        px.style.height = '100%';
-        spriteDiv.appendChild(px);
+        // Check for theme classes
+        if (body.classList.contains('light-theme') || body.classList.contains('light-mode')) {
+            return true;
+        }
+        if (body.classList.contains('dark-theme') || body.classList.contains('dark-mode')) {
+            return false;
+        }
+        
+        // Fall back to system preference
+        return !window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-}
 
-// Quick click animation only (no audio)
-spriteDiv.addEventListener('click', () => {
-    spriteDiv.style.transform = 'scale(1.2)';
-    setTimeout(() => spriteDiv.style.transform = '', 200);
-});
+    // Get pet theme colors based on current mode
+    function getPetThemeColors(themeName) {
+        const isLightMode = isLightModeActive();
+        const petThemes = {
+            default: isLightMode
+            ? { 0: 'transparent', 1: '#8B5E3C', 2: '#FFD8A6', 3: '#5C3A25', 4: '#FFCB88', 5: '#8B5E3C', 6: '#FFD8A6' }
+            : { 0: 'transparent', 1: '#4a90e2', 2: '#ffffff', 3: '#1f5fbf', 4: '#9cc7f0', 5: '#4a90e2', 6: '#ffffff' },
+            chaotic: isLightMode
+            ? { 0: 'transparent', 1: '#8B0000', 2: '#FF4500', 3: '#4B0000', 4: '#FF6347', 5: '#8B0000', 6: '#FF4500' }
+            : { 0: 'transparent', 1: '#FF4500', 2: '#8B0000', 3: '#FF6347', 4: '#4B0000', 5: '#FF4500', 6: '#8B0000' },
+            neutral: isLightMode
+            ? { 0: 'transparent', 1: '#6A0DAD', 2: '#E0CFFF', 3: '#4B0082', 4: '#D8BFFF', 5: '#6A0DAD', 6: '#E0CFFF' }
+            : { 0: 'transparent', 1: '#E0CFFF', 2: '#6A0DAD', 3: '#D8BFFF', 4: '#4B0082', 5: '#E0CFFF', 6: '#6A0DAD' },
+            noir: isLightMode
+            ? { 0: 'transparent', 1: '#333333', 2: '#DDDDDD', 3: '#000000', 4: '#FFFFFF', 5: '#333333', 6: '#DDDDDD' }
+            : { 0: 'transparent', 1: '#DDDDDD', 2: '#333333', 3: '#FFFFFF', 4: '#000000', 5: '#DDDDDD', 6: '#333333' },
+            forest: isLightMode
+            ? { 0: 'transparent', 1: '#2E8B57', 2: '#A9DFBF', 3: '#1B5E20', 4: '#82E0AA', 5: '#2E8B57', 6: '#A9DFBF' }
+            : { 0: 'transparent', 1: '#A9DFBF', 2: '#2E8B57', 3: '#82E0AA', 4: '#1B5E20', 5: '#A9DFBF', 6: '#2E8B57' },
+            neon: isLightMode
+            ? { 0: 'transparent', 1: '#FF00FF', 2: '#00FFFF', 3: '#990099', 4: '#66FFFF', 5: '#FF00FF', 6: '#00FFFF' }
+            : { 0: 'transparent', 1: '#00FFFF', 2: '#FF00FF', 3: '#66FFFF', 4: '#990099', 5: '#00FFFF', 6: '#FF00FF' },
+            solar: isLightMode
+            ? { 0: 'transparent', 1: '#FF8C00', 2: '#FFF5CC', 3: '#CC7000', 4: '#FFD580', 5: '#FF8C00', 6: '#FFF5CC' }
+            : { 0: 'transparent', 1: '#FFD580', 2: '#FF8C00', 3: '#FFF5CC', 4: '#CC7000', 5: '#FFD580', 6: '#FF8C00' },
+            glacial: isLightMode
+            ? { 0: 'transparent', 1: '#5DADE2', 2: '#EBF5FB', 3: '#154360', 4: '#AED6F1', 5: '#5DADE2', 6: '#EBF5FB' }
+            : { 0: 'transparent', 1: '#AED6F1', 2: '#5DADE2', 3: '#EBF5FB', 4: '#154360', 5: '#AED6F1', 6: '#5DADE2' },
+            cosmic: isLightMode
+            ? { 0: 'transparent', 1: '#2C003E', 2: '#E0B0FF', 3: '#12001A', 4: '#8A2BE2', 5: '#2C003E', 6: '#E0B0FF' }
+            : { 0: 'transparent', 1: '#8A2BE2', 2: '#E0B0FF', 3: '#2C003E', 4: '#12001A', 5: '#8A2BE2', 6: '#E0B0FF' },
+            blossom: isLightMode
+            ? { 0: 'transparent', 1: '#E6E6FA', 2: '#FFE5B4', 3: '#98FB98', 4: '#FFFFFF', 5: '#E6E6FA', 6: '#FFE5B4' }
+            : { 0: 'transparent', 1: '#D8BFD8', 2: '#FFB07C', 3: '#66CDAA', 4: '#E6E6FA', 5: '#D8BFD8', 6: '#FFB07C' }, 
+            volt: isLightMode
+            ? { 0: 'transparent', 1: '#FFD700', 2: '#FFFFFF', 3: '#FF8C00', 4: '#FFFF66', 5: '#FFD700', 6: '#FFFFFF' }
+            : { 0: 'transparent', 1: '#FFFF66', 2: '#FFD700', 3: '#FFFFFF', 4: '#FF8C00', 5: '#FFFF66', 6: '#FFD700' },
+            retro: isLightMode
+            ? { 0: 'transparent', 1: '#FF69B4', 2: '#00CED1', 3: '#8B008B', 4: '#FFD700', 5: '#FF69B4', 6: '#00CED1' }
+            : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B', 5: '#00CED1', 6: '#FF69B4' },
+            lunar: isLightMode
+            ? { 0: 'transparent', 1: '#F8F8FF', 2: '#C0C0C0', 3: '#B0C4DE', 4: '#E6E6FA', 5: '#F8F8FF', 6: '#C0C0C0' } 
+            : { 0: 'transparent', 1: '#2F4F4F', 2: '#708090', 3: '#B0C4DE', 4: '#C0C0C0', 5: '#2F4F4F', 6: '#708090' },
+            binary: isLightMode
+            ? { 0: 'transparent', 1: '#708090', 2: '#B22222', 3: '#32CD32', 4: '#D3D3D3', 5: '#708090', 6: '#B22222' }
+            : { 0: 'transparent', 1: '#000000', 2: '#00FF00', 3: '#008000', 4: '#AAFFAA', 5: '#000000', 6: '#00FF00' }
+        };
 
-return spriteDiv;
-```
+        return petThemes[themeName] || petThemes.default;
+    }
 
-}
+    // =====================
+    // Sprite Rendering
+    // =====================
 
-// Render the pet preview in settings
-function renderPetPreview() {
-const styleElement = document.getElementById(‘petStyle’);
-const themeElement = document.getElementById(‘petTheme’);
-const preview = document.getElementById(‘petPreview’);
+    // Render a pet sprite from array + theme colors
+    function renderPetSprite(spriteArray, colors) {
+        const spriteDiv = document.createElement('div');
+        spriteDiv.classList.add('pet-sprite', 'pulse');
+        spriteDiv.style.display = 'grid';
+        spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, 1fr)`;
+        spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, 1fr)`;
+        spriteDiv.style.width = '100%';
+        spriteDiv.style.height = '100%';
 
-```
-if (!styleElement || !themeElement || !preview) {
-    console.warn('Pet elements not found');
-    return;
-}
+        for (let y = 0; y < spriteArray.length; y++) {
+            for (let x = 0; x < spriteArray[y].length; x++) {
+                const px = document.createElement('div');
+                px.style.backgroundColor = colors[spriteArray[y][x]] || 'transparent';
+                px.style.width = '100%';
+                px.style.height = '100%';
+                spriteDiv.appendChild(px);
+            }
+        }
 
-const style = styleElement.value;
-const theme = themeElement.value;
-preview.innerHTML = '';
+        // Quick click animation only (no audio)
+        spriteDiv.addEventListener('click', () => {
+            spriteDiv.style.transform = 'scale(1.2)';
+            setTimeout(() => spriteDiv.style.transform = '', 200);
+        });
+        
+        return spriteDiv;
+    }
 
-if (style === 'none') return;
+    // Render the pet preview in settings
+    function renderPetPreview() {
+        const styleElement = document.getElementById('petStyle');
+        const themeElement = document.getElementById('petTheme');
+        const preview = document.getElementById('petPreview');
 
-const spriteData = petSprites[style];
-const themeColors = getPetThemeColors(theme);
+        if (!styleElement || !themeElement || !preview) {
+            console.warn('Pet elements not found');
+            return;
+        }
 
-if (spriteData && themeColors) {
-    const petSpriteDiv = renderPetSprite(spriteData, themeColors);
-    preview.appendChild(petSpriteDiv);
-}
-```
+        const style = styleElement.value;
+        const theme = themeElement.value;
+        preview.innerHTML = '';
 
-}
+        if (style === 'none') return;
 
-function updateStickyPet() {
-const styleElement = document.getElementById(‘petStyle’);
-const themeElement = document.getElementById(‘petTheme’);
-const petContainer = document.getElementById(‘petContainer’);
+        const spriteData = petSprites[style];
+        const themeColors = getPetThemeColors(theme);
 
-```
-if (!styleElement || !themeElement || !petContainer) {
-    console.warn('Pet elements not found');
-    return;
-}
+        if (spriteData && themeColors) {
+            const petSpriteDiv = renderPetSprite(spriteData, themeColors);
+            preview.appendChild(petSpriteDiv);
+        }
+    }
 
-const style = styleElement.value;
-const theme = themeElement.value;
-petContainer.innerHTML = '';
+    function updateStickyPet() {
+        const styleElement = document.getElementById('petStyle');
+        const themeElement = document.getElementById('petTheme');
+        const petContainer = document.getElementById('petContainer');
 
-if (style === 'none') return;
+        if (!styleElement || !themeElement || !petContainer) {
+            console.warn('Pet elements not found');
+            return;
+        }
 
-const spriteData = petSprites[style];
-const themeColors = getPetThemeColors(theme);
+        const style = styleElement.value;
+        const theme = themeElement.value;
+        petContainer.innerHTML = '';
 
-if (spriteData && themeColors) {
-    const petSpriteDiv = renderPetSprite(spriteData, themeColors);
-    petContainer.appendChild(petSpriteDiv);
-}
-```
+        if (style === 'none') return;
 
-}
+        const spriteData = petSprites[style];
+        const themeColors = getPetThemeColors(theme);
 
-function savePetSettings() {
-const styleElement = document.getElementById(‘petStyle’);
-const themeElement = document.getElementById(‘petTheme’);
+        if (spriteData && themeColors) {
+            const petSpriteDiv = renderPetSprite(spriteData, themeColors);
+            petContainer.appendChild(petSpriteDiv);
+        }
+    }
 
-```
-if (!styleElement || !themeElement) return;
+    function savePetSettings() {
+        const styleElement = document.getElementById('petStyle');
+        const themeElement = document.getElementById('petTheme');
 
-const settings = {
-    style: styleElement.value,
-    theme: themeElement.value
-};
+        if (!styleElement || !themeElement) return;
 
-try {
-    localStorage.setItem('petSettings', JSON.stringify(settings));
-} catch (error) {
-    console.warn('Failed to save pet settings:', error);
-}
-```
+        const settings = {
+            style: styleElement.value,
+            theme: themeElement.value
+        };
 
-}
+        try {
+            localStorage.setItem('petSettings', JSON.stringify(settings));
+        } catch (error) {
+            console.warn('Failed to save pet settings:', error);
+        }
+    }
 
-function loadPetSettings() {
-const styleSelect = document.getElementById(‘petStyle’);
-const themeSelect = document.getElementById(‘petTheme’);
+    function loadPetSettings() {
+        const styleSelect = document.getElementById('petStyle');
+        const themeSelect = document.getElementById('petTheme');
 
-```
-if (!styleSelect || !themeSelect) {
-    console.warn('Pet select elements not found');
-    return;
-}
+        if (!styleSelect || !themeSelect) {
+            console.warn('Pet select elements not found');
+            return;
+        }
 
-let saved = {};
-try {
-    saved = JSON.parse(localStorage.getItem('petSettings')) || {};
-} catch (error) {
-    console.warn('Failed to load pet settings:', error);
-    saved = {};
-}
+        let saved = {};
+        try {
+            saved = JSON.parse(localStorage.getItem('petSettings')) || {};
+        } catch (error) {
+            console.warn('Failed to load pet settings:', error);
+            saved = {};
+        }
 
-styleSelect.value = saved.style || 'none';
-themeSelect.value = saved.theme || 'default';
+        styleSelect.value = saved.style || 'none';
+        themeSelect.value = saved.theme || 'default';
 
-renderPetPreview();
-updateStickyPet();
-```
-
-}
-
-// Initialize pet system
-function initializePetSystem() {
-// Wait for DOM to be ready
-if (document.readyState === ‘loading’) {
-document.addEventListener(‘DOMContentLoaded’, initializePetSystem);
-return;
-}
-
-```
-// Load saved settings
-loadPetSettings();
-
-// Set up event listeners
-const styleElement = document.getElementById('petStyle');
-const themeElement = document.getElementById('petTheme');
-
-if (styleElement) {
-    styleElement.addEventListener('change', () => {
         renderPetPreview();
         updateStickyPet();
-        savePetSettings();
-    });
-}
+    }
 
-if (themeElement) {
-    themeElement.addEventListener('change', () => {
-        renderPetPreview();
-        updateStickyPet();
-        savePetSettings();
-    });
-}
+    // Initialize pet system
+    function initializePetSystem() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePetSystem);
+            return;
+        }
 
-// Listen for theme changes to update pet colors
-const themeObserver = new MutationObserver(() => {
-    renderPetPreview();
-    updateStickyPet();
-});
+        // Load saved settings
+        loadPetSettings();
 
-themeObserver.observe(document.body, {
-    attributes: true,
-    attributeFilter: ['class']
-});
+        // Set up event listeners
+        const styleElement = document.getElementById('petStyle');
+        const themeElement = document.getElementById('petTheme');
 
-// Listen for system theme changes
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-    renderPetPreview();
-    updateStickyPet();
-});
-```
+        if (styleElement) {
+            styleElement.addEventListener('change', () => {
+                renderPetPreview();
+                updateStickyPet();
+                savePetSettings();
+            });
+        }
 
-}
+        if (themeElement) {
+            themeElement.addEventListener('change', () => {
+                renderPetPreview();
+                updateStickyPet();
+                savePetSettings();
+            });
+        }
+
+        // Listen for theme changes to update pet colors
+        const themeObserver = new MutationObserver(() => {
+            renderPetPreview();
+            updateStickyPet();
+        });
+
+        themeObserver.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            renderPetPreview();
+            updateStickyPet();
+        });
+    }
 
         
         // --- Sprite Style ---
