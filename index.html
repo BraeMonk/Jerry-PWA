@@ -1898,6 +1898,8 @@
                     <option value="lunar">Lunar</option>
                     <option value="binary">Binary</option>
                     <option value="earthy">Foliage</option>
+                    <option value="harvestAutumn">Harvest</option>
+                    <option value="halloweenAutumn">Hallow's Eve</option>
                 </select>
             </div>
             <!-- Background Environment Selection -->
@@ -2018,6 +2020,8 @@
                     <option value="lunar">Lunar</option>
                     <option value="binary">Binary</option>
                     <option value="earthy">Foliage</option>
+                    <option value="harvestAutumn">Harvest</option>
+                    <option value="halloweenAutumn">Hallow's Eve</option>
                 </select>
             </div>
             <div style="margin-top: 30px;">
@@ -2762,7 +2766,13 @@
 
                 earthy: isLightMode 
                     ? { 0: 'transparent', 1: '#8B5A2B', 2: '#A0522D', 3: '#556B2F', 4: '#6B8E23', 5: '#CD853F', 6: '#9ACD32', 7: '#7F5217', 8: '#B87333', 9: '#4F6228' } 
-                    : { 0: 'transparent', 1: '#654321', 2: '#8B4513', 3: '#228B22', 4: '#32CD32', 5: '#A0522D', 6: '#ADFF2F', 7: '#4B2E1F', 8: '#7C3600', 9: '#1F4D1F' }
+                    : { 0: 'transparent', 1: '#654321', 2: '#8B4513', 3: '#228B22', 4: '#32CD32', 5: '#A0522D', 6: '#ADFF2F', 7: '#4B2E1F', 8: '#7C3600', 9: '#1F4D1F' },
+                halloweenAutumn: isLightMode 
+                    ? { 0:'transparent',1:'#FF7518',2:'#FFB347',3:'#8B0000',4:'#6B4226',5:'#FFD700',6:'#A0522D',7:'#2F4F4F',8:'#800080',9:'#2C2C2C' } 
+                    : { 0:'transparent',1:'#FF4500',2:'#CC7722',3:'#B22222',4:'#3E2723',5:'#FF8C00',6:'#8B4513',7:'#191970',8:'#4B0082',9:'#000000' },
+                harvestAutumn: isLightMode 
+                    ? { 0:'transparent',1:'#FFA500',2:'#FFB733',3:'#FF6347',4:'#CD853F',5:'#FFD700',6:'#F4A460',7:'#8B4513',8:'#DAA520',9:'#A0522D' } 
+                    : { 0:'transparent',1:'#FF8C00',2:'#E97451',3:'#B22222',4:'#8B4513',5:'#FFCC00',6:'#D2691E',7:'#654321',8:'#B8860B',9:'#5C3317' }
             };
         }
 
@@ -3322,7 +3332,13 @@
             : { 0: 'transparent', 1: '#000000', 2: '#00FF00', 3: '#008000', 4: '#AAFFAA', 5: '#000000', 6: '#00FF00' },
             earthy: isLightMode 
             ? { 0: 'transparent', 1: '#8B5A2B', 2: '#A0522D', 3: '#556B2F', 4: '#6B8E23', 5: '#CD853F', 6: '#9ACD32' } 
-            : { 0: 'transparent', 1: '#654321', 2: '#8B4513', 3: '#228B22', 4: '#32CD32', 5: '#A0522D', 6: '#ADFF2F' }
+            : { 0: 'transparent', 1: '#654321', 2: '#8B4513', 3: '#228B22', 4: '#32CD32', 5: '#A0522D', 6: '#ADFF2F' },
+            halloweenAutumn: isLightMode 
+            ? { 0:'transparent',1:'#FF7518',2:'#FFB347',3:'#8B0000',4:'#6B4226',5:'#FFD700',6:'#A0522D',7:'#2F4F4F',8:'#800080',9:'#2C2C2C' } 
+            : { 0:'transparent',1:'#FF4500',2:'#CC7722',3:'#B22222',4:'#3E2723',5:'#FF8C00',6:'#8B4513',7:'#191970',8:'#4B0082',9:'#000000' },
+            harvestAutumn: isLightMode 
+            ? { 0:'transparent',1:'#FFA500',2:'#FFB733',3:'#FF6347',4:'#CD853F',5:'#FFD700',6:'#F4A460',7:'#8B4513',8:'#DAA520',9:'#A0522D' } 
+            : { 0:'transparent',1:'#FF8C00',2:'#E97451',3:'#B22222',4:'#8B4513',5:'#FFCC00',6:'#D2691E',7:'#654321',8:'#B8860B',9:'#5C3317' }
         };
 
         return petThemes[themeName] || petThemes.default;
