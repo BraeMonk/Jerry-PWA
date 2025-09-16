@@ -1370,6 +1370,34 @@
             background: url('./Arcane.jpg') no-repeat center center;
             background-size: cover;
         }
+
+        .jerry-container.bg-matrix {
+            background: url('./Matrix.jpg') no-repeat center center;
+            background-size: cover;
+            /* optional subtle overlay so text stays readable */
+            background-blend-mode: overlay;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Swatch for Woods */
+        .swatch-matrix {
+            background: url('./Matrix.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
+        .jerry-container.bg-flare {
+            background: url('./Flare.jpg') no-repeat center center;
+            background-size: cover;
+            /* optional subtle overlay so text stays readable */
+            background-blend-mode: overlay;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Swatch for Woods */
+        .swatch-flare {
+            background: url('./Flare.jpg') no-repeat center center;
+            background-size: cover;
+        }
         
         .swatch-all {
             background: repeating-linear-gradient(
@@ -1848,6 +1876,7 @@
                     <option value="wisp">Wisp</option>
                     <option value="python">Snowball</option>
                     <option value="luna">Luna</option>
+                    <option value="matrix">Matrix</option>
                 </select>
             </div>
             <div class="form-group">
@@ -1866,6 +1895,7 @@
                     <option value="volt">Volt</option>
                     <option value="retro">Retro</option>
                     <option value="lunar">Lunar</option>
+                    <option value="binary">Binary</option>
                 </select>
             </div>
             <!-- Background Environment Selection -->
@@ -1874,34 +1904,6 @@
                 <div class="background-scroll">
                     <div class="background-option" data-bg="default">
                         <span>🚫</span>
-                    </div>
-                    <div class="background-option" data-bg="wildBerry">
-                        <div class="bg-swatch swatch-wildBerry"></div>
-                        <span>Wild Berry</span>
-                    </div>
-                    <div class="background-option" data-bg="finalFrontier">
-                        <div class="bg-swatch swatch-finalFrontier"></div>
-                        <span>Final Frontier</span>
-                    </div>
-                    <div class="background-option" data-bg="coolBreeze">
-                        <div class="bg-swatch swatch-coolBreeze"></div>
-                        <span>Cool Breeze</span>
-                    </div>
-                    <div class="background-option" data-bg="sunsetGlow">
-                        <div class="bg-swatch swatch-sunsetGlow"></div>
-                        <span>Sunset Glow</span>
-                    </div>
-                    <div class="background-option" data-bg="mysticPurple">
-                        <div class="bg-swatch swatch-mysticPurple"></div>
-                        <span>Mystic Purple</span>
-                    </div>
-                    <div class="background-option" data-bg="lemonZest">
-                        <div class="bg-swatch swatch-lemonZest"></div>
-                        <span>Lemon Zest</span>
-                    </div>
-                    <div class="background-option" data-bg="oceanDeep">
-                        <div class="bg-swatch swatch-oceanDeep"></div>
-                        <span>Ocean Deep</span>
                     </div>
                     <div class="background-option" data-bg="neonLights">
                         <div class="bg-swatch swatch-neonLights"></div>
@@ -1954,6 +1956,14 @@
                     <div class="background-option" data-bg="arcane">
                         <div class="bg-swatch swatch-arcane"></div>
                         <span>Arcane</span>
+                    </div>
+                    <div class="background-option" data-bg="matrix">
+                        <div class="bg-swatch swatch-matrix"></div>
+                        <span>01001101</span>
+                    </div>
+                    <div class="background-option" data-bg="flare">
+                        <div class="bg-swatch swatch-flare"></div>
+                        <span>Flare</span>
                     </div>
                 </div>
             </div>
@@ -2305,6 +2315,25 @@
                 [0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0],
                 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
             ],
+
+            matrix: [
+                [0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0],
+                [0,0,0,0,2,2,1,1,1,1,2,2,0,0,0,0],
+                [0,0,0,2,1,1,1,1,1,1,1,1,2,0,0,0],
+                [0,0,2,1,1,1,3,1,1,3,1,1,1,2,0,0],
+                [0,2,1,1,3,3,3,3,3,3,3,3,1,1,2,0],
+                [0,2,1,3,3,3,3,3,3,3,3,3,3,1,2,0],
+                [2,1,3,3,3,3,3,3,3,3,3,3,3,3,1,2],
+                [2,1,3,3,3,3,4,4,4,4,3,3,3,3,1,2],
+                [2,1,3,3,3,4,4,1,1,4,4,3,3,3,1,2]
+                [2,1,3,3,3,4,4,4,4,4,4,3,3,3,1,2],
+                [0,2,1,3,3,3,4,4,4,4,3,3,3,1,2,0]
+                [0,2,1,1,3,3,3,4,4,3,3,3,1,1,2,0],
+                [0,0,2,1,1,1,3,3,3,3,1,1,1,2,0,0],
+                [0,0,0,2,1,1,1,1,1,1,1,1,2,0,0,0],
+                [0,0,0,0,2,2,1,1,1,1,2,2,0,0,0,0],
+                [0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0]
+            ],
         };
 
 
@@ -2557,7 +2586,10 @@
                     : { 0: 'transparent', 1: '#00CED1', 2: '#FF69B4', 3: '#FFD700', 4: '#8B008B' },
                 lunar: isLightMode
                     ? { 0: 'transparent', 1: '#F8F8FF', 2: '#C0C0C0', 3: '#B0C4DE', 4: '#E6E6FA' } 
-                    : { 0: 'transparent', 1: '#2F4F4F', 2: '#708090', 3: '#B0C4DE', 4: '#C0C0C0' } 
+                    : { 0: 'transparent', 1: '#2F4F4F', 2: '#708090', 3: '#B0C4DE', 4: '#C0C0C0' },
+                binary: isLightMode
+                    ? { 0: 'transparent', 1: '#708090', 2: '#B22222', 3: '#32CD32', 4: '#D3D3D3' }
+                    : { 0: 'transparent', 1: '#000000', 2: '#00FF00', 3: '#008000', 4: '#AAFFAA' }
             };
         }
 
@@ -3961,13 +3993,6 @@
             // Map keys to CSS classes
             const BACKGROUNDS = {
                 default: 'bg-default',
-                wildBerry: 'bg-wildBerry',
-                finalFrontier: 'bg-finalFrontier',
-                coolBreeze: 'bg-coolBreeze',
-                sunsetGlow: 'bg-sunsetGlow',
-                mysticPurple: 'bg-mysticPurple',
-                lemonZest: 'bg-lemonZest',
-                oceanDeep: 'bg-oceanDeep',
                 neonLights: 'bg-neonLights',
                 noir: 'bg-noir',
                 petal: 'bg-petal',
@@ -3979,7 +4004,9 @@
                 spooky: 'bg-spooky',
                 dreamland: 'bg-dreamland',
                 beach: 'bg-beach',
-                arcane: 'bg-arcane'
+                arcane: 'bg-arcane',
+                matrix: 'bg-matrix',
+                flare: 'bg-flare'
             };
 
             // Apply a background class
