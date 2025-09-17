@@ -1886,25 +1886,16 @@
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
                 <select class="form-input" id="spriteTheme">
                     <option value="default">Default</option>
-                    <option value="chaotic">Chaotic</option>
-                    <option value="neutral">Neutral</option>
-                    <option value="noir">Noir</option>
-                    <option value="forest">Forest</option>
+                    <option value="candy">Candy</option>
+                    <option value="desert">Desert</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="ember">Ember</option>
+                    <option value="meadow">Meadow</option>
                     <option value="neon">Neon</option>
-                    <option value="solar">Solar</option>
-                    <option value="glacial">Glacial</option>
-                    <option value="cosmic">Cosmic</option>
-                    <option value="blossom">Blossom</option>
-                    <option value="volt">Volt</option>
-                    <option value="retro">Retro</option>
-                    <option value="lunar">Lunar</option>
-                    <option value="binary">Binary</option>
-                    <option value="earthy">Foliage</option>
-                    <option value="harvestAutumn">Harvest</option>
-                    <option value="halloweenAutumn">Hallow's Eve</option>
-                    <option value="neoTokyo">Neo Tokyo</option>
-                    <option value="dreamcore">Dream Core</option>
-                    <option value="medievalFantasy">Fantasy</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="gothic">Gothic</option>
+                    <option value="aurora">Aurora</option>
+                    <option value="clay">Clay</option>
                 </select>
             </div>
             <!-- Background Environment Selection -->
@@ -2015,25 +2006,17 @@
         
                     <!-- same themes as sprite -->
                     <option value="default">Default</option>
-                    <option value="chaotic">Chaotic</option>
-                    <option value="neutral">Neutral</option>
-                    <option value="noir">Noir</option>
-                    <option value="forest">Forest</option>
+                    <option value="candy">Candy</option>
+                    <option value="desert">Desert</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="ember">Ember</option>
+                    <option value="meadow">Meadow</option>
                     <option value="neon">Neon</option>
-                    <option value="solar">Solar</option>
-                    <option value="glacial">Glacial</option>
-                    <option value="cosmic">Cosmic</option>
-                    <option value="blossom">Blossom</option>
-                    <option value="volt">Volt</option>
-                    <option value="retro">Retro</option>
-                    <option value="lunar">Lunar</option>
-                    <option value="binary">Binary</option>
-                    <option value="earthy">Foliage</option>
-                    <option value="harvestAutumn">Harvest</option>
-                    <option value="halloweenAutumn">Hallow's Eve</option>
-                    <option value="neoTokyo">Neo Tokyo</option>
-                    <option value="dreamcore">Dream Core</option>
-                    <option value="medievalFantasy">Fantasy</option>
+                    <option value="pastel">Pastel</option>
+                    <option value="gothic">Gothic</option>
+                    <option value="aurora">Aurora</option>
+                    <option value="clay">Clay</option>
+                </select>
                     
                 </select>
             </div>
@@ -2769,261 +2752,36 @@
                         7: '#1F5FBF', 8: '#173F80', 9: '#0D264D', 10: '#08162B'
                     },
 
-                chaotic: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFE5E0', 2: '#FFB3A1', 3: '#FF7F66',
-                        4: '#FF6347', 5: '#FF4500', 6: '#E63E00',
-                        7: '#B22222', 8: '#8B0000', 9: '#660000', 10: '#330000'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFB3A1', 2: '#FF7F66', 3: '#FF6347',
-                        4: '#FF4500', 5: '#E63E00', 6: '#B22222',
-                        7: '#8B0000', 8: '#660000', 9: '#330000', 10: '#1A0000'
-                    },
-
-                neutral: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#F8F0FF', 2: '#E0CFFF', 3: '#D8BFFF',
-                        4: '#B58ED9', 5: '#9C6AC7', 6: '#7D3C98',
-                        7: '#6A0DAD', 8: '#4B0082', 9: '#3A0066', 10: '#250044'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#E0CFFF', 2: '#D8BFFF', 3: '#B58ED9',
-                        4: '#9C6AC7', 5: '#7D3C98', 6: '#6A0DAD',
-                        7: '#4B0082', 8: '#330055', 9: '#1E0033', 10: '#0F001A'
-                    },
-
-                noir: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFFFFF', 2: '#DDDDDD', 3: '#BBBBBB',
-                        4: '#999999', 5: '#777777', 6: '#555555',
-                        7: '#333333', 8: '#111111', 9: '#000000'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFFFFF', 2: '#DDDDDD', 3: '#BBBBBB',
-                        4: '#999999', 5: '#777777', 6: '#555555',
-                        7: '#333333', 8: '#111111', 9: '#000000'
-                    },
-
-                forest: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#E5F7EC', 2: '#C3EED3', 3: '#A9DFBF',
-                        4: '#82E0AA', 5: '#58C48F', 6: '#2E8B57',
-                        7: '#1B5E20', 8: '#145C17', 9: '#0C3B0F', 10: '#061F08'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#C3EED3', 2: '#A9DFBF', 3: '#82E0AA',
-                        4: '#58C48F', 5: '#2E8B57', 6: '#1B5E20',
-                        7: '#145C17', 8: '#0C3B0F', 9: '#061F08', 10: '#020C04'
-                    },
+                candy: isLightMode
+                    ? {0: 'transparent', 1: '#FF6B6B', 2: '#FFA94D', 3: '#FFD93D', 4: '#6BCB77', 5: '#4D96FF', 6: '#9D4EDD', 7: '#FF8FAB', 8: '#FFB5E8', 9: '#FFDEE9', 10: '#FFFFFF'}
+                    : {0: 'transparent', 1: '#FF8787', 2: '#FFB86B', 3: '#FFE066', 4: '#8CE99A', 5: '#74C0FC', 6: '#B197FC', 7: '#FF99C8', 8: '#FFB3DE', 9: '#FFC2E5', 10: '#F8F9FA'},
+                desert: isLightMode
+                    ? {0: 'transparent', 1: '#F4E1D2', 2: '#E2B07E', 3: '#D89C5C', 4: '#C97B3D', 5: '#A0522D', 6: '#8B5E3C', 7: '#6B4226', 8: '#4B2E1F', 9: '#2E1A12', 10: '#000000'}
+                    : {0: 'transparent', 1: '#E6CBB3', 2: '#D4A373', 3: '#BF8040', 4: '#A0522D', 5: '#7B4B24', 6: '#5C3720', 7: '#3E2414', 8: '#24140D', 9: '#120A06', 10: '#000000'},
+                ocean: isLightMode
+                    ? {0: 'transparent', 1: '#A2D2FF', 2: '#80C0FF', 3: '#5AA9FA', 4: '#4682B4', 5: '#2E5984', 6: '#1B3B5F', 7: '#0F2A44', 8: '#082136', 9: '#041626', 10: '#000814'}
+                    : {0: 'transparent', 1: '#90C8F8', 2: '#66AEEF', 3: '#3D91E0', 4: '#2E6FA3', 5: '#1D4E72', 6: '#103552', 7: '#0A2438', 8: '#061C2B', 9: '#03111B', 10: '#000814'},
+                ember: isLightMode
+                    ? {0: 'transparent', 1: '#FFF3B0', 2: '#FFD93D', 3: '#FFA200', 4: '#FF6B35', 5: '#E63946', 6: '#B51709', 7: '#800F00', 8: '#4D0600', 9: '#260300', 10: '#0D0000'}
+                    : {0: 'transparent', 1: '#FFE066', 2: '#FFC300', 3: '#FF8C00', 4: '#FF5733', 5: '#C70039', 6: '#900C3F', 7: '#581845', 8: '#2C0B27', 9: '#160513', 10: '#0B0208'},
+                meadow: isLightMode
+                    ? {0: 'transparent', 1: '#E0F7E9', 2: '#B2F2BB', 3: '#8CE99A', 4: '#69DB7C', 5: '#38D9A9', 6: '#20C997', 7: '#12B886', 8: '#0CA678', 9: '#087F5B', 10: '#045040'}
+                    : {0: 'transparent', 1: '#C3F5D5', 2: '#96E6A8', 3: '#70D78B', 4: '#4CB372', 5: '#31A67F', 6: '#24916B', 7: '#1A7257', 8: '#115745', 9: '#0A3A2D', 10: '#041E16'},
                 neon: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFB3FF', 2: '#FF66FF', 3: '#FF00FF',
-                        4: '#CC00CC', 5: '#990099', 6: '#660066',
-                        7: '#33FFFF', 8: '#00FFFF', 9: '#00CCCC', 10: '#009999'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#B3FFFF', 2: '#66FFFF', 3: '#00FFFF',
-                        4: '#33CCCC', 5: '#00CCCC', 6: '#009999',
-                        7: '#FF66FF', 8: '#FF00FF', 9: '#CC00CC', 10: '#990099'
-                    },
-
-                solar: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFF5CC', 2: '#FFE6A3', 3: '#FFD580',
-                        4: '#FFCB66', 5: '#FF8C00', 6: '#E67E22',
-                        7: '#CC7000', 8: '#B35900', 9: '#803D00', 10: '#4D2400'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFE6A3', 2: '#FFD580', 3: '#FFCB66',
-                        4: '#FF8C00', 5: '#E67E22', 6: '#CC7000',
-                        7: '#B35900', 8: '#803D00', 9: '#4D2400', 10: '#261200'
-                    },
-
-                glacial: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#F0FAFF', 2: '#D6EAF8', 3: '#B3E5FC',
-                        4: '#A9DDF2', 5: '#85C1E9', 6: '#5DADE2',
-                        7: '#2E86C1', 8: '#154360', 9: '#0E2B3F', 10: '#061522'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#EBF5FB', 2: '#D6EAF8', 3: '#B3E5FC',
-                        4: '#AED6F1', 5: '#85C1E9', 6: '#5DADE2',
-                        7: '#2E86C1', 8: '#154360', 9: '#0E2B3F', 10: '#061522'
-                    },
-
-                cosmic: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#F0E6FF', 2: '#E0B0FF', 3: '#D8A0FF',
-                        4: '#B47CD9', 5: '#8A2BE2', 6: '#5C1F80',
-                        7: '#2C003E', 8: '#1A0010', 9: '#12001A', 10: '#0A000C'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#E0B0FF', 2: '#D8A0FF', 3: '#B47CD9',
-                        4: '#8A2BE2', 5: '#5C1F80', 6: '#2C003E',
-                        7: '#1A0010', 8: '#12001A', 9: '#0A000C'
-                    },
-
-                blossom: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFF7FF', 2: '#FFE5B4', 3: '#FFF0D6',
-                        4: '#E6E6FA', 5: '#D8BFD8', 6: '#CDAACD',
-                        7: '#98FB98', 8: '#90EE90', 9: '#70CC70', 10: '#4D994D'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFCC99', 2: '#FFB07C', 3: '#E6E6FA',
-                        4: '#D8BFD8', 5: '#B0A0C0', 6: '#8B7BA0',
-                        7: '#66CDAA', 8: '#55AA88', 9: '#3B7A5C', 10: '#20402E'
-                    },
-
-                volt: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFFFCC', 2: '#FFFF66', 3: '#FFFACD',
-                        4: '#FFD700', 5: '#FFC300', 6: '#FF8C00',
-                        7: '#FF7F00', 8: '#CC6600', 9: '#993D00', 10: '#662600'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFFFCC', 2: '#FFFF66', 3: '#FFFACD',
-                        4: '#FFD700', 5: '#FFC300', 6: '#FF8C00',
-                        7: '#FF7F00', 8: '#CC6600', 9: '#993D00', 10: '#662600'
-                    },
-
-                retro: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFD1E8', 2: '#FF69B4', 3: '#FF1493',
-                        4: '#8B008B', 5: '#800080', 6: '#660066',
-                        7: '#00CED1', 8: '#20B2AA', 9: '#008B8B', 10: '#005555'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFD1E8', 2: '#FF69B4', 3: '#FF1493',
-                        4: '#8B008B', 5: '#800080', 6: '#660066',
-                        7: '#00CED1', 8: '#20B2AA', 9: '#008B8B', 10: '#005555'
-                    },
-
-                lunar: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFFFFF', 2: '#F8F8FF', 3: '#E6E6FA',
-                        4: '#D3D3F0', 5: '#C0C0C0', 6: '#B0C4DE',
-                        7: '#B0B0C0', 8: '#9090A0', 9: '#707080'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#C0C0C0', 2: '#B0C4DE', 3: '#90A0A0',
-                        4: '#708090', 5: '#556B6B', 6: '#404040',
-                        7: '#2F4F4F', 8: '#1E2E2E', 9: '#0F1717'
-                    },
-
-                binary: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFFFFF', 2: '#D3D3D3', 3: '#AAAAAA',
-                        4: '#708090', 5: '#5A6B7D', 6: '#444444',
-                        7: '#32CD32', 8: '#228B22', 9: '#116611', 10: '#003300'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#AAFFAA', 2: '#66FF66', 3: '#33FF33',
-                        4: '#00FF00', 5: '#00CC00', 6: '#008000',
-                        7: '#005500', 8: '#003300', 9: '#001A00', 10: '#000000'
-                    },
-
-                earthy: isLightMode
-                    ? {0: 'transparent', 1: '#F5E0C0', 2: '#DEB887', 3: '#CD853F', 4: '#B87333', 5: '#A0522D', 6: '#8B5A2B', 7: '#7F5217', 8: '#6B8E23', 9: '#556B2F', 10: '#4F6228'}
-                    : {0: 'transparent', 1: '#D2B48C', 2: '#A67B5B', 3: '#8B4513', 4: '#7C3600', 5: '#654321', 6: '#4B2E1F', 7: '#32CD32', 8: '#228B22', 9: '#1F4D1F', 10: '#0D260D'},
-
-                halloweenAutumn: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFD699', 2: '#FFB347', 3: '#FF7518',
-                        4: '#FF8C00', 5: '#FFD700', 6: '#A0522D',
-                        7: '#6B4226', 8: '#8B0000', 9: '#800080', 10: '#2C2C2C'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFB347', 2: '#FF8C00', 3: '#FF7518',
-                        4: '#CC7722', 5: '#B22222', 6: '#8B4513',
-                        7: '#3E2723', 8: '#191970', 9: '#4B0082', 10: '#000000'
-                    },
-
-                harvestAutumn: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFE6B3', 2: '#FFB733', 3: '#FFA500',
-                        4: '#FFD700', 5: '#DAA520', 6: '#CD853F',
-                        7: '#A0522D', 8: '#8B4513', 9: '#6B4226', 10: '#5C3317'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFCC00', 2: '#FF8C00', 3: '#E97451',
-                        4: '#D2691E', 5: '#B22222', 6: '#8B4513',
-                        7: '#7C3600', 8: '#654321', 9: '#5C3317', 10: '#2E1A0F'
-                    },
-
-                neoTokyo: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFCCE0', 2: '#FF69B4', 3: '#FF0055',
-                        4: '#BA55D3', 5: '#9370DB', 6: '#5D00FF',
-                        7: '#40E0D0', 8: '#00BCD4', 9: '#FFD700', 10: '#EEEEEE'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#FFCCE0', 2: '#FF1493', 3: '#FF0055',
-                        4: '#BA55D3', 5: '#8A2BE2', 6: '#5D00FF',
-                        7: '#20B2AA', 8: '#00FFE0', 9: '#FFCC00', 10: '#222222'
-                    },
-
-                dreamcore: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FEF6E4', 2: '#FFEBd6', 3: '#FCD5CE',
-                        4: '#FFC8DD', 5: '#CDB4DB', 6: '#A2D2FF',
-                        7: '#BDE0FE', 8: '#E2ECE9', 9: '#D8E2DC', 10: '#A8B0B0'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#A88C70', 2: '#B08080', 3: '#A07090',
-                        4: '#8A6FA3', 5: '#6FAAC2', 6: '#5A8BB0',
-                        7: '#7A8F88', 8: '#909090', 9: '#2C2C2C', 10: '#141414'
-                    },
-
-                medievalFantasy: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#F5F0E1', 2: '#DEB887', 3: '#D2B48C',
-                        4: '#C0A080', 5: '#BFA77F', 6: '#A0522D',
-                        7: '#8B5A2B', 8: '#7F684E', 9: '#6B4226', 10: '#3B2617'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#C0A080', 2: '#A0522D', 3: '#8B5A2B',
-                        4: '#7F684E', 5: '#6B4226', 6: '#5C3317',
-                        7: '#4B2E1F', 8: '#362312', 9: '#2A1A0F', 10: '#1A0D07'
-                    },
-
+                    ? {0: 'transparent', 1: '#FF00FF', 2: '#FF1493', 3: '#FF4500', 4: '#FFD700', 5: '#ADFF2F', 6: '#00FF7F', 7: '#00FFFF', 8: '#1E90FF', 9: '#8A2BE2', 10: '#FFFFFF'}
+                    : {0: 'transparent', 1: '#FF4DFF', 2: '#FF69B4', 3: '#FF6347', 4: '#FFE066', 5: '#C0FF66', 6: '#66FFB2', 7: '#66FFFF', 8: '#66A3FF', 9: '#B266FF', 10: '#F8F9FA'},
+                pastel: isLightMode
+                    ? {0: 'transparent', 1: '#FFB5E8', 2: '#FFDEB4', 3: '#FFF5BA', 4: '#B5EAD7', 5: '#C7CEEA', 6: '#E0BBE4', 7: '#FEC8D8', 8: '#D8E2DC', 9: '#F1F0C0', 10: '#FFFFFF'}
+                    : {0: 'transparent', 1: '#FF99CC', 2: '#FFCC99', 3: '#FFF2A8', 4: '#99E2C3', 5: '#A8B9E6', 6: '#C7A9D6', 7: '#F5A3C7', 8: '#CFCFCF', 9: '#EAE6B8', 10: '#F8F9FA'},
+                gothic: isLightMode
+                    ? {0: 'transparent', 1: '#1A1A1A', 2: '#2E2E2E', 3: '#444444', 4: '#5E2750', 5: '#87255B', 6: '#D90368', 7: '#FF6F61', 8: '#C9ADA7', 9: '#EAEAEA', 10: '#FFFFFF'}
+                    : {0: 'transparent', 1: '#000000', 2: '#1A1A1A', 3: '#333333', 4: '#5E2750', 5: '#7A1E48', 6: '#B30C5C', 7: '#FF4F5E', 8: '#A99A93', 9: '#D6D6D6', 10: '#F5F5F5'},
+                aurora: isLightMode
+                    ? {0: 'transparent', 1: '#A5FFD6', 2: '#82FFC7', 3: '#5DFDCB', 4: '#3EDBF0', 5: '#3B9AE1', 6: '#6F69AC', 7: '#9D4EDD', 8: '#FF5D8F', 9: '#FF87AB', 10: '#FFFFFF'}
+                    : {0: 'transparent', 1: '#7DFFBF', 2: '#5AF7B0', 3: '#32E1B5', 4: '#1EB7D8', 5: '#2070B0', 6: '#514080', 7: '#7A29C6', 8: '#FF4D7A', 9: '#FF6F9F', 10: '#F8F9FA'},
+                clay: isLightMode
+                    ? {0: 'transparent', 1: '#F5E0C0', 2: '#E0C097', 3: '#CC9B6D', 4: '#B0724A', 5: '#8C4A2F', 6: '#6E3923', 7: '#4E2817', 8: '#321B10', 9: '#1A0D08', 10: '#000000'}
+                    : {0: 'transparent', 1: '#EAD2B0', 2: '#D1A374', 3: '#B97849', 4: '#8E5432', 5: '#6B3C24', 6: '#502C1A', 7: '#361E12', 8: '#22120B', 9: '#120805', 10: '#000000'},
             };
         }
 
@@ -3637,270 +3395,36 @@
                     7: '#1F5FBF', 8: '#173F80', 9: '#0D264D', 10: '#08162B'
                 },
 
-            chaotic: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFE5E0', 2: '#FFB3A1', 3: '#FF7F66',
-                    4: '#FF6347', 5: '#FF4500', 6: '#E63E00',
-                    7: '#B22222', 8: '#8B0000', 9: '#660000', 10: '#330000'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFB3A1', 2: '#FF7F66', 3: '#FF6347',
-                    4: '#FF4500', 5: '#E63E00', 6: '#B22222',
-                    7: '#8B0000', 8: '#660000', 9: '#330000', 10: '#1A0000'
-                },
-
-            neutral: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#F8F0FF', 2: '#E0CFFF', 3: '#D8BFFF',
-                    4: '#B58ED9', 5: '#9C6AC7', 6: '#7D3C98',
-                    7: '#6A0DAD', 8: '#4B0082', 9: '#3A0066', 10: '#250044'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#E0CFFF', 2: '#D8BFFF', 3: '#B58ED9',
-                    4: '#9C6AC7', 5: '#7D3C98', 6: '#6A0DAD',
-                    7: '#4B0082', 8: '#330055', 9: '#1E0033', 10: '#0F001A'
-                },
-
-            noir: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFFFFF', 2: '#DDDDDD', 3: '#BBBBBB',
-                    4: '#999999', 5: '#777777', 6: '#555555',
-                    7: '#333333', 8: '#111111', 9: '#000000'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFFFFF', 2: '#DDDDDD', 3: '#BBBBBB',
-                    4: '#999999', 5: '#777777', 6: '#555555',
-                    7: '#333333', 8: '#111111', 9: '#000000'
-                },
-
-            forest: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#E5F7EC', 2: '#C3EED3', 3: '#A9DFBF',
-                    4: '#82E0AA', 5: '#58C48F', 6: '#2E8B57',
-                    7: '#1B5E20', 8: '#145C17', 9: '#0C3B0F', 10: '#061F08'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#C3EED3', 2: '#A9DFBF', 3: '#82E0AA',
-                    4: '#58C48F', 5: '#2E8B57', 6: '#1B5E20',
-                    7: '#145C17', 8: '#0C3B0F', 9: '#061F08', 10: '#020C04'
-                },
+            candy: isLightMode
+                ? {0: 'transparent', 1: '#FF6B6B', 2: '#FFA94D', 3: '#FFD93D', 4: '#6BCB77', 5: '#4D96FF', 6: '#9D4EDD', 7: '#FF8FAB', 8: '#FFB5E8', 9: '#FFDEE9', 10: '#FFFFFF'}
+                : {0: 'transparent', 1: '#FF8787', 2: '#FFB86B', 3: '#FFE066', 4: '#8CE99A', 5: '#74C0FC', 6: '#B197FC', 7: '#FF99C8', 8: '#FFB3DE', 9: '#FFC2E5', 10: '#F8F9FA'},
+            desert: isLightMode
+                ? {0: 'transparent', 1: '#F4E1D2', 2: '#E2B07E', 3: '#D89C5C', 4: '#C97B3D', 5: '#A0522D', 6: '#8B5E3C', 7: '#6B4226', 8: '#4B2E1F', 9: '#2E1A12', 10: '#000000'}
+                : {0: 'transparent', 1: '#E6CBB3', 2: '#D4A373', 3: '#BF8040', 4: '#A0522D', 5: '#7B4B24', 6: '#5C3720', 7: '#3E2414', 8: '#24140D', 9: '#120A06', 10: '#000000'},
+            ocean: isLightMode
+                ? {0: 'transparent', 1: '#A2D2FF', 2: '#80C0FF', 3: '#5AA9FA', 4: '#4682B4', 5: '#2E5984', 6: '#1B3B5F', 7: '#0F2A44', 8: '#082136', 9: '#041626', 10: '#000814'}
+                : {0: 'transparent', 1: '#90C8F8', 2: '#66AEEF', 3: '#3D91E0', 4: '#2E6FA3', 5: '#1D4E72', 6: '#103552', 7: '#0A2438', 8: '#061C2B', 9: '#03111B', 10: '#000814'},
+            ember: isLightMode
+                ? {0: 'transparent', 1: '#FFF3B0', 2: '#FFD93D', 3: '#FFA200', 4: '#FF6B35', 5: '#E63946', 6: '#B51709', 7: '#800F00', 8: '#4D0600', 9: '#260300', 10: '#0D0000'}
+                : {0: 'transparent', 1: '#FFE066', 2: '#FFC300', 3: '#FF8C00', 4: '#FF5733', 5: '#C70039', 6: '#900C3F', 7: '#581845', 8: '#2C0B27', 9: '#160513', 10: '#0B0208'},
+            meadow: isLightMode
+                ? {0: 'transparent', 1: '#E0F7E9', 2: '#B2F2BB', 3: '#8CE99A', 4: '#69DB7C', 5: '#38D9A9', 6: '#20C997', 7: '#12B886', 8: '#0CA678', 9: '#087F5B', 10: '#045040'}
+                : {0: 'transparent', 1: '#C3F5D5', 2: '#96E6A8', 3: '#70D78B', 4: '#4CB372', 5: '#31A67F', 6: '#24916B', 7: '#1A7257', 8: '#115745', 9: '#0A3A2D', 10: '#041E16'},
             neon: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFB3FF', 2: '#FF66FF', 3: '#FF00FF',
-                    4: '#CC00CC', 5: '#990099', 6: '#660066',
-                    7: '#33FFFF', 8: '#00FFFF', 9: '#00CCCC', 10: '#009999'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#B3FFFF', 2: '#66FFFF', 3: '#00FFFF',
-                    4: '#33CCCC', 5: '#00CCCC', 6: '#009999',
-                    7: '#FF66FF', 8: '#FF00FF', 9: '#CC00CC', 10: '#990099'
-                },
-
-            solar: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFF5CC', 2: '#FFE6A3', 3: '#FFD580',
-                    4: '#FFCB66', 5: '#FF8C00', 6: '#E67E22',
-                    7: '#CC7000', 8: '#B35900', 9: '#803D00', 10: '#4D2400'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFE6A3', 2: '#FFD580', 3: '#FFCB66',
-                    4: '#FF8C00', 5: '#E67E22', 6: '#CC7000',
-                    7: '#B35900', 8: '#803D00', 9: '#4D2400', 10: '#261200'
-                },
-
-            glacial: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#F0FAFF', 2: '#D6EAF8', 3: '#B3E5FC',
-                    4: '#A9DDF2', 5: '#85C1E9', 6: '#5DADE2',
-                    7: '#2E86C1', 8: '#154360', 9: '#0E2B3F', 10: '#061522'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#EBF5FB', 2: '#D6EAF8', 3: '#B3E5FC',
-                    4: '#AED6F1', 5: '#85C1E9', 6: '#5DADE2',
-                    7: '#2E86C1', 8: '#154360', 9: '#0E2B3F', 10: '#061522'
-                },
-
-            cosmic: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#F0E6FF', 2: '#E0B0FF', 3: '#D8A0FF',
-                    4: '#B47CD9', 5: '#8A2BE2', 6: '#5C1F80',
-                    7: '#2C003E', 8: '#1A0010', 9: '#12001A', 10: '#0A000C'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#E0B0FF', 2: '#D8A0FF', 3: '#B47CD9',
-                    4: '#8A2BE2', 5: '#5C1F80', 6: '#2C003E',
-                    7: '#1A0010', 8: '#12001A', 9: '#0A000C'
-                },
-
-            blossom: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFF7FF', 2: '#FFE5B4', 3: '#FFF0D6',
-                    4: '#E6E6FA', 5: '#D8BFD8', 6: '#CDAACD',
-                    7: '#98FB98', 8: '#90EE90', 9: '#70CC70', 10: '#4D994D'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFCC99', 2: '#FFB07C', 3: '#E6E6FA',
-                    4: '#D8BFD8', 5: '#B0A0C0', 6: '#8B7BA0',
-                    7: '#66CDAA', 8: '#55AA88', 9: '#3B7A5C', 10: '#20402E'
-                },
-
-            volt: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFFFCC', 2: '#FFFF66', 3: '#FFFACD',
-                    4: '#FFD700', 5: '#FFC300', 6: '#FF8C00',
-                    7: '#FF7F00', 8: '#CC6600', 9: '#993D00', 10: '#662600'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFFFCC', 2: '#FFFF66', 3: '#FFFACD',
-                    4: '#FFD700', 5: '#FFC300', 6: '#FF8C00',
-                    7: '#FF7F00', 8: '#CC6600', 9: '#993D00', 10: '#662600'
-                },
-
-            retro: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFD1E8', 2: '#FF69B4', 3: '#FF1493',
-                    4: '#8B008B', 5: '#800080', 6: '#660066',
-                    7: '#00CED1', 8: '#20B2AA', 9: '#008B8B', 10: '#005555'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFD1E8', 2: '#FF69B4', 3: '#FF1493',
-                    4: '#8B008B', 5: '#800080', 6: '#660066',
-                    7: '#00CED1', 8: '#20B2AA', 9: '#008B8B', 10: '#005555'
-                },
-
-            lunar: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFFFFF', 2: '#F8F8FF', 3: '#E6E6FA',
-                    4: '#D3D3F0', 5: '#C0C0C0', 6: '#B0C4DE',
-                    7: '#B0B0C0', 8: '#9090A0', 9: '#707080'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#C0C0C0', 2: '#B0C4DE', 3: '#90A0A0',
-                    4: '#708090', 5: '#556B6B', 6: '#404040',
-                    7: '#2F4F4F', 8: '#1E2E2E', 9: '#0F1717'
-                },
-
-            binary: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFFFFF', 2: '#D3D3D3', 3: '#AAAAAA',
-                    4: '#708090', 5: '#5A6B7D', 6: '#444444',
-                    7: '#32CD32', 8: '#228B22', 9: '#116611', 10: '#003300'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#AAFFAA', 2: '#66FF66', 3: '#33FF33',
-                    4: '#00FF00', 5: '#00CC00', 6: '#008000',
-                    7: '#005500', 8: '#003300', 9: '#001A00', 10: '#000000'
-                },
-
-            earthy: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#F5E0C0', 2: '#DEB887', 3: '#CD853F',
-                    4: '#B87333', 5: '#A0522D', 6: '#8B5A2B',
-                    7: '#7F5217', 8: '#6B8E23', 9: '#556B2F', 10: '#4F6228'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#D2B48C', 2: '#A67B5B', 3: '#8B4513',
-                    4: '#7C3600', 5: '#654321', 6: '#4B2E1F',
-                    7: '#32CD32', 8: '#228B22', 9: '#1F4D1F', 10: '#0D260D'
-                },
-
-            halloweenAutumn: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFD699', 2: '#FFB347', 3: '#FF7518',
-                    4: '#FF8C00', 5: '#FFD700', 6: '#A0522D',
-                    7: '#6B4226', 8: '#8B0000', 9: '#800080', 10: '#2C2C2C'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFB347', 2: '#FF8C00', 3: '#FF7518',
-                    4: '#CC7722', 5: '#B22222', 6: '#8B4513',
-                    7: '#3E2723', 8: '#191970', 9: '#4B0082', 10: '#000000'
-                },
-
-            harvestAutumn: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFE6B3', 2: '#FFB733', 3: '#FFA500',
-                    4: '#FFD700', 5: '#DAA520', 6: '#CD853F',
-                    7: '#A0522D', 8: '#8B4513', 9: '#6B4226', 10: '#5C3317'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFCC00', 2: '#FF8C00', 3: '#E97451',
-                    4: '#D2691E', 5: '#B22222', 6: '#8B4513',
-                    7: '#7C3600', 8: '#654321', 9: '#5C3317', 10: '#2E1A0F'
-                },
-
-            neoTokyo: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FFCCE0', 2: '#FF69B4', 3: '#FF0055',
-                    4: '#BA55D3', 5: '#9370DB', 6: '#5D00FF',
-                    7: '#40E0D0', 8: '#00BCD4', 9: '#FFD700', 10: '#EEEEEE'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#FFCCE0', 2: '#FF1493', 3: '#FF0055',
-                    4: '#BA55D3', 5: '#8A2BE2', 6: '#5D00FF',
-                    7: '#20B2AA', 8: '#00FFE0', 9: '#FFCC00', 10: '#222222'
-                },
-
-            dreamcore: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#FEF6E4', 2: '#FFEBd6', 3: '#FCD5CE',
-                    4: '#FFC8DD', 5: '#CDB4DB', 6: '#A2D2FF',
-                    7: '#BDE0FE', 8: '#E2ECE9', 9: '#D8E2DC', 10: '#A8B0B0'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#A88C70', 2: '#B08080', 3: '#A07090',
-                    4: '#8A6FA3', 5: '#6FAAC2', 6: '#5A8BB0',
-                    7: '#7A8F88', 8: '#909090', 9: '#2C2C2C', 10: '#141414'
-                },
-
-            medievalFantasy: isLightMode
-                ? {
-                    0: 'transparent',
-                    1: '#F5F0E1', 2: '#DEB887', 3: '#D2B48C',
-                    4: '#C0A080', 5: '#BFA77F', 6: '#A0522D',
-                    7: '#8B5A2B', 8: '#7F684E', 9: '#6B4226', 10: '#3B2617'
-                }
-                : {
-                    0: 'transparent',
-                    1: '#C0A080', 2: '#A0522D', 3: '#8B5A2B',
-                    4: '#7F684E', 5: '#6B4226', 6: '#5C3317',
-                    7: '#4B2E1F', 8: '#362312', 9: '#2A1A0F', 10: '#1A0D07'
-                },
+                ? {0: 'transparent', 1: '#FF00FF', 2: '#FF1493', 3: '#FF4500', 4: '#FFD700', 5: '#ADFF2F', 6: '#00FF7F', 7: '#00FFFF', 8: '#1E90FF', 9: '#8A2BE2', 10: '#FFFFFF'}
+                : {0: 'transparent', 1: '#FF4DFF', 2: '#FF69B4', 3: '#FF6347', 4: '#FFE066', 5: '#C0FF66', 6: '#66FFB2', 7: '#66FFFF', 8: '#66A3FF', 9: '#B266FF', 10: '#F8F9FA'},
+            pastel: isLightMode
+                ? {0: 'transparent', 1: '#FFB5E8', 2: '#FFDEB4', 3: '#FFF5BA', 4: '#B5EAD7', 5: '#C7CEEA', 6: '#E0BBE4', 7: '#FEC8D8', 8: '#D8E2DC', 9: '#F1F0C0', 10: '#FFFFFF'}
+                : {0: 'transparent', 1: '#FF99CC', 2: '#FFCC99', 3: '#FFF2A8', 4: '#99E2C3', 5: '#A8B9E6', 6: '#C7A9D6', 7: '#F5A3C7', 8: '#CFCFCF', 9: '#EAE6B8', 10: '#F8F9FA'},
+            gothic: isLightMode
+                ? {0: 'transparent', 1: '#1A1A1A', 2: '#2E2E2E', 3: '#444444', 4: '#5E2750', 5: '#87255B', 6: '#D90368', 7: '#FF6F61', 8: '#C9ADA7', 9: '#EAEAEA', 10: '#FFFFFF'}
+                : {0: 'transparent', 1: '#000000', 2: '#1A1A1A', 3: '#333333', 4: '#5E2750', 5: '#7A1E48', 6: '#B30C5C', 7: '#FF4F5E', 8: '#A99A93', 9: '#D6D6D6', 10: '#F5F5F5'},
+            aurora: isLightMode
+                ? {0: 'transparent', 1: '#A5FFD6', 2: '#82FFC7', 3: '#5DFDCB', 4: '#3EDBF0', 5: '#3B9AE1', 6: '#6F69AC', 7: '#9D4EDD', 8: '#FF5D8F', 9: '#FF87AB', 10: '#FFFFFF'}
+                : {0: 'transparent', 1: '#7DFFBF', 2: '#5AF7B0', 3: '#32E1B5', 4: '#1EB7D8', 5: '#2070B0', 6: '#514080', 7: '#7A29C6', 8: '#FF4D7A', 9: '#FF6F9F', 10: '#F8F9FA'},
+            clay: isLightMode
+                ? {0: 'transparent', 1: '#F5E0C0', 2: '#E0C097', 3: '#CC9B6D', 4: '#B0724A', 5: '#8C4A2F', 6: '#6E3923', 7: '#4E2817', 8: '#321B10', 9: '#1A0D08', 10: '#000000'}
+                : {0: 'transparent', 1: '#EAD2B0', 2: '#D1A374', 3: '#B97849', 4: '#8E5432', 5: '#6B3C24', 6: '#502C1A', 7: '#361E12', 8: '#22120B', 9: '#120805', 10: '#000000'},
         };
 
         return petThemes[themeName] || petThemes.default;
