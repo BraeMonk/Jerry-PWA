@@ -3682,19 +3682,34 @@
             };
         }
         
-        // --- Load saved sprite selections ---
+        // --- Load saved sprite selections with validation ---
         try {
             const savedJerrySprite = localStorage.getItem('jerryCurrentSprite') || localStorage.getItem('currentSprite');
             const savedTheme = localStorage.getItem('spriteTheme');
             
+            // Only set saved sprite if it actually exists in jerrySprites
             if (savedJerrySprite && jerrySprites[savedJerrySprite]) {
                 appState.jerry.currentSprite = savedJerrySprite;
+            } else {
+                // Clean up invalid saved sprite
+                appState.jerry.currentSprite = 'default';
+                localStorage.removeItem('jerryCurrentSprite');
+                localStorage.removeItem('currentSprite');
             }
-            if (savedTheme) {
+            
+            // Validate theme exists (either custom or default)
+            if (savedTheme && (savedTheme === 'default' || customThemes[savedTheme])) {
                 appState.spriteTheme = savedTheme;
+            } else {
+                // Clean up invalid saved theme
+                appState.spriteTheme = 'default';
+                localStorage.removeItem('spriteTheme');
             }
         } catch (error) {
             console.error('Error loading saved selections:', error);
+            // Fallback to defaults
+            appState.jerry.currentSprite = 'default';
+            appState.spriteTheme = 'default';
         }
 
         // --- Load other saved settings ---
@@ -3749,6 +3764,14 @@
             const select = category === 'jerry' ? spriteStyleSelect : styleElement;
             if (!select) return;
             
+            // Validate sprite data exists before adding to dropdown
+            const spriteExists = (category === 'jerry' && jerrySprites[id]) || 
+                            (category === 'pet' && petSprites[id]);
+            if (!spriteExists) {
+                console.warn(`Sprite ${id} data not found, skipping dropdown addition`);
+                return;
+            }
+            
             // Remove existing option if it exists
             const existingOption = select.querySelector(`option[value="${id}"]`);
             if (existingOption) existingOption.remove();
@@ -3761,6 +3784,12 @@
 
         function addThemeToDropdown(id, name) {
             if (!spriteThemeSelect) return;
+            
+            // Validate theme data exists before adding to dropdown
+            if (id !== 'default' && !customThemes[id]) {
+                console.warn(`Theme ${id} data not found, skipping dropdown addition`);
+                return;
+            }
             
             // Remove existing option if it exists
             const existingOption = spriteThemeSelect.querySelector(`option[value="${id}"]`);
@@ -4085,16 +4114,42 @@
             });
         }
 
-        // --- Populate dropdowns with saved custom sprites/themes ---
-        Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => 
-            addSpriteToDropdown('jerry', id, sprite.name)
-        );
-        Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => 
-            addSpriteToDropdown('pet', id, sprite.name)
-        );
-        Object.entries(customThemes).forEach(([id, theme]) => 
-            addThemeToDropdown(id, theme.name)
-        );
+        // --- Populate dropdowns with saved custom sprites/themes (with validation) ---
+        Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
+            // Double-check that the sprite data is valid before adding to dropdown
+            if (sprite.name && sprite.data && Array.isArray(sprite.data) && jerrySprites[id]) {
+                addSpriteToDropdown('jerry', id, sprite.name);
+            } else {
+                console.warn(`Invalid jerry sprite data for ${id}, removing from storage`);
+                delete customSprites.jerry[id];
+                delete jerrySprites[id];
+            }
+        });
+        
+        Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => {
+            // Double-check that the sprite data is valid before adding to dropdown
+            if (sprite.name && sprite.data && Array.isArray(sprite.data) && petSprites[id]) {
+                addSpriteToDropdown('pet', id, sprite.name);
+            } else {
+                console.warn(`Invalid pet sprite data for ${id}, removing from storage`);
+                delete customSprites.pet[id];
+                delete petSprites[id];
+            }
+        });
+        
+        Object.entries(customThemes).forEach(([id, theme]) => {
+            // Validate theme data before adding to dropdown
+            if (theme.name && theme.data && typeof theme.data === 'object') {
+                addThemeToDropdown(id, theme.name);
+            } else {
+                console.warn(`Invalid theme data for ${id}, removing from storage`);
+                delete customThemes[id];
+            }
+        });
+        
+        // Save cleaned up data
+        saveCustomSprites();
+        saveCustomThemes();
 
         // --- Set dropdown values AFTER populating them ---
         if (spriteStyleSelect) {
@@ -4113,10 +4168,17 @@
             
             spriteStyleSelect.addEventListener('change', e => {
                 const selectedStyle = e.target.value;
+                // Validate sprite exists before applying
                 if (jerrySprites[selectedStyle]) {
                     if (appState) appState.jerry.currentSprite = selectedStyle;
                     saveCurrentSelections();
                     if (typeof saveJerryState === 'function') saveJerryState();
+                    if (typeof updateJerrySprite === 'function') updateJerrySprite();
+                } else {
+                    console.warn(`Selected sprite ${selectedStyle} not found, reverting to default`);
+                    spriteStyleSelect.value = 'default';
+                    if (appState) appState.jerry.currentSprite = 'default';
+                    saveCurrentSelections();
                     if (typeof updateJerrySprite === 'function') updateJerrySprite();
                 }
             });
@@ -4138,11 +4200,23 @@
             });
         }
 
-        // --- Initialize base sprite safely ---
+        // --- Initialize base sprite safely with validation ---
         if (typeof baseSprite !== 'undefined' && jerrySprites) {
             const currentSprite = appState?.jerry?.currentSprite || 'default';
-            if (jerrySprites[currentSprite]) {
-                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSprite]));
+            if (jerrySprites[currentSprite] && Array.isArray(jerrySprites[currentSprite])) {
+                try {
+                    baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSprite]));
+                } catch (error) {
+                    console.error('Error copying sprite data:', error);
+                    baseSprite = jerrySprites['default'] ? JSON.parse(JSON.stringify(jerrySprites['default'])) : [];
+                    if (appState) appState.jerry.currentSprite = 'default';
+                    saveCurrentSelections();
+                }
+            } else {
+                console.warn(`Current sprite ${currentSprite} not found, using default`);
+                baseSprite = jerrySprites['default'] ? JSON.parse(JSON.stringify(jerrySprites['default'])) : [];
+                if (appState) appState.jerry.currentSprite = 'default';
+                saveCurrentSelections();
             }
         }
         
