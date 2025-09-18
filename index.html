@@ -3649,10 +3649,7 @@
             return;
         }
 
-        // --- Load saved settings ---
-        loadPetSettings();
-
-        // --- Initialize custom sprites/themes with safe loading ---
+        // --- Initialize custom sprites/themes with safe loading FIRST ---
         let customSprites = {};
         let customThemes = {};
         
@@ -3664,17 +3661,45 @@
             if (!customSprites.jerry) customSprites.jerry = {};
             if (!customSprites.pet) customSprites.pet = {};
             
+            // Ensure jerrySprites and petSprites exist before merging
+            if (typeof jerrySprites === 'undefined') window.jerrySprites = {};
+            if (typeof petSprites === 'undefined') window.petSprites = {};
+            
             // Safely merge with existing sprites
-            if (typeof jerrySprites === 'object') {
-                Object.assign(jerrySprites, customSprites.jerry);
-            }
-            if (typeof petSprites === 'object') {
-                Object.assign(petSprites, customSprites.pet);
-            }
+            Object.assign(jerrySprites, customSprites.jerry);
+            Object.assign(petSprites, customSprites.pet);
         } catch (error) {
             console.error('Error loading custom sprites/themes:', error);
             customSprites = { jerry: {}, pet: {} };
             customThemes = {};
+        }
+
+        // --- Initialize appState if it doesn't exist ---
+        if (typeof appState === 'undefined') {
+            window.appState = {
+                jerry: { currentSprite: 'default' },
+                spriteTheme: 'default'
+            };
+        }
+        
+        // --- Load saved sprite selections ---
+        try {
+            const savedJerrySprite = localStorage.getItem('jerryCurrentSprite') || localStorage.getItem('currentSprite');
+            const savedTheme = localStorage.getItem('spriteTheme');
+            
+            if (savedJerrySprite && jerrySprites[savedJerrySprite]) {
+                appState.jerry.currentSprite = savedJerrySprite;
+            }
+            if (savedTheme) {
+                appState.spriteTheme = savedTheme;
+            }
+        } catch (error) {
+            console.error('Error loading saved selections:', error);
+        }
+
+        // --- Load other saved settings ---
+        if (typeof loadPetSettings === 'function') {
+            loadPetSettings();
         }
 
         // --- DOM elements ---
@@ -3692,6 +3717,19 @@
                 localStorage.setItem('customSprites', JSON.stringify(customSprites));
             } catch (error) {
                 console.error('Error saving custom sprites:', error);
+            }
+        }
+        
+        function saveCurrentSelections() {
+            try {
+                if (appState?.jerry?.currentSprite) {
+                    localStorage.setItem('jerryCurrentSprite', appState.jerry.currentSprite);
+                }
+                if (appState?.spriteTheme) {
+                    localStorage.setItem('spriteTheme', appState.spriteTheme);
+                }
+            } catch (error) {
+                console.error('Error saving current selections:', error);
             }
         }
         
@@ -3767,6 +3805,7 @@
                             if (appState?.jerry?.currentSprite === id) {
                                 appState.jerry.currentSprite = 'default';
                                 if (spriteStyleSelect) spriteStyleSelect.value = 'default';
+                                saveCurrentSelections();
                                 if (typeof saveJerryState === 'function') saveJerryState();
                                 if (typeof updateJerrySprite === 'function') updateJerrySprite();
                             }
@@ -3804,6 +3843,7 @@
                             appState.spriteTheme = 'default';
                             if (spriteThemeSelect) spriteThemeSelect.value = 'default';
                             localStorage.setItem('spriteTheme', 'default');
+                            saveCurrentSelections();
                             if (typeof updateJerrySprite === 'function') updateJerrySprite();
                         }
                     }
@@ -3961,13 +4001,16 @@
                         saveCustomThemes();
                         
                         // Auto-apply last uploaded theme
-                        const lastTheme = processedThemes[processedThemes.length - 1];
-                        const lastId = Object.keys(customThemes).pop();
-                        if (lastId && appState) {
-                            appState.spriteTheme = lastId;
-                            if (spriteThemeSelect) spriteThemeSelect.value = lastId;
-                            localStorage.setItem('spriteTheme', lastId);
-                            if (typeof updateJerrySprite === 'function') updateJerrySprite();
+                        const lastThemeEntries = Object.entries(customThemes);
+                        if (lastThemeEntries.length > 0) {
+                            const [lastId] = lastThemeEntries[lastThemeEntries.length - 1];
+                            if (appState) {
+                                appState.spriteTheme = lastId;
+                                if (spriteThemeSelect) spriteThemeSelect.value = lastId;
+                                localStorage.setItem('spriteTheme', lastId);
+                                saveCurrentSelections();
+                                if (typeof updateJerrySprite === 'function') updateJerrySprite();
+                            }
                         }
                     }
                 }
@@ -4053,22 +4096,26 @@
             addThemeToDropdown(id, theme.name)
         );
 
-        // --- Sprite style/theme select for Jerry ---
-        if (spriteStyleSelect && appState?.jerry?.currentSprite) {
-            if (jerrySprites[appState.jerry.currentSprite]) {
-                spriteStyleSelect.value = appState.jerry.currentSprite;
-            } else {
-                // Fallback if sprite no longer exists
-                appState.jerry.currentSprite = 'default';
-                spriteStyleSelect.value = 'default';
-            }
-        }
-        
+        // --- Set dropdown values AFTER populating them ---
         if (spriteStyleSelect) {
+            // Wait for next tick to ensure options are added
+            setTimeout(() => {
+                const currentSprite = appState?.jerry?.currentSprite || 'default';
+                if (jerrySprites[currentSprite]) {
+                    spriteStyleSelect.value = currentSprite;
+                } else {
+                    // Fallback if sprite no longer exists
+                    appState.jerry.currentSprite = 'default';
+                    spriteStyleSelect.value = 'default';
+                    saveCurrentSelections();
+                }
+            }, 0);
+            
             spriteStyleSelect.addEventListener('change', e => {
                 const selectedStyle = e.target.value;
                 if (jerrySprites[selectedStyle]) {
                     if (appState) appState.jerry.currentSprite = selectedStyle;
+                    saveCurrentSelections();
                     if (typeof saveJerryState === 'function') saveJerryState();
                     if (typeof updateJerrySprite === 'function') updateJerrySprite();
                 }
@@ -4076,14 +4123,17 @@
         }
 
         if (spriteThemeSelect) {
-            const savedTheme = localStorage.getItem('spriteTheme') || 'default';
-            if (appState) appState.spriteTheme = savedTheme;
-            spriteThemeSelect.value = savedTheme;
+            // Wait for next tick to ensure options are added
+            setTimeout(() => {
+                const savedTheme = appState?.spriteTheme || 'default';
+                spriteThemeSelect.value = savedTheme;
+            }, 0);
             
             spriteThemeSelect.addEventListener('change', e => {
                 const selectedTheme = e.target.value;
                 if (appState) appState.spriteTheme = selectedTheme;
                 localStorage.setItem('spriteTheme', selectedTheme);
+                saveCurrentSelections();
                 if (typeof updateJerrySprite === 'function') updateJerrySprite();
             });
         }
