@@ -1888,7 +1888,6 @@
                 <select class="form-input" id="spriteTheme">
                     <option value="default">Default</option>
                     <option value="candy">Candy</option>
-                    <option value="desert">Desert</option>
                     <option value="ocean">Ocean</option>
                     <option value="ember">Ember</option>
                     <option value="meadow">Meadow</option>
@@ -1896,7 +1895,8 @@
                     <option value="pastel">Pastel</option>
                     <option value="gothic">Gothic</option>
                     <option value="aurora">Aurora</option>
-                    <option value="clay">Clay</option>
+                    <option value="fantasySprite">Fantasy</option>
+                    <option value="retroPixel">Retro</option>
                 </select>
             </div>
             <!-- Background Environment Selection -->
@@ -2009,7 +2009,6 @@
                     <!-- same themes as sprite -->
                     <option value="default">Default</option>
                     <option value="candy">Candy</option>
-                    <option value="desert">Desert</option>
                     <option value="ocean">Ocean</option>
                     <option value="ember">Ember</option>
                     <option value="meadow">Meadow</option>
@@ -2017,7 +2016,8 @@
                     <option value="pastel">Pastel</option>
                     <option value="gothic">Gothic</option>
                     <option value="aurora">Aurora</option>
-                    <option value="clay">Clay</option>
+                    <option value="fantasySprite">Fantasy</option>
+                    <option value="retroPixel">Retro</option>
                 </select>
                     
                 </select>
@@ -2777,9 +2777,6 @@
                 candy: isLightMode
                     ? {0: 'transparent', 1: '#FF6B6B', 2: '#FFA94D', 3: '#FFD93D', 4: '#6BCB77', 5: '#4D96FF', 6: '#9D4EDD', 7: '#FF8FAB', 8: '#FFB5E8', 9: '#FFDEE9', 10: '#FFFFFF'}
                     : {0: 'transparent', 1: '#FF8787', 2: '#FFB86B', 3: '#FFE066', 4: '#8CE99A', 5: '#74C0FC', 6: '#B197FC', 7: '#FF99C8', 8: '#FFB3DE', 9: '#FFC2E5', 10: '#F8F9FA'},
-                desert: isLightMode
-                    ? {0: 'transparent', 1: '#F4E1D2', 2: '#E2B07E', 3: '#D89C5C', 4: '#C97B3D', 5: '#A0522D', 6: '#8B5E3C', 7: '#6B4226', 8: '#4B2E1F', 9: '#2E1A12', 10: '#000000'}
-                    : {0: 'transparent', 1: '#E6CBB3', 2: '#D4A373', 3: '#BF8040', 4: '#A0522D', 5: '#7B4B24', 6: '#5C3720', 7: '#3E2414', 8: '#24140D', 9: '#120A06', 10: '#000000'},
                 ocean: isLightMode
                     ? {0: 'transparent', 1: '#A2D2FF', 2: '#80C0FF', 3: '#5AA9FA', 4: '#4682B4', 5: '#2E5984', 6: '#1B3B5F', 7: '#0F2A44', 8: '#082136', 9: '#041626', 10: '#000814'}
                     : {0: 'transparent', 1: '#90C8F8', 2: '#66AEEF', 3: '#3D91E0', 4: '#2E6FA3', 5: '#1D4E72', 6: '#103552', 7: '#0A2438', 8: '#061C2B', 9: '#03111B', 10: '#000814'},
@@ -2801,9 +2798,12 @@
                 aurora: isLightMode
                     ? {0: 'transparent', 1: '#A5FFD6', 2: '#82FFC7', 3: '#5DFDCB', 4: '#3EDBF0', 5: '#3B9AE1', 6: '#6F69AC', 7: '#9D4EDD', 8: '#FF5D8F', 9: '#FF87AB', 10: '#FFFFFF'}
                     : {0: 'transparent', 1: '#7DFFBF', 2: '#5AF7B0', 3: '#32E1B5', 4: '#1EB7D8', 5: '#2070B0', 6: '#514080', 7: '#7A29C6', 8: '#FF4D7A', 9: '#FF6F9F', 10: '#F8F9FA'},
-                clay: isLightMode
-                    ? {0: 'transparent', 1: '#F5E0C0', 2: '#E0C097', 3: '#CC9B6D', 4: '#B0724A', 5: '#8C4A2F', 6: '#6E3923', 7: '#4E2817', 8: '#321B10', 9: '#1A0D08', 10: '#000000'}
-                    : {0: 'transparent', 1: '#EAD2B0', 2: '#D1A374', 3: '#B97849', 4: '#8E5432', 5: '#6B3C24', 6: '#502C1A', 7: '#361E12', 8: '#22120B', 9: '#120805', 10: '#000000'},
+                retroPixel: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#FFD800', 3: '#FF8C00', 4: '#FF0000', 5: '#C000C0', 6: '#0000FF', 7: '#008080', 8: '#00C000', 9: '#404040', 10: '#000000'}
+                    : {0: 'transparent', 1: '#E0E0E0', 2: '#E0C000', 3: '#D07000', 4: '#C00000', 5: '#A000A0', 6: '#0000A0', 7: '#006060', 8: '#00A000', 9: '#303030', 10: '#000000'},
+                fantasySprite: isLightMode
+                    ? {0: 'transparent', 1: '#F0EAD6', 2: '#C2B280', 3: '#8E735B', 4: '#5C4B3B', 5: '#3B2F2F', 6: '#6B8E23', 7: '#4682B4', 8: '#9370DB', 9: '#FFD700', 10: '#000000'}
+                    : {0: 'transparent', 1: '#D8D2BE', 2: '#A89C6E', 3: '#6E5B45', 4: '#44362C', 5: '#2C2222', 6: '#556B2F', 7: '#36648B', 8: '#7A5DC7', 9: '#E6C200', 10: '#000000'},
             };
         }
 
@@ -3439,9 +3439,6 @@
             candy: isLightMode
                 ? {0: 'transparent', 1: '#FF6B6B', 2: '#FFA94D', 3: '#FFD93D', 4: '#6BCB77', 5: '#4D96FF', 6: '#9D4EDD', 7: '#FF8FAB', 8: '#FFB5E8', 9: '#FFDEE9', 10: '#FFFFFF'}
                 : {0: 'transparent', 1: '#FF8787', 2: '#FFB86B', 3: '#FFE066', 4: '#8CE99A', 5: '#74C0FC', 6: '#B197FC', 7: '#FF99C8', 8: '#FFB3DE', 9: '#FFC2E5', 10: '#F8F9FA'},
-            desert: isLightMode
-                ? {0: 'transparent', 1: '#F4E1D2', 2: '#E2B07E', 3: '#D89C5C', 4: '#C97B3D', 5: '#A0522D', 6: '#8B5E3C', 7: '#6B4226', 8: '#4B2E1F', 9: '#2E1A12', 10: '#000000'}
-                : {0: 'transparent', 1: '#E6CBB3', 2: '#D4A373', 3: '#BF8040', 4: '#A0522D', 5: '#7B4B24', 6: '#5C3720', 7: '#3E2414', 8: '#24140D', 9: '#120A06', 10: '#000000'},
             ocean: isLightMode
                 ? {0: 'transparent', 1: '#A2D2FF', 2: '#80C0FF', 3: '#5AA9FA', 4: '#4682B4', 5: '#2E5984', 6: '#1B3B5F', 7: '#0F2A44', 8: '#082136', 9: '#041626', 10: '#000814'}
                 : {0: 'transparent', 1: '#90C8F8', 2: '#66AEEF', 3: '#3D91E0', 4: '#2E6FA3', 5: '#1D4E72', 6: '#103552', 7: '#0A2438', 8: '#061C2B', 9: '#03111B', 10: '#000814'},
@@ -3463,9 +3460,12 @@
             aurora: isLightMode
                 ? {0: 'transparent', 1: '#A5FFD6', 2: '#82FFC7', 3: '#5DFDCB', 4: '#3EDBF0', 5: '#3B9AE1', 6: '#6F69AC', 7: '#9D4EDD', 8: '#FF5D8F', 9: '#FF87AB', 10: '#FFFFFF'}
                 : {0: 'transparent', 1: '#7DFFBF', 2: '#5AF7B0', 3: '#32E1B5', 4: '#1EB7D8', 5: '#2070B0', 6: '#514080', 7: '#7A29C6', 8: '#FF4D7A', 9: '#FF6F9F', 10: '#F8F9FA'},
-            clay: isLightMode
-                ? {0: 'transparent', 1: '#F5E0C0', 2: '#E0C097', 3: '#CC9B6D', 4: '#B0724A', 5: '#8C4A2F', 6: '#6E3923', 7: '#4E2817', 8: '#321B10', 9: '#1A0D08', 10: '#000000'}
-                : {0: 'transparent', 1: '#EAD2B0', 2: '#D1A374', 3: '#B97849', 4: '#8E5432', 5: '#6B3C24', 6: '#502C1A', 7: '#361E12', 8: '#22120B', 9: '#120805', 10: '#000000'},
+            retroPixel: isLightMode
+                ? {0: 'transparent', 1: '#FFFFFF', 2: '#FFD800', 3: '#FF8C00', 4: '#FF0000', 5: '#C000C0', 6: '#0000FF', 7: '#008080', 8: '#00C000', 9: '#404040', 10: '#000000'}
+                : {0: 'transparent', 1: '#E0E0E0', 2: '#E0C000', 3: '#D07000', 4: '#C00000', 5: '#A000A0', 6: '#0000A0', 7: '#006060', 8: '#00A000', 9: '#303030', 10: '#000000'},
+            fantasySprite: isLightMode
+                ? {0: 'transparent', 1: '#F0EAD6', 2: '#C2B280', 3: '#8E735B', 4: '#5C4B3B', 5: '#3B2F2F', 6: '#6B8E23', 7: '#4682B4', 8: '#9370DB', 9: '#FFD700', 10: '#000000'}
+                : {0: 'transparent', 1: '#D8D2BE', 2: '#A89C6E', 3: '#6E5B45', 4: '#44362C', 5: '#2C2222', 6: '#556B2F', 7: '#36648B', 8: '#7A5DC7', 9: '#E6C200', 10: '#000000'},
         };
 
         return petThemes[themeName] || petThemes.default;
