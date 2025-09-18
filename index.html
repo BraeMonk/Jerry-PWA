@@ -1431,6 +1431,35 @@
             padding: 0;
             margin: 0;
         }
+
+        .upload-zone {
+            border: 2px dashed #aaa;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+            background: rgba(0,0,0,0.05);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .upload-zone.dragover {
+            background: rgba(0, 150, 255, 0.1);
+            border-color: #0096ff;
+        }
+
+        #uploadedSpritesList {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        #uploadedSpritesList li {
+            padding: 5px 10px;
+            margin: 3px 0;
+            background: rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
         
         @media (max-width: 480px) {
             .app-container {
@@ -1853,6 +1882,14 @@
             <div style="margin-top: 30px;">
                 <h3 style="margin-bottom: 15px;">Sprite</h3>
             </div>
+            <div class="settings-section">
+                <h3>Upload Custom Sprites</h3>
+                <div id="spriteUploadZone" class="upload-zone">
+                    <p>Drag & drop your sprite JSON here or click to upload</p>
+                    <input type="file" id="spriteFileInput" accept=".json" hidden>
+                </div>
+                <ul id="uploadedSpritesList"></ul>
+            </div>
             <!-- Rest of your existing settings content -->
             <div class="form-group" style="margin-top: 20px;">
                 <label class="form-label">Sprite Preview</label>
@@ -2018,8 +2055,6 @@
                     <option value="aurora">Aurora</option>
                     <option value="fantasySprite">Fantasy</option>
                     <option value="retroPixel">Retro</option>
-                </select>
-                    
                 </select>
             </div>
             <div style="margin-top: 30px;">
@@ -2544,9 +2579,9 @@
                 [0,0,0,0,0,0,0,10,7,10,0,0,0,10,7,10],
                 [0,0,0,0,0,0,0,10,7,10,0,0,0,10,7,10],
                 [0,0,0,0,0,0,0,0,10,0,0,0,0,0,10,0]
-            ]
-
+            ],
         };
+            
 
 
         const affirmations = [
@@ -3605,21 +3640,74 @@
         updateStickyPet();
     }
 
-    // Initialize pet system
     function initializePetSystem() {
-        // Wait for DOM to be ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializePetSystem);
             return;
         }
 
-        // Load saved settings
+        // --- Load saved settings ---
         loadPetSettings();
 
-        // Set up event listeners
+        // --- Initialize custom sprites ---
+        let customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
+        Object.assign(jerrySprites, customSprites.jerry);
+        Object.assign(petSprites, customSprites.pet);
+
+        // --- DOM elements ---
         const styleElement = document.getElementById('petStyle');
         const themeElement = document.getElementById('petTheme');
+        const spriteUploadZone = document.getElementById('spriteUploadZone');
+        const spriteFileInput = document.getElementById('spriteFileInput');
+        const uploadedSpritesList = document.getElementById('uploadedSpritesList');
+        const spriteStyleSelect = document.getElementById('spriteStyle');
+        const spriteThemeSelect = document.getElementById('spriteTheme');
 
+        // --- Helper functions ---
+        function saveCustomSprites() {
+            localStorage.setItem('customSprites', JSON.stringify(customSprites));
+        }
+
+        function generateUniqueID(base) {
+            return `${base}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+        }
+
+        function addSpriteToDropdown(category, id, name) {
+            const select = category === 'jerry' ? spriteStyleSelect : styleElement;
+            if (!select) return;
+            if (!Array.from(select.options).some(o => o.value === id)) {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = name;
+                select.appendChild(option);
+            }
+        }
+
+        function renderUploadedSpritesList() {
+            uploadedSpritesList.innerHTML = '';
+            ['jerry', 'pet'].forEach(category => {
+                Object.entries(customSprites[category]).forEach(([id, sprite]) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${category === 'jerry' ? 'Jerry' : 'Pet'}: ${sprite.name}`;
+                    const del = document.createElement('button');
+                    del.textContent = 'Delete';
+                    del.addEventListener('click', () => {
+                        delete customSprites[category][id];
+                        saveCustomSprites();
+                        renderUploadedSpritesList();
+                        const select = category === 'jerry' ? spriteStyleSelect : styleElement;
+                        const option = select.querySelector(`option[value="${id}"]`);
+                        if (option) option.remove();
+                    });
+                    li.appendChild(del);
+                    uploadedSpritesList.appendChild(li);
+                });
+            });
+        }
+
+        renderUploadedSpritesList();
+
+        // --- Event listeners ---
         if (styleElement) {
             styleElement.addEventListener('change', () => {
                 renderPetPreview();
@@ -3636,64 +3724,97 @@
             });
         }
 
-        // Listen for theme changes to update pet colors
+        // Theme observer
         const themeObserver = new MutationObserver(() => {
             renderPetPreview();
             updateStickyPet();
         });
+        themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
 
-        themeObserver.observe(document.body, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-
-        // Listen for system theme changes
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
             renderPetPreview();
             updateStickyPet();
         });
-    }
 
-        
-        // --- Sprite Style ---
-        const spriteStyleSelect = document.getElementById('spriteStyle');
-        if (spriteStyleSelect) {
-            
-            if (appState.jerry.currentSprite && jerrySprites[appState.jerry.currentSprite]) {
-                spriteStyleSelect.value = appState.jerry.currentSprite;
+        // --- File Upload & Drag/Drop ---
+        spriteUploadZone.addEventListener('click', () => spriteFileInput.click());
+
+        async function handleSpriteFile(file) {
+            if (!file) return;
+            try {
+                const text = await file.text();
+                const spriteData = JSON.parse(text);
+                if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
+                    alert('Invalid sprite JSON: must be a 2D array');
+                    return;
+                }
+                const name = prompt('Enter a name for this sprite:');
+                if (!name) return;
+                const category = prompt('Category? Enter "jerry" or "pet":', 'jerry');
+                if (!category || (category !== 'jerry' && category !== 'pet')) {
+                    alert('Invalid category, must be "jerry" or "pet"');
+                    return;
+                }
+                const id = generateUniqueID(category);
+                customSprites[category][id] = { name, data: spriteData };
+                saveCustomSprites();
+                if (category === 'jerry') jerrySprites[id] = spriteData;
+                else petSprites[id] = spriteData;
+                addSpriteToDropdown(category, id, name);
+                renderUploadedSpritesList();
+                showNotification(`Sprite "${name}" uploaded!`);
+            } catch (err) {
+                console.error(err);
+                alert('Failed to load sprite JSON');
+            } finally {
+                spriteFileInput.value = '';
             }
-            spriteStyleSelect.addEventListener('change', (e) => {
+        }
+
+        spriteFileInput.addEventListener('change', e => handleSpriteFile(e.target.files[0]));
+
+        spriteUploadZone.addEventListener('dragover', e => { e.preventDefault(); spriteUploadZone.classList.add('dragover'); });
+        spriteUploadZone.addEventListener('dragleave', () => spriteUploadZone.classList.remove('dragover'));
+        spriteUploadZone.addEventListener('drop', e => {
+            e.preventDefault();
+            spriteUploadZone.classList.remove('dragover');
+            handleSpriteFile(e.dataTransfer.files[0]);
+        });
+
+        // --- Populate dropdowns with saved custom sprites ---
+        Object.entries(customSprites.jerry).forEach(([id, sprite]) => addSpriteToDropdown('jerry', id, sprite.name));
+        Object.entries(customSprites.pet).forEach(([id, sprite]) => addSpriteToDropdown('pet', id, sprite.name));
+
+        // --- Sprite style/theme select for Jerry ---
+        if (spriteStyleSelect && appState.jerry.currentSprite && jerrySprites[appState.jerry.currentSprite]) {
+            spriteStyleSelect.value = appState.jerry.currentSprite;
+        }
+        if (spriteStyleSelect) {
+            spriteStyleSelect.addEventListener('change', e => {
                 const selectedStyle = e.target.value;
                 if (jerrySprites[selectedStyle]) {
                     appState.jerry.currentSprite = selectedStyle;
                     saveJerryState();
-                    updateJerrySprite(); // redraw main + preview
+                    updateJerrySprite();
                 }
             });
         }
 
-        // --- Sprite Theme ---
-        const spriteThemeSelect = document.getElementById('spriteTheme');
         if (spriteThemeSelect) {
-            spriteThemeSelect.addEventListener('change', (e) => {
+            const savedTheme = localStorage.getItem('spriteTheme');
+            appState.spriteTheme = savedTheme || 'default';
+            spriteThemeSelect.value = appState.spriteTheme;
+            spriteThemeSelect.addEventListener('change', e => {
                 const selectedTheme = e.target.value;
                 appState.spriteTheme = selectedTheme;
                 localStorage.setItem('spriteTheme', selectedTheme);
-                updateJerrySprite(); // redraw main + preview
+                updateJerrySprite();
             });
-
-            // On load, restore saved theme
-            const savedTheme = localStorage.getItem('spriteTheme');
-            if (savedTheme) {
-                appState.spriteTheme = savedTheme;
-                spriteThemeSelect.value = savedTheme;
-            } else {
-                appState.spriteTheme = 'default';
-            }
         }
 
         baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.jerry.currentSprite || 'default']));
         updateJerrySprite();
+    }
         
         // === Chat Functions ===
         async function sendMessage() {
