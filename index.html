@@ -3661,13 +3661,28 @@
             if (!customSprites.jerry) customSprites.jerry = {};
             if (!customSprites.pet) customSprites.pet = {};
             
-            // Ensure jerrySprites and petSprites exist before merging
+            // Ensure jerrySprites and petSprites exist
             if (typeof jerrySprites === 'undefined') window.jerrySprites = {};
             if (typeof petSprites === 'undefined') window.petSprites = {};
             
-            // Safely merge with existing sprites
-            Object.assign(jerrySprites, customSprites.jerry);
-            Object.assign(petSprites, customSprites.pet);
+            // CRITICAL: Restore custom sprite DATA to runtime objects
+            Object.entries(customSprites.jerry).forEach(([id, sprite]) => {
+                if (sprite && sprite.data && Array.isArray(sprite.data)) {
+                    jerrySprites[id] = sprite.data;
+                    console.log(`Restored jerry sprite: ${id}`);
+                }
+            });
+            
+            Object.entries(customSprites.pet).forEach(([id, sprite]) => {
+                if (sprite && sprite.data && Array.isArray(sprite.data)) {
+                    petSprites[id] = sprite.data;
+                    console.log(`Restored pet sprite: ${id}`);
+                }
+            });
+            
+            console.log('Jerry sprites available:', Object.keys(jerrySprites));
+            console.log('Pet sprites available:', Object.keys(petSprites));
+            
         } catch (error) {
             console.error('Error loading custom sprites/themes:', error);
             customSprites = { jerry: {}, pet: {} };
@@ -3999,12 +4014,16 @@
                         const id = generateUniqueID(category);
                         customSprites[category][id] = { name, data: spriteInfo.data };
                         
-                        // Add to runtime sprites
-                        if (category === 'jerry') jerrySprites[id] = spriteInfo.data;
-                        else petSprites[id] = spriteInfo.data;
+                        // CRITICAL: Add to runtime sprites immediately
+                        if (category === 'jerry') {
+                            jerrySprites[id] = spriteInfo.data;
+                        } else {
+                            petSprites[id] = spriteInfo.data;
+                        }
                         
                         addSpriteToDropdown(category, id, name);
                         processedCount++;
+                        console.log(`Added ${category} sprite: ${id} - ${name}`);
                     }
                     
                     if (processedCount > 0) {
@@ -4115,10 +4134,17 @@
         }
 
         // --- Populate dropdowns with saved custom sprites/themes (with validation) ---
+        console.log('Populating dropdowns...');
+        
         Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
-            // Double-check that the sprite data is valid before adding to dropdown
-            if (sprite.name && sprite.data && Array.isArray(sprite.data) && jerrySprites[id]) {
+            // Ensure the sprite data exists in jerrySprites
+            if (sprite.name && sprite.data && Array.isArray(sprite.data)) {
+                if (!jerrySprites[id]) {
+                    jerrySprites[id] = sprite.data;
+                    console.log(`Re-added missing jerry sprite to runtime: ${id}`);
+                }
                 addSpriteToDropdown('jerry', id, sprite.name);
+                console.log(`Added jerry dropdown option: ${id} - ${sprite.name}`);
             } else {
                 console.warn(`Invalid jerry sprite data for ${id}, removing from storage`);
                 delete customSprites.jerry[id];
@@ -4127,9 +4153,14 @@
         });
         
         Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => {
-            // Double-check that the sprite data is valid before adding to dropdown
-            if (sprite.name && sprite.data && Array.isArray(sprite.data) && petSprites[id]) {
+            // Ensure the sprite data exists in petSprites
+            if (sprite.name && sprite.data && Array.isArray(sprite.data)) {
+                if (!petSprites[id]) {
+                    petSprites[id] = sprite.data;
+                    console.log(`Re-added missing pet sprite to runtime: ${id}`);
+                }
                 addSpriteToDropdown('pet', id, sprite.name);
+                console.log(`Added pet dropdown option: ${id} - ${sprite.name}`);
             } else {
                 console.warn(`Invalid pet sprite data for ${id}, removing from storage`);
                 delete customSprites.pet[id];
@@ -4141,6 +4172,7 @@
             // Validate theme data before adding to dropdown
             if (theme.name && theme.data && typeof theme.data === 'object') {
                 addThemeToDropdown(id, theme.name);
+                console.log(`Added theme dropdown option: ${id} - ${theme.name}`);
             } else {
                 console.warn(`Invalid theme data for ${id}, removing from storage`);
                 delete customThemes[id];
@@ -4150,6 +4182,9 @@
         // Save cleaned up data
         saveCustomSprites();
         saveCustomThemes();
+        
+        console.log('Final jerry sprites:', Object.keys(jerrySprites));
+        console.log('Final pet sprites:', Object.keys(petSprites));
 
         // --- Set dropdown values AFTER populating them ---
         if (spriteStyleSelect) {
