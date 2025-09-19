@@ -1471,6 +1471,18 @@
             background: rgba(0,0,0,0.05);
             border-radius: 4px;
         }
+
+        /* Make the sprite containers non-blocking for pointer events */
+        .jerry-sprite,
+        #spritePreview {
+            pointer-events: none;
+        }
+
+        /* Keep your individual pixel styling intact */
+        .jerry-sprite .pixel,
+        #spritePreview .pixel {
+            pointer-events: none; /* already set, fine to leave */
+        }
         
         @media (max-width: 480px) {
             .app-container {
