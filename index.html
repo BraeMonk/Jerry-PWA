@@ -267,7 +267,6 @@
             min-height: calc(100vh - 120px);
             -webkit-overflow-scrolling: touch;
             overflow-y: auto;
-            transform: none;
         }
         
         .screen.active {
@@ -2692,30 +2691,7 @@
             radialMenu.classList.remove('open');
             radialOverlay.classList.remove('active');
         });
-
-        // --- MOBILE KEYBOARD FIX ---
-        const inputs = document.querySelectorAll('input, textarea');
-
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                // Only hide overlay if it’s currently active
-                if (radialOverlay.classList.contains('active')) {
-                    radialOverlay.style.display = 'none';
-                }
-
-                // Scroll input into view on mobile
-                setTimeout(() => {
-                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
-            });
-
-            input.addEventListener('blur', () => {
-                // Restore overlay if the menu is still open
-                if (radialMenu.classList.contains('open')) {
-                    radialOverlay.style.display = 'block';
-                }
-            });
-        });
+        
 
         // UPDATED SWITCH TAB FUNCTION
         function switchTab(tabName, event) {
@@ -5271,25 +5247,42 @@
             splash.remove();
         }
 
-        function fixPWAInputs() {
+        function enableMobileKeyboardFix() {
             const inputs = document.querySelectorAll('input, textarea');
-        
+
             inputs.forEach(input => {
                 // Scroll input into view when focused
                 input.addEventListener('focus', () => {
-                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Hide overlay if active
+                    if (window.radialOverlay?.classList.contains('active')) {
+                        radialOverlay.style.display = 'none';
+                    }
+
+                    // Scroll smoothly to center
+                    setTimeout(() => {
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 50);
                 });
-        
-                // Ensure keyboard shows on mobile (use touchend, not touchstart)
+
+                // Force focus on touchend for mobile PWA
                 input.addEventListener('touchend', (e) => {
-                    // Only focus if not already focused
                     if (document.activeElement !== input) {
-                        input.focus();
+                        // Hide overlay before focusing
+                        if (window.radialOverlay?.classList.contains('active')) {
+                    radialOverlay.style.display = 'none';
+                        }
+                        input.focus({ preventScroll: true });
+                    }
+                });
+                // Restore overlay on blur
+                input.addEventListener('blur', () => {
+                    if (window.radialMenu?.classList.contains('open')) {
+                        radialOverlay.style.display = 'block';
                     }
                 });
             });
-        
-            // Chat input handling
+
+            // Chat input: handle enter key
             const chatInput = document.getElementById('chatInput');
             if (chatInput) {
                 chatInput.addEventListener('keydown', e => {
@@ -5411,7 +5404,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await fadeSplash();  // show splash first
             await initializeApp();  // then initialize the app
-            fixPWAInputs();
+            enableMobileKeyboardFix();
         });
 
     </script>
