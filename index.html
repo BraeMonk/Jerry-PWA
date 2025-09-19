@@ -1885,16 +1885,16 @@
             <div id="spriteUploadZone" class="upload-zone">
                 <p>Drag & drop your sprite JSON here or click to upload</p>
                 <input type="file" id="spriteFileInput" accept=".json" hidden>
+            </div>
 
-                <!-- Inline inputs for naming and category -->
-                <div id="spriteUploadInputs" style="display:none; margin-top:10px;">
-                    <input type="text" id="spriteNameInputInline" placeholder="Sprite Name" style="width:100%; margin-bottom:5px;">
-                    <select id="spriteCategorySelectInline" style="width:100%; margin-bottom:5px;">
-                        <option value="jerry">Jerry</option>
-                        <option value="pet">Pet</option>
-                    </select>
-                    <button id="spriteUploadSubmitInline" style="width:100%;">Add Sprite</button>
-                </div>
+            <!-- Inline inputs for naming and category -->
+            <div id="spriteUploadInputs" style="display:none; margin-top:10px;">
+                <input type="text" id="spriteNameInputInline" placeholder="Sprite Name" style="width:100%; margin-bottom:5px;">
+                <select id="spriteCategorySelectInline" style="width:100%; margin-bottom:5px;">
+                    <option value="jerry">Jerry</option>
+                    <option value="pet">Pet</option>
+                </select>
+                <button id="spriteUploadSubmitInline" style="width:100%;">Add Sprite</button>
             </div>
             <ul id="uploadedSpritesList"></ul>
             </div>
@@ -3674,38 +3674,26 @@
             return;
         }
 
-        // Load custom sprites and themes from localStorage
+        // Load from localStorage
         let customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
         let customThemes = getFromLocalStorage('customThemes', {});
 
-        // Merge custom sprites into built-in sprites safely
+        // Merge custom sprites into app
         Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
             if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
                 if (!jerrySprites[id]) jerrySprites[id] = sprite.data;
-            } else {
-                console.warn('Invalid Jerry sprite skipped:', id, sprite);
-                delete customSprites.jerry[id];
-            }
+            } else delete customSprites.jerry[id];
         });
-
         Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => {
             if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
                 if (!petSprites[id]) petSprites[id] = sprite.data;
-            } else {
-                console.warn('Invalid Pet sprite skipped:', id, sprite);
-                delete customSprites.pet[id];
-            }
+            } else delete customSprites.pet[id];
         });
 
-        // Validate appState selections
-        if (!jerrySprites[appState.jerry.currentSprite]) {
-            appState.jerry.currentSprite = 'default';
-        }
-        if (!customThemes[appState.spriteTheme]) {
-            appState.spriteTheme = 'default';
-        }
+        // Validate appState
+        if (!jerrySprites[appState.jerry.currentSprite]) appState.jerry.currentSprite = 'default';
+        if (!customThemes[appState.spriteTheme]) appState.spriteTheme = 'default';
 
-        // Save cleaned data back to localStorage
         saveToLocalStorage('customSprites', customSprites);
         saveToLocalStorage('customThemes', customThemes);
 
@@ -3716,13 +3704,12 @@
         const spriteFileInput = document.getElementById('spriteFileInput');
         const uploadedSpritesList = document.getElementById('uploadedSpritesList');
 
-        // Inline inputs
         const uploadInputs = document.getElementById('spriteUploadInputs');
         const nameInput = document.getElementById('spriteNameInputInline');
         const categorySelect = document.getElementById('spriteCategorySelectInline');
         const uploadSubmit = document.getElementById('spriteUploadSubmitInline');
 
-        let pendingUpload = null; // { type: 'sprite'|'theme', data: {...} }
+        let pendingUpload = null; // { type: 'sprite'|'theme', data: [...], name: string }
 
         // Populate dropdowns
         function populateDropdowns() {
@@ -3735,7 +3722,6 @@
                     spriteStyleSelect.appendChild(option);
                 }
             });
-
             // Themes
             Object.entries(customThemes).forEach(([id, theme]) => {
                 if (!spriteThemeSelect.querySelector(`option[value="${id}"]`)) {
@@ -3771,104 +3757,89 @@
         // Update uploaded list
         function updateUploadList() {
             uploadedSpritesList.innerHTML = '';
-
             Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
                 const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>Jerry: ${sprite.name}</span>
-                    <button onclick="deleteSprite('jerry', '${id}', '${sprite.name}')">Delete</button>
-                `;
+                li.innerHTML = `<span>Jerry: ${sprite.name}</span>
+                    <button onclick="deleteSprite('jerry','${id}','${sprite.name}')">Delete</button>`;
                 uploadedSpritesList.appendChild(li);
             });
-
+            Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>Pet: ${sprite.name}</span>
+                    <button onclick="deleteSprite('pet','${id}','${sprite.name}')">Delete</button>`;
+                uploadedSpritesList.appendChild(li);
+            });
             Object.entries(customThemes).forEach(([id, theme]) => {
                 const li = document.createElement('li');
-                li.innerHTML = `
-                    <span>Theme: ${theme.name}</span>
-                    <button onclick="deleteTheme('${id}', '${theme.name}')">Delete</button>
-                `;
+                li.innerHTML = `<span>Theme: ${theme.name}</span>
+                    <button onclick="deleteTheme('${id}','${theme.name}')">Delete</button>`;
                 uploadedSpritesList.appendChild(li);
             });
         }
 
-        // Global delete functions
+        // Delete functions
         window.deleteSprite = function(category, id, name) {
             if (!confirm(`Delete sprite "${name}"?`)) return;
             delete customSprites[category][id];
             if (category === 'jerry') delete jerrySprites[id];
             else delete petSprites[id];
-
             saveToLocalStorage('customSprites', customSprites);
-
-            const option = spriteStyleSelect.querySelector(`option[value="${id}"]`);
-            if (option) option.remove();
 
             if (appState.jerry.currentSprite === id) {
                 appState.jerry.currentSprite = 'default';
                 spriteStyleSelect.value = 'default';
-                localStorage.setItem('jerryCurrentSprite', 'default');
+                localStorage.setItem('jerryCurrentSprite','default');
                 updateJerrySprite();
             }
-
+            populateDropdowns();
             updateUploadList();
         };
-
         window.deleteTheme = function(id, name) {
             if (!confirm(`Delete theme "${name}"?`)) return;
             delete customThemes[id];
             saveToLocalStorage('customThemes', customThemes);
 
-            const option = spriteThemeSelect.querySelector(`option[value="${id}"]`);
-            if (option) option.remove();
-
             if (appState.spriteTheme === id) {
                 appState.spriteTheme = 'default';
                 spriteThemeSelect.value = 'default';
-                localStorage.setItem('spriteTheme', 'default');
+                localStorage.setItem('spriteTheme','default');
                 updateJerrySprite();
             }
-
+            populateDropdowns();
             updateUploadList();
         };
 
-        // Handle file upload
+        // Handle file
         async function handleFile(file) {
             if (!file) return;
             try {
                 const text = await file.text();
-                const data = JSON.parse(text);
+                let data = JSON.parse(text);
 
-                // Reset pending
+                // Normalize: support array of sprites/themes or object with sprite/theme key
+                if (Array.isArray(data)) {
+                    data = { sprites: data }; // assume sprite array
+                }
+
                 pendingUpload = null;
 
-                if (data.sprites && data.sprites.length) {
-                    const sprite = data.sprites[0];
-                    if (sprite && (Array.isArray(sprite.data) || Array.isArray(sprite[0]))) {
-                        pendingUpload = { type: 'sprite', data: sprite.data || sprite };
-                        nameInput.value = sprite.name || '';
-                        categorySelect.style.display = 'block';
-                    }
-                } else if (data.sprite) {
-                    const sprite = data.sprite;
-                    if (sprite && (Array.isArray(sprite.data) || Array.isArray(sprite[0]))) {
-                        pendingUpload = { type: 'sprite', data: sprite.data || sprite };
-                        nameInput.value = sprite.name || '';
-                        categorySelect.style.display = 'block';
-                    }
-                } else if (data.themes || data.theme) {
-                    const theme = (data.themes && data.themes[0]) || data.theme;
-                    pendingUpload = { type: 'theme', data: theme.data || theme };
-                    nameInput.value = theme.name || '';
-                    categorySelect.style.display = 'none'; // category not needed for themes
+                // Sprite
+                let spriteData = data.sprite || (data.sprites && data.sprites[0]);
+                if (spriteData && (Array.isArray(spriteData.data) || Array.isArray(spriteData))) {
+                    pendingUpload = { type: 'sprite', data: spriteData.data || spriteData, name: spriteData.name || '' };
+                    nameInput.value = pendingUpload.name;
+                    categorySelect.style.display = 'block';
+                }
+                // Theme
+                let themeData = data.theme || (data.themes && data.themes[0]);
+                if (!pendingUpload && themeData && (themeData.data || typeof themeData === 'object')) {
+                    pendingUpload = { type: 'theme', data: themeData.data || themeData, name: themeData.name || '' };
+                    nameInput.value = pendingUpload.name;
+                    categorySelect.style.display = 'none';
                 }
 
-                if (pendingUpload) {
-                    uploadInputs.style.display = 'block';
-                    nameInput.focus();
-                } else {
-                    alert('No valid sprite or theme found.');
-                }
-
+                if (pendingUpload) uploadInputs.style.display = 'block';
+                else alert('No valid sprite or theme found.');
             } catch (err) {
                 alert('Error reading file: ' + err.message);
             } finally {
@@ -3904,19 +3875,18 @@
             uploadInputs.style.display = 'none';
         });
 
-        // File upload events
+        // Drag & drop / click
         spriteUploadZone.addEventListener('click', () => spriteFileInput.click());
         spriteFileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
         spriteUploadZone.addEventListener('dragover', (e) => { e.preventDefault(); spriteUploadZone.classList.add('dragover'); });
         spriteUploadZone.addEventListener('dragleave', () => spriteUploadZone.classList.remove('dragover'));
         spriteUploadZone.addEventListener('drop', (e) => { e.preventDefault(); spriteUploadZone.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
 
-        // Initialize dropdowns and uploaded list
         populateDropdowns();
         updateUploadList();
-
         if (typeof loadPetSettings === 'function') loadPetSettings();
     }
+
 
         // === Chat Functions ===
         async function sendMessage() {
@@ -5105,7 +5075,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     const swCode = `
-                        const CACHE_NAME = 'jerry-pwa-v20';
+                        const CACHE_NAME = 'jerry-pwa-v21';
                         const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
                             event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
