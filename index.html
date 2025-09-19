@@ -4571,6 +4571,41 @@
             observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
         });
 
+        function renderJournalEntries() {
+            const journalContainer = document.getElementById('journalEntries');
+            if (!journalContainer) return;
+        
+            journalContainer.innerHTML = '';
+        
+            appState.journal.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'journal-entry';
+                entryDiv.style.cursor = 'pointer';
+                entryDiv.style.marginBottom = '8px';
+                entryDiv.style.padding = '6px';
+                entryDiv.style.border = '1px solid rgba(0,0,0,0.1)';
+                entryDiv.style.borderRadius = '4px';
+                entryDiv.style.background = 'rgba(255,255,255,0.05)';
+                entryDiv.style.transition = 'background 0.2s';
+        
+                const timestamp = new Date(entry.timestamp).toLocaleString();
+                const fullText = entry.content;
+                const truncated = fullText.length > 100 ? fullText.slice(0, 100) + '…' : fullText;
+        
+                entryDiv.textContent = `${timestamp}: ${truncated}`;
+        
+                if (fullText.length > 100) {
+                    let expanded = false;
+                    entryDiv.addEventListener('click', () => {
+                        expanded = !expanded;
+                        entryDiv.textContent = `${timestamp}: ${expanded ? fullText : truncated}`;
+                    });
+                }
+        
+                journalContainer.appendChild(entryDiv);
+            });
+        }
+
         // Initialize journal if it doesn't exist
         if (!appState.journal) appState.journal = [];
 
@@ -5122,30 +5157,29 @@
 
         function fixPWAInputs() {
             const inputs = document.querySelectorAll('input, textarea');
-    
+        
             inputs.forEach(input => {
-                input.addEventListener('touchstart', function(e) {
-                    setTimeout(() => {
-                        this.focus();
-                        this.click();
-                    }, 50);
-                }, { passive: true });
-                input.addEventListener('click', function(e) {
-                    setTimeout(() => this.focus(), 10);
+                input.addEventListener('focus', () => {
+                    // Force scroll into view
+                    setTimeout(() => input.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+                });
+                input.addEventListener('touchstart', () => {
+                    setTimeout(() => input.focus(), 50);
                 });
             });
-    
-            // Add Enter key handling for chat input specifically
+        
+            // Chat input handling
             const chatInput = document.getElementById('chatInput');
             if (chatInput) {
-                chatInput.addEventListener('keydown', function(event) {
-                    if (event.key === 'Enter' && !event.shiftKey) {
-                        event.preventDefault();
+                chatInput.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
                         sendMessage();
                     }
                 });
             }
         }
+
         
         // =======================
         // Async App Initialization
