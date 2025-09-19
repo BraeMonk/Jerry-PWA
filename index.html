@@ -3680,12 +3680,12 @@
             // Merge custom sprites safely
             Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
                 if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
-                    if (!jerrySprites[id]) jerrySprites[id] = sprite.data;
+                    jerrySprites[id] = sprite.data;
                 } else delete customSprites.jerry[id];
             });
             Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => {
                 if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
-                    if (!petSprites[id]) petSprites[id] = sprite.data;
+                    petSprites[id] = sprite.data;
                 } else delete customSprites.pet[id];
             });
 
@@ -3710,20 +3710,21 @@
 
             let pendingUpload = null;
 
+            // Populate dropdowns including built-in sprites
             function populateDropdowns() {
-                // Clear existing options to avoid duplicates
+                // Clear existing options
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
 
-                // Jerry sprites
-                Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
+                // Include all Jerry sprites (built-in + custom)
+                Object.entries(jerrySprites).forEach(([id, data]) => {
                     const option = document.createElement('option');
                     option.value = id;
-                    option.textContent = sprite.name;
+                    option.textContent = (customSprites.jerry[id]?.name) || id;
                     spriteStyleSelect.appendChild(option);
                 });
 
-                // Themes
+                // Include themes
                 Object.entries(customThemes).forEach(([id, theme]) => {
                     const option = document.createElement('option');
                     option.value = id;
@@ -3731,7 +3732,7 @@
                     spriteThemeSelect.appendChild(option);
                 });
 
-                // Ensure defaults exist
+                // Ensure default options exist
                 if (!spriteStyleSelect.querySelector('option[value="default"]')) {
                     const defaultOption = document.createElement('option');
                     defaultOption.value = 'default';
@@ -3777,10 +3778,13 @@
                 if (category === 'jerry') delete jerrySprites[id];
                 else delete petSprites[id];
                 saveToLocalStorage('customSprites', customSprites);
+
                 if (appState.jerry.currentSprite === id) {
                     appState.jerry.currentSprite = 'default';
+                    localStorage.setItem('jerryCurrentSprite', 'default');
                     updateJerrySprite();
                 }
+
                 populateDropdowns();
                 updateUploadList();
             };
@@ -3789,10 +3793,13 @@
                 if (!confirm(`Delete theme "${name}"?`)) return;
                 delete customThemes[id];
                 saveToLocalStorage('customThemes', customThemes);
+
                 if (appState.spriteTheme === id) {
                     appState.spriteTheme = 'default';
+                    localStorage.setItem('spriteTheme', 'default');
                     updateJerrySprite();
                 }
+
                 populateDropdowns();
                 updateUploadList();
             };
@@ -3803,11 +3810,9 @@
                     const text = await file.text();
                     let data = JSON.parse(text);
 
-                    // Normalize: array becomes object
                     if (Array.isArray(data)) data = { sprites: data };
                     pendingUpload = null;
 
-                    // Sprite first
                     let spriteData = data.sprite || (data.sprites && data.sprites[0]);
                     if (spriteData && (Array.isArray(spriteData.data) || Array.isArray(spriteData))) {
                         pendingUpload = { type: 'sprite', data: spriteData.data || spriteData, name: spriteData.name || '' };
@@ -3815,7 +3820,6 @@
                         categorySelect.style.display = 'block';
                     }
 
-                    // Theme if no sprite
                     let themeData = data.theme || (data.themes && data.themes[0]);
                     if (!pendingUpload && themeData && (themeData.data || typeof themeData === 'object')) {
                         pendingUpload = { type: 'theme', data: themeData.data || themeData, name: themeData.name || '' };
@@ -3889,43 +3893,44 @@
         }
 
 
+
         // === Chat Functions ===
-    async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const message = input.value.trim();
-        if (!message) return;
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
 
-        // Add user message
-        addMessageToChat('user', message, 'user');
-        input.value = '';
+            // Add user message
+            addMessageToChat('user', message, 'user');
+            input.value = '';
 
-        // Add to history
-        appState.chatHistory.push({ role: 'user', content: message });
+            // Add to history
+            appState.chatHistory.push({ role: 'user', content: message });
 
-        // Add thinking indicator and keep reference
-        const thinkingDiv = addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
+            // Add thinking indicator and keep reference
+            const thinkingDiv = addMessageToChat('assistant', 'Thinking...', 'jerry thinking');
 
-        try {
-            const response = await getAIResponse(message);
+            try {
+                const response = await getAIResponse(message);
 
-            // Replace "Thinking..." with actual response
-            thinkingDiv.innerHTML = `<strong>${appState.botName || 'Jerry'}:</strong> ${response}`;
-            thinkingDiv.classList.remove('thinking');
+                // Replace "Thinking..." with actual response
+                thinkingDiv.innerHTML = `<strong>${appState.botName || 'Jerry'}:</strong> ${response}`;
+                thinkingDiv.classList.remove('thinking');
 
-            // Keep chat history within limit
-            const MAX_CHAT_HISTORY = 20;
-            if (appState.chatHistory.length > MAX_CHAT_HISTORY) {
-                appState.chatHistory = appState.chatHistory.slice(-MAX_CHAT_HISTORY);
+                // Keep chat history within limit
+                const MAX_CHAT_HISTORY = 20;
+                if (appState.chatHistory.length > MAX_CHAT_HISTORY) {
+                    appState.chatHistory = appState.chatHistory.slice(-MAX_CHAT_HISTORY);
+                }
+
+            } catch (error) {
+                console.error('sendMessage error:', error);
+
+                // Replace thinking indicator with fallback response
+                thinkingDiv.innerHTML = `<strong>${appState.botName || 'Jerry'}:</strong> ${getFallbackResponse(message)}`;
+                thinkingDiv.classList.remove('thinking');
             }
-
-        } catch (error) {
-            console.error('sendMessage error:', error);
-
-            // Replace thinking indicator with fallback response
-            thinkingDiv.innerHTML = `<strong>${appState.botName || 'Jerry'}:</strong> ${getFallbackResponse(message)}`;
-            thinkingDiv.classList.remove('thinking');
         }
-    }
 
 
         /**
@@ -5077,7 +5082,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     const swCode = `
-                        const CACHE_NAME = 'jerry-pwa-v22';
+                        const CACHE_NAME = 'jerry-pwa-v23';
                         const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
                             event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
