@@ -3955,19 +3955,24 @@
             
             if (petStyle) {
                 petStyle.addEventListener('change', () => {
-                    renderPetPreview();
-                    updateStickyPet();
-                    savePetSettings();
+                    appState.pet.currentSprite = petStyle.value;        // update state
+                    localStorage.setItem('petCurrentSprite', petStyle.value); // persist
+                    renderPetPreview();                                 // update preview
+                    updateStickyPet();                                  // update main pet
+                    savePetSettings();                                  // save settings
                 });
             }
             
             if (petTheme) {
                 petTheme.addEventListener('change', () => {
+                    appState.pet.theme = petTheme.value;
+                    localStorage.setItem('petTheme', petTheme.value);
                     renderPetPreview();
                     updateStickyPet();
                     savePetSettings();
                 });
             }
+
 
             updateUploadList();
             loadPetSettings();
