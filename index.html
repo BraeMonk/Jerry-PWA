@@ -3791,6 +3791,44 @@
                 });
             }
 
+            function populatePetOptions() {
+                const styleSelect = document.getElementById('petStyle');
+                const themeSelect = document.getElementById('petTheme');
+            
+                if (!styleSelect || !themeSelect) return;
+            
+                // Clear existing options
+                styleSelect.innerHTML = '';
+                themeSelect.innerHTML = '';
+            
+                // Add default "none" option
+                const noneOption = document.createElement('option');
+                noneOption.value = 'none';
+                noneOption.textContent = 'None';
+                styleSelect.appendChild(noneOption);
+            
+                // Add all pet styles
+                Object.keys(petSprites).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+                    styleSelect.appendChild(option);
+                });
+            
+                // Add all themes
+                const allThemes = [
+                    'default', 'candy', 'ocean', 'ember', 'meadow', 'neon', 'pastel', 
+                    'gothic', 'aurora', 'retroPixel', 'fantasySprite'
+                ];
+            
+                allThemes.forEach(themeName => {
+                    const option = document.createElement('option');
+                    option.value = themeName;
+                    option.textContent = themeName.charAt(0).toUpperCase() + themeName.slice(1);
+                    themeSelect.appendChild(option);
+                });
+            }
+
             function updateUploadList() {
                 if (!uploadedSpritesList) return;
                 
@@ -3908,6 +3946,7 @@
 
             // Initialize UI
             populateDropdowns();
+            populatePetOptions();
             updateUploadList();
             loadPetSettings();
         }
