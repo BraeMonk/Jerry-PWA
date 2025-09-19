@@ -3670,12 +3670,12 @@
         function loadPetSettings() {
             const styleSelect = document.getElementById('petStyle');
             const themeSelect = document.getElementById('petTheme');
-
+        
             if (!styleSelect || !themeSelect) {
                 console.warn('Pet select elements not found');
                 return;
             }
-
+        
             let saved = {};
             try {
                 saved = JSON.parse(localStorage.getItem('petSettings')) || {};
@@ -3683,10 +3683,21 @@
                 console.warn('Failed to load pet settings:', error);
                 saved = {};
             }
-
-            styleSelect.value = saved.style || 'none';
-            themeSelect.value = saved.theme || 'default';
-
+        
+            // Only use saved style if it exists in petSprites
+            const savedStyle = saved.style && petSprites[saved.style] ? saved.style : 'none';
+            const savedTheme = saved.theme || 'default';
+        
+            // Apply values to selects
+            styleSelect.value = savedStyle;
+            themeSelect.value = savedTheme;
+        
+            // Update appState for global reference
+            appState.pet = appState.pet || {};
+            appState.pet.currentSprite = savedStyle;
+            appState.pet.theme = savedTheme;
+        
+            // Render both preview and sticky pet
             renderPetPreview();
             updateStickyPet();
         }
@@ -3957,34 +3968,41 @@
 
             // Initialize UI
             populateDropdowns();
-            populatePetOptions();
+            populatePetOptions(); // fill dropdowns first
 
+            // Load saved settings first
+            loadPetSettings();
+            
+            // Pet select elements
             const petStyle = document.getElementById('petStyle');
             const petTheme = document.getElementById('petTheme');
             
+            // Event listeners for changes
             if (petStyle) {
                 petStyle.addEventListener('change', () => {
-                    appState.pet.currentSprite = petStyle.value;        // update state
-                    localStorage.setItem('petCurrentSprite', petStyle.value); // persist
-                    renderPetPreview();                                 // update preview
-                    updateStickyPet();                                  // update main pet
-                    savePetSettings();                                  // save settings
+                    const style = petStyle.value;
+                    appState.pet.currentSprite = style;
+                    localStorage.setItem('petSettings', JSON.stringify({ style, theme: appState.pet.theme || 'default' }));
+                    renderPetPreview();
+                    updateStickyPet();
                 });
             }
             
             if (petTheme) {
                 petTheme.addEventListener('change', () => {
-                    appState.pet.theme = petTheme.value;
-                    localStorage.setItem('petTheme', petTheme.value);
+                    const theme = petTheme.value;
+                    appState.pet.theme = theme;
+                    localStorage.setItem('petSettings', JSON.stringify({ style: appState.pet.currentSprite || 'none', theme }));
                     renderPetPreview();
                     updateStickyPet();
-                    savePetSettings();
                 });
             }
+            
+            // Finally, render sticky pet in case saved values exist
+            updateStickyPet();
 
 
             updateUploadList();
-            loadPetSettings();
         }
 
 
