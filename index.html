@@ -265,8 +265,7 @@
             display: none;
             padding: 20px;
             min-height: calc(100vh - 120px);
-            overflow-y: visible;
-            -webkit-overflow-scrolling: auto;
+            -webkit-overflow-scrolling: touch;
             overflow-y: auto;
             transform: none;
         }
@@ -1357,16 +1356,6 @@
                 #ff7e5f 20px
             );
             border-radius: 4px;
-        }
-
-        .form-input,
-        .form-textarea,
-        #journalInput,
-        .chat-input,
-        textarea,
-        input {
-            position: relative;
-            z-index: 1000; /* safely above any sprites/backgrounds */
         }
 
         #petContainer {
