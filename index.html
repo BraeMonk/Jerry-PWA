@@ -5247,56 +5247,6 @@
             splash.remove();
         }
 
-        function enableMobileKeyboardFix() {
-            const inputs = document.querySelectorAll('input, textarea');
-
-            inputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    // Hide overlay if active
-                    if (window.radialOverlay?.classList.contains('active')) {
-                        radialOverlay.style.display = 'none';
-                    }
-
-                    // Delay scrolling so keyboard animation is done
-                    setTimeout(() => {
-                        const rect = input.getBoundingClientRect();
-                        const scrollY = window.scrollY || window.pageYOffset;
-                        const yOffset = 10; // space from top
-                        window.scrollTo({
-                            top: rect.top + scrollY - yOffset,
-                            behavior: 'smooth'
-                        });
-                    }, 300); // 300ms is usually enough
-                });
-
-                input.addEventListener('touchend', (e) => {
-                    if (document.activeElement !== input) {
-                        if (window.radialOverlay?.classList.contains('active')) {
-                            radialOverlay.style.display = 'none';
-                        }
-                        input.focus({ preventScroll: true });
-                    }
-                });
-
-                input.addEventListener('blur', () => {
-                    if (window.radialMenu?.classList.contains('open')) {
-                        radialOverlay.style.display = 'block';
-                    }
-                });
-            });
-
-            // Chat input: handle enter key
-            const chatInput = document.getElementById('chatInput');
-            if (chatInput) {
-                chatInput.addEventListener('keydown', e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage();
-                    }
-                });
-            }
-        }
-
         // =======================
         // Async App Initialization
         // =======================
@@ -5405,7 +5355,6 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await fadeSplash();  // show splash first
             await initializeApp();  // then initialize the app
-            enableMobileKeyboardFix();
         });
 
     </script>
