@@ -3668,39 +3668,55 @@
         }
 
         function loadPetSettings() {
-            const styleSelect = document.getElementById('petStyle');
-            const themeSelect = document.getElementById('petTheme');
+            const styleElement = document.getElementById('petStyle');
+            const themeElement = document.getElementById('petTheme');
         
-            if (!styleSelect || !themeSelect) {
-                console.warn('Pet select elements not found');
-                return;
+            if (!styleElement || !themeElement) return;
+        
+            // Clear existing options
+            styleElement.innerHTML = '';
+            themeElement.innerHTML = '';
+        
+            // Populate sprite styles
+            styleElement.appendChild(new Option('None', 'none'));
+            for (const key in petSprites) {
+                styleElement.appendChild(new Option(key, key));
             }
         
-            let saved = {};
-            try {
-                saved = JSON.parse(localStorage.getItem('petSettings')) || {};
-            } catch (error) {
-                console.warn('Failed to load pet settings:', error);
-                saved = {};
+            // Populate themes
+            const availableThemes = [
+                'default', 'candy', 'ocean', 'ember', 'meadow', 'neon', 
+                'pastel', 'gothic', 'aurora', 'retroPixel', 'fantasySprite'
+            ];
+            for (const theme of availableThemes) {
+                themeElement.appendChild(new Option(theme, theme));
             }
         
-            // Only use saved style if it exists in petSprites
-            const savedStyle = saved.style && petSprites[saved.style] ? saved.style : 'none';
-            const savedTheme = saved.theme || 'default';
+            // Load saved settings
+            const savedStyle = localStorage.getItem('petStyle') || 'miniJerry';
+            const savedTheme = localStorage.getItem('petTheme') || 'default';
         
-            // Apply values to selects
-            styleSelect.value = savedStyle;
-            themeSelect.value = savedTheme;
+            styleElement.value = petSprites[savedStyle] ? savedStyle : 'miniJerry';
+            themeElement.value = availableThemes.includes(savedTheme) ? savedTheme : 'default';
         
-            // Update appState for global reference
-            appState.pet = appState.pet || {};
-            appState.pet.currentSprite = savedStyle;
-            appState.pet.theme = savedTheme;
-        
-            // Render both preview and sticky pet
+            // Initial render
             renderPetPreview();
             updateStickyPet();
+        
+            // Update preview on change
+            styleElement.addEventListener('change', () => {
+                renderPetPreview();
+                updateStickyPet();
+                localStorage.setItem('petStyle', styleElement.value);
+            });
+        
+            themeElement.addEventListener('change', () => {
+                renderPetPreview();
+                updateStickyPet();
+                localStorage.setItem('petTheme', themeElement.value);
+            });
         }
+
 
         function initializePetSystem() {
             if (document.readyState === 'loading') {
