@@ -3677,7 +3677,7 @@
             let customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
             let customThemes = getFromLocalStorage('customThemes', {});
 
-            // Merge custom sprites safely
+            // Merge custom sprites into the built-ins
             Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
                 if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
                     jerrySprites[id] = sprite.data;
@@ -3689,11 +3689,14 @@
                 } else delete customSprites.pet[id];
             });
 
+            // Merge custom themes into built-in themes object
+            const allThemes = Object.assign({}, defaultThemes || { default: { name: 'Default', data: {} } }, customThemes);
+
             // Validate appState
             if (!jerrySprites[appState.jerry.currentSprite]) appState.jerry.currentSprite = 'default';
-            if (!customThemes[appState.spriteTheme]) appState.spriteTheme = 'default';
+            if (!allThemes[appState.spriteTheme]) appState.spriteTheme = 'default';
 
-            // Save cleaned data
+            // Save cleaned custom data
             saveToLocalStorage('customSprites', customSprites);
             saveToLocalStorage('customThemes', customThemes);
 
@@ -3710,41 +3713,26 @@
 
             let pendingUpload = null;
 
-            // Populate dropdowns including built-in sprites
             function populateDropdowns() {
-                // Clear existing options
+                // Clear previous options
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
 
-                // Include all Jerry sprites (built-in + custom)
+                // Populate Jerry sprites (built-in + custom)
                 Object.entries(jerrySprites).forEach(([id, data]) => {
                     const option = document.createElement('option');
                     option.value = id;
-                    option.textContent = (customSprites.jerry[id]?.name) || id;
+                    option.textContent = id === 'default' ? 'Default' : (customSprites.jerry[id]?.name || id);
                     spriteStyleSelect.appendChild(option);
                 });
 
-                // Include themes
-                Object.entries(customThemes).forEach(([id, theme]) => {
+                // Populate themes
+                Object.entries(allThemes).forEach(([id, theme]) => {
                     const option = document.createElement('option');
                     option.value = id;
-                    option.textContent = theme.name;
+                    option.textContent = theme.name || id;
                     spriteThemeSelect.appendChild(option);
                 });
-
-                // Ensure default options exist
-                if (!spriteStyleSelect.querySelector('option[value="default"]')) {
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = 'default';
-                    defaultOption.textContent = 'Default';
-                    spriteStyleSelect.prepend(defaultOption);
-                }
-                if (!spriteThemeSelect.querySelector('option[value="default"]')) {
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = 'default';
-                    defaultOption.textContent = 'Default';
-                    spriteThemeSelect.prepend(defaultOption);
-                }
 
                 spriteStyleSelect.value = appState.jerry.currentSprite;
                 spriteThemeSelect.value = appState.spriteTheme;
@@ -3752,18 +3740,21 @@
 
             function updateUploadList() {
                 uploadedSpritesList.innerHTML = '';
+
                 Object.entries(customSprites.jerry || {}).forEach(([id, sprite]) => {
                     const li = document.createElement('li');
                     li.innerHTML = `<span>Jerry: ${sprite.name}</span>
                         <button onclick="deleteSprite('jerry','${id}','${sprite.name}')">Delete</button>`;
                     uploadedSpritesList.appendChild(li);
                 });
+
                 Object.entries(customSprites.pet || {}).forEach(([id, sprite]) => {
                     const li = document.createElement('li');
                     li.innerHTML = `<span>Pet: ${sprite.name}</span>
                         <button onclick="deleteSprite('pet','${id}','${sprite.name}')">Delete</button>`;
                     uploadedSpritesList.appendChild(li);
                 });
+
                 Object.entries(customThemes).forEach(([id, theme]) => {
                     const li = document.createElement('li');
                     li.innerHTML = `<span>Theme: ${theme.name}</span>
@@ -3778,13 +3769,10 @@
                 if (category === 'jerry') delete jerrySprites[id];
                 else delete petSprites[id];
                 saveToLocalStorage('customSprites', customSprites);
-
                 if (appState.jerry.currentSprite === id) {
                     appState.jerry.currentSprite = 'default';
-                    localStorage.setItem('jerryCurrentSprite', 'default');
                     updateJerrySprite();
                 }
-
                 populateDropdowns();
                 updateUploadList();
             };
@@ -3793,13 +3781,10 @@
                 if (!confirm(`Delete theme "${name}"?`)) return;
                 delete customThemes[id];
                 saveToLocalStorage('customThemes', customThemes);
-
                 if (appState.spriteTheme === id) {
                     appState.spriteTheme = 'default';
-                    localStorage.setItem('spriteTheme', 'default');
                     updateJerrySprite();
                 }
-
                 populateDropdowns();
                 updateUploadList();
             };
@@ -3891,7 +3876,6 @@
             updateJerrySprite();
             if (typeof loadPetSettings === 'function') loadPetSettings();
         }
-
 
 
         // === Chat Functions ===
