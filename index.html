@@ -718,6 +718,8 @@
             align-items: center;        /* center vertically */
             padding: 8px;               /* optional padding so sprite isn’t flush with edges */
             box-sizing: border-box;     /* include padding in width/height */
+            pointer-events:none;
+            z-index: 1;
         }
 
 
@@ -725,6 +727,7 @@
             position: absolute;
             width: 10px;
             height: 10px;
+            pointer-events: none;
         }
 
         #journal {
