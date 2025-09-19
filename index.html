@@ -2797,55 +2797,121 @@
         updateJerrySprite();
         }
 
+        // =====================
+        // Update Jerry Sprite
+        // =====================
         function updateJerrySprite() {
             try {
+                // Fetch saved values from localStorage
                 const savedSpriteStyle = localStorage.getItem('jerryCurrentSprite');
                 const savedTheme = localStorage.getItem('spriteTheme');
 
+                // Detect light/dark mode
                 const isLightMode = document.body.classList.contains('light-theme');
                 const colorSets = getColorSets(isLightMode);
 
-                const currentSpriteStyle = (savedSpriteStyle && jerrySprites[savedSpriteStyle])
+                // Resolve sprite style safely
+                const currentSpriteStyle = jerrySprites[savedSpriteStyle]
                     ? savedSpriteStyle
-                    : 'default';
+                    : Object.keys(jerrySprites)[0]; // first sprite if saved one missing
 
-                const spriteTheme = (savedTheme && colorSets[savedTheme])
+                // Resolve theme safely
+                const spriteTheme = colorSets[savedTheme]
                     ? savedTheme
-                    : 'default';
+                    : Object.keys(colorSets)[0]; // first available theme
 
+                // Get sprite data
                 let spriteData = jerrySprites[currentSpriteStyle];
                 if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
-                    console.warn('Invalid Jerry sprite data, falling back to default:', currentSpriteStyle);
-                    spriteData = jerrySprites['default'];
+                    console.warn('Invalid Jerry sprite data, falling back to first sprite');
+                    spriteData = jerrySprites[Object.keys(jerrySprites)[0]];
                 }
 
+                // Clone sprite data
                 baseSprite = JSON.parse(JSON.stringify(spriteData));
+                
+                // Get colors for the theme
+                const colors = colorSets[spriteTheme];
 
-                // Resolve theme to actual color array
-                const colors = colorSets[spriteTheme] || colorSets['default'];
-
+                // Render sprite and preview
                 if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, colors);
                 if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, colors);
 
-                // Persist + sync stat
+                // Persist selections
                 localStorage.setItem('jerryCurrentSprite', currentSpriteStyle);
                 localStorage.setItem('spriteTheme', spriteTheme);
+
+                // Sync app state
                 appState.jerry.currentSprite = currentSpriteStyle;
                 appState.spriteTheme = spriteTheme;
+
+                // Sync dropdown (if exists)
+                const spriteSelect = document.getElementById('spriteSelect');
+                if (spriteSelect) spriteSelect.value = currentSpriteStyle;
+                const themeSelect = document.getElementById('themeSelect');
+                if (themeSelect) themeSelect.value = spriteTheme;
+
             } catch (err) {
                 console.error('Failed to update Jerry sprite:', err);
                 fallbackJerry();
             }
         }
 
+        // =====================
+        // Fallback
+        // =====================
         function fallbackJerry() {
-            baseSprite = JSON.parse(JSON.stringify(jerrySprites['default']));
-            const defaultColors = getColorSets(true)['default']; // assuming light mode fallbac
-            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, defaultColors);
-            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, defaultColors);
-            appState.jerry.currentSprite = 'default';
-            appState.spriteTheme = 'default';
+            const firstSprite = Object.keys(jerrySprites)[0];
+            baseSprite = JSON.parse(JSON.stringify(jerrySprites[firstSprite]));
+
+            const isLightMode = document.body.classList.contains('light-theme');
+            const colorSets = getColorSets(isLightMode);
+            const firstTheme = Object.keys(colorSets)[0];
+            const colors = colorSets[firstTheme];
+
+            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, colors);
+            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, colors);
+
+            appState.jerry.currentSprite = firstSprite;
+            appState.spriteTheme = firstTheme;
+
+            localStorage.setItem('jerryCurrentSprite', firstSprite);
+            localStorage.setItem('spriteTheme', firstTheme);
+
+            // Sync dropdowns
+            const spriteSelect = document.getElementById('spriteSelect');
+            if (spriteSelect) spriteSelect.value = firstSprite
+                const themeSelect = document.getElementById('themeSelect');
+            if (themeSelect) themeSelect.value = firstTheme;
         }
+
+        // =====================
+        // Dropdown Event Listeners
+        // =====================
+        const spriteSelect = document.getElementById('spriteSelect');
+        if (spriteSelect) {
+            spriteSelect.addEventListener('change', e => {
+                const selected = e.target.value;
+                localStorage.setItem('jerryCurrentSprite', selected);
+                updateJerrySprite();
+            });
+        }
+
+        const themeSelect = document.getElementById('themeSelect');
+        if (themeSelect) {
+            themeSelect.addEventListener('change', e => {
+                const selected = e.target.value;
+                localStorage.setItem('spriteTheme', selected);
+                updateJerrySprite();
+            });
+        }
+
+        // =====================
+        // Initialize on page load
+        // =====================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateJerrySprite();
+        });
 
 
 
