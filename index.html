@@ -1587,8 +1587,7 @@
                     <div class="message jerry">It's good to see you again.</div>
                 </div>
                 <div class="chat-input-container">
-                    <textarea class="chat-input" id="chatInput" placeholder="Type your message..." 
-                         onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+                    <textarea inputmode="text" class="chat-input" id="chatInput" placeholder="Type your message..." ></textarea>
                     <button class="send-button" onclick="sendMessage()">→</button>
                 </div>
             </div>
@@ -1632,15 +1631,15 @@
             <div id="cbtContent">
                 <div class="form-group">
                     <label class="form-label" for="cbtSituation">What was the situation or event that triggered the difficult feeling?</label>
-                    <textarea class="form-input form-textarea" id="cbtSituation" placeholder="e.g., I had a disagreement with a friend."></textarea>
+                    <textarea inputmode="text" class="form-input form-textarea" id="cbtSituation" placeholder="e.g., I had a disagreement with a friend."></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="cbtEmotions">What emotions did you feel? (e.g., sad, angry, anxious)</label>
-                    <textarea class="form-input form-textarea" id="cbtEmotions" placeholder="List the primary emotions."></textarea>
+                    <textarea inputmode="text" class="form-input form-textarea" id="cbtEmotions" placeholder="List the primary emotions."></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="cbtThoughts">What were the automatic thoughts that went through your mind?</label>
-                    <textarea class="form-input form-textarea" id="cbtThoughts" placeholder="What did you immediately think or believe?"></textarea>
+                    <textarea inputmode="text" class="form-input form-textarea" id="cbtThoughts" placeholder="What did you immediately think or believe?"></textarea>
                 </div>
                 
                 <h3 style="margin: 20px 0 12px;">Which cognitive distortions apply?</h3>
@@ -1752,7 +1751,7 @@
         <div class="screen" id="journalTab">
             <h2 style="margin-bottom: 16px;">Journal</h2>
             <!-- New Entry Input -->
-            <textarea id="journalInput" placeholder="Write your thoughts here..." rows="5"></textarea>
+            <textarea inputmode="text" id="journalInput" placeholder="Write your thoughts here..." rows="5"></textarea>
             <button id="saveJournalEntry">Save Entry</button>
         </div>
 
@@ -1808,7 +1807,7 @@
             <!-- Bot Name Input -->
             <div class="form-group">
                 <label class="form-label" for="botName">Companion Name</label>
-                <input type="text" class="form-input" id="botName" placeholder="Enter a name for your companion.">
+                <input type="text" inputmode="text" class="form-input" id="botName" placeholder="Enter a name for your companion.">
             </div>
 
             <!-- API Configuration Section -->
@@ -1840,7 +1839,7 @@
 
                 <!-- Own API Key Input (shown by default) -->
                 <div id="ownApiSection">
-                    <input type="text" class="form-input" id="apiKey" placeholder="Enter your Google AI Studio API key here.">
+                    <input type="text" inputmode="text" class="form-input" id="apiKey" placeholder="Enter your Google AI Studio API key here.">
                     <div style="font-size: 12px; color: #a0aec0; margin-top: 8px;">
                         Get your free API key at <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #3355d4;">Google AI Studio</a>
                     </div>
@@ -5097,6 +5096,32 @@
             splash.remove();
         }
 
+        function fixPWAInputs() {
+            const inputs = document.querySelectorAll('input, textarea');
+    
+            inputs.forEach(input => {
+                input.addEventListener('touchstart', function(e) {
+                    setTimeout(() => {
+                        this.focus();
+                        this.click();
+                    }, 50);
+                }, { passive: true });
+                input.addEventListener('click', function(e) {
+                    setTimeout(() => this.focus(), 10);
+                });
+            });
+    
+            // Add Enter key handling for chat input specifically
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter' && !event.shiftKey) {
+                        event.preventDefault();
+                        sendMessage();
+                    }
+                });
+            }
+        }
         
         // =======================
         // Async App Initialization
@@ -5206,6 +5231,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await fadeSplash();  // show splash first
             await initializeApp();  // then initialize the app
+            fixPWAInputs();
         });
 
     </script>
