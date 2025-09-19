@@ -2846,9 +2846,9 @@
                 appState.spriteTheme = spriteTheme;
 
                 // Sync dropdown (if exists)
-                const spriteSelect = document.getElementById('spriteSelect');
+                const spriteSelect = document.getElementById('spriteStyle');
                 if (spriteSelect) spriteSelect.value = currentSpriteStyle;
-                const themeSelect = document.getElementById('themeSelect');
+                const themeSelect = document.getElementById('spriteTheme');
                 if (themeSelect) themeSelect.value = spriteTheme;
 
             } catch (err) {
@@ -2879,16 +2879,16 @@
             localStorage.setItem('spriteTheme', firstTheme);
 
             // Sync dropdowns
-            const spriteSelect = document.getElementById('spriteSelect');
+            const spriteSelect = document.getElementById('spriteStyle');
             if (spriteSelect) spriteSelect.value = firstSprite
-                const themeSelect = document.getElementById('themeSelect');
+                const themeSelect = document.getElementById('spriteTheme');
             if (themeSelect) themeSelect.value = firstTheme;
         }
 
         // =====================
         // Dropdown Event Listeners
         // =====================
-        const spriteSelect = document.getElementById('spriteSelect');
+        const spriteSelect = document.getElementById('spriteStyle');
         if (spriteSelect) {
             spriteSelect.addEventListener('change', e => {
                 const selected = e.target.value;
@@ -2897,7 +2897,7 @@
             });
         }
 
-        const themeSelect = document.getElementById('themeSelect');
+        const themeSelect = document.getElementById('spriteTheme');
         if (themeSelect) {
             themeSelect.addEventListener('change', e => {
                 const selected = e.target.value;
