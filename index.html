@@ -3611,7 +3611,7 @@
             const themeColors = getPetThemeColors(theme);
         
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 16); // 16px per pixel
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 10); // 8px per pixel
                 preview.appendChild(petSpriteDiv);
             }
         }
@@ -3637,7 +3637,7 @@
             const themeColors = getPetThemeColors(theme);
         
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 16); // match pixel size
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 8); // match pixel size
                 // Ensure container is fixed at top-right
                 petContainer.style.position = 'fixed';
                 petContainer.style.top = '10px';
