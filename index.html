@@ -2802,11 +2802,9 @@
                 const savedSpriteStyle = localStorage.getItem('jerryCurrentSprite');
                 const savedTheme = localStorage.getItem('spriteTheme');
 
-                // Build theme list dynamically
                 const isLightMode = document.body.classList.contains('light-theme');
                 const colorSets = getColorSets(isLightMode);
 
-                // Validate selections
                 const currentSpriteStyle = (savedSpriteStyle && jerrySprites[savedSpriteStyle])
                     ? savedSpriteStyle
                     : 'default';
@@ -2815,7 +2813,6 @@
                     ? savedTheme
                     : 'default';
 
-                // Sprite data
                 let spriteData = jerrySprites[currentSpriteStyle];
                 if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
                     console.warn('Invalid Jerry sprite data, falling back to default:', currentSpriteStyle);
@@ -2824,11 +2821,13 @@
 
                 baseSprite = JSON.parse(JSON.stringify(spriteData));
 
-                // Render
-                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
-                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
+                // Resolve theme to actual color array
+                const colors = colorSets[spriteTheme] || colorSets['default'];
 
-                // Persist + sync state
+                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, colors);
+                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, colors);
+
+                // Persist + sync stat
                 localStorage.setItem('jerryCurrentSprite', currentSpriteStyle);
                 localStorage.setItem('spriteTheme', spriteTheme);
                 appState.jerry.currentSprite = currentSpriteStyle;
@@ -2841,8 +2840,9 @@
 
         function fallbackJerry() {
             baseSprite = JSON.parse(JSON.stringify(jerrySprites['default']));
-            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, 'default');
-            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, 'default');
+            const defaultColors = getColorSets(true)['default']; // assuming light mode fallbac
+            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, defaultColors);
+            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, defaultColors);
             appState.jerry.currentSprite = 'default';
             appState.spriteTheme = 'default';
         }
