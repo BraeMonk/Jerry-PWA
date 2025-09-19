@@ -286,6 +286,7 @@
             transition: background 0.5s ease;
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
         }
 
         /* Background inside container, above stats */
@@ -538,7 +539,7 @@
             border: 1px solid #4a5568;
             border-radius: 8px;
             color: #e2e8f0;
-            font-size: 16px;
+            font-size: 14px;
             outline: none;
             transition: border-color 0.3s ease;
         }
@@ -718,8 +719,6 @@
             align-items: center;        /* center vertically */
             padding: 8px;               /* optional padding so sprite isn’t flush with edges */
             box-sizing: border-box;     /* include padding in width/height */
-            pointer-events:none;
-            z-index: 1;
         }
 
 
@@ -727,7 +726,6 @@
             position: absolute;
             width: 10px;
             height: 10px;
-            pointer-events: none;
         }
 
         #journal {
@@ -744,7 +742,7 @@
             min-height: 200px;
             width: 100%;
             padding: 16px;
-            font-size: 16px;
+            font-size: 1rem;
             border: 1px solid #4a5568;
             border-radius: 8px;
             background: #2d3748;
@@ -1360,6 +1358,16 @@
             border-radius: 4px;
         }
 
+        .form-input,
+        .form-textarea,
+        #journalInput,
+        .chat-input,
+        textarea,
+        input {
+            position: relative;
+            z-index: 1000; /* safely above any sprites/backgrounds */
+        }
+
         #petContainer {
             position: fixed;
             top: 20px;
@@ -1370,6 +1378,7 @@
             cursor: pointer;
             background: transparent;
             border: none;
+            pointer-events: none;
         }
 
         .pet-sprite {
@@ -1377,6 +1386,7 @@
             height: 100%;
             display: grid;         /* JS sets grid anyway */
             animation: petIdle 2s infinite alternate;
+            pointer-events: auto;
         }
 
         .pet-sprite.pulse {
