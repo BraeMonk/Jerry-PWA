@@ -1586,7 +1586,7 @@
                     <div class="message jerry">It's good to see you again.</div>
                 </div>
                 <div class="chat-input-container">
-                    <textarea class="chat-input" id="chatInput" placeholder="Type your message..." 
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." 
                          onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
                     <button class="send-button" onclick="sendMessage()">→</button>
                 </div>
@@ -1817,7 +1817,7 @@
                 <!-- API Option Selection -->
                 <div class="api-toggle" style="background: #2d3748; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
                     <div class="api-option" style="display: flex; align-items: center; margin-bottom: 12px;">
-                        <input type="radio" name="apiOption" id="useOwnApi" value="own" checked style="margin-right: 12px; transform: scale(1.2);">
+                        <input type="text" name="apiOption" id="useOwnApi" value="own" checked style="margin-right: 12px; transform: scale(1.2);">
                         <label for="useOwnApi" style="flex: 1; cursor: pointer;">
                             Use Your Own API Key
                             <div style="font-size: 12px; color: #a0aec0; margin-top: 4px;">
