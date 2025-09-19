@@ -1485,7 +1485,12 @@
         #spritePreview .pixel {
             pointer-events: none; /* already set, fine to leave */
         }
-        
+
+        input, textarea, select, button {
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 1000 !important;
+        }
         @media (max-width: 480px) {
             .app-container {
                 max-width: 100%;
