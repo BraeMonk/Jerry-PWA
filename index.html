@@ -2834,8 +2834,8 @@
                 const colors = colorSets[spriteTheme];
 
                 // Render sprite and preview
-                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, colors);
-                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, colors);
+                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
+                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
 
                 // Persist selections
                 localStorage.setItem('jerryCurrentSprite', currentSpriteStyle);
@@ -2869,8 +2869,8 @@
             const firstTheme = Object.keys(colorSets)[0];
             const colors = colorSets[firstTheme];
 
-            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, colors);
-            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, colors);
+            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
+            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
 
             appState.jerry.currentSprite = firstSprite;
             appState.spriteTheme = firstTheme;
