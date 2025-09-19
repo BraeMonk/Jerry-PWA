@@ -1426,10 +1426,14 @@
         #petPreview {
             width: 60px;
             height: 60px;
-            background: transparent;   /* Remove background */
-            border: none;              /* Remove border */
-            padding: 0;
-            margin: 0;
+            background: transparent;   /* Keep background clear */
+            border: none;
+            padding: 4px;              /* Add some space around the sprite */
+            margin: 0 auto;            /* Center container horizontally if needed */
+            display: flex;             /* Center sprite inside container */
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;    /* Include padding in width/height */
         }
 
         .upload-zone {
@@ -3611,7 +3615,7 @@
             const themeColors = getPetThemeColors(theme);
         
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 10); // 8px per pixel
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 8); // 8px per pixel
                 preview.appendChild(petSpriteDiv);
             }
         }
@@ -3637,7 +3641,7 @@
             const themeColors = getPetThemeColors(theme);
         
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 8); // match pixel size
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 6); // match pixel size
                 // Ensure container is fixed at top-right
                 petContainer.style.position = 'fixed';
                 petContainer.style.top = '10px';
