@@ -705,15 +705,21 @@
         }
 
         #spritePreview {
-            position: relative;       /* so child .pixel divs can be absolutely positioned */
-            width: 160px;             /* 16 pixels * 10px per pixel */
-            height: 160px;            /* same as above */
+            position: relative;
+            width: 160px;              /* fixed preview size */
+            height: 160px;
             background-color: transparent;
             border: none;
             outline: none;
             box-shadow: none;
             background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
+            display: flex;
+            justify-content: center;    /* center horizontally */
+            align-items: center;        /* center vertically */
+            padding: 8px;               /* optional padding so sprite isn’t flush with edges */
+            box-sizing: border-box;     /* include padding in width/height */
         }
+
 
         #spritePreview .pixel {
             position: absolute;
@@ -3560,36 +3566,43 @@
         // =====================
 
         // Render a pet sprite from array + theme colors
-        function renderPetSprite(spriteArray, colors, pixelSize = 16) {
+        function renderPetSprite(spriteArray, colors, maxSize = 50) {
+            const rows = spriteArray.length;
+            const cols = spriteArray[0].length;
+        
+            // Calculate pixel size to fit sprite inside maxSize
+            const pixelSize = Math.floor(Math.min(maxSize / cols, maxSize / rows));
+        
             const spriteDiv = document.createElement('div');
             spriteDiv.classList.add('pet-sprite', 'pulse');
             spriteDiv.style.display = 'grid';
-            spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, ${pixelSize}px)`;
-            spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, ${pixelSize}px)`;
-            spriteDiv.style.width = `${spriteArray[0].length * pixelSize}px`;
-            spriteDiv.style.height = `${spriteArray.length * pixelSize}px`;
+            spriteDiv.style.gridTemplateColumns = `repeat(${cols}, ${pixelSize}px)`;
+            spriteDiv.style.gridTemplateRows = `repeat(${rows}, ${pixelSize}px)`;
+            spriteDiv.style.width = `${cols * pixelSize}px`;
+            spriteDiv.style.height = `${rows * pixelSize}px`;
             spriteDiv.style.background = 'transparent';
             spriteDiv.style.pointerEvents = 'auto'; // allow click animation
-            
-            for (let y = 0; y < spriteArray.length; y++) {
-                for (let x = 0; x < spriteArray[y].length; x++) {
+            spriteDiv.style.boxSizing = 'border-box';
+        
+            for (let y = 0; y < rows; y++) {
+                for (let x = 0; x < cols; x++) {
                     const pixelValue = spriteArray[y][x];
                     const px = document.createElement('div');
-            
+        
                     px.style.width = `${pixelSize}px`;
                     px.style.height = `${pixelSize}px`;
                     px.style.backgroundColor = pixelValue !== 0 ? colors[pixelValue] : 'transparent';
-            
+        
                     spriteDiv.appendChild(px);
                 }
             }
-            
+        
             // Optional click animation
             spriteDiv.addEventListener('click', () => {
                 spriteDiv.style.transform = 'scale(1.2)';
                 setTimeout(() => spriteDiv.style.transform = '', 200);
             });
-            
+        
             return spriteDiv;
         }
 
@@ -3615,7 +3628,9 @@
             const themeColors = getPetThemeColors(theme);
         
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 8); // 8px per pixel
+                // Use maxSize to scale sprite to fit preview container
+                const maxPreviewSize = Math.min(preview.clientWidth, preview.clientHeight);
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, maxPreviewSize);
                 preview.appendChild(petSpriteDiv);
             }
         }
@@ -3641,7 +3656,10 @@
             const themeColors = getPetThemeColors(theme);
         
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 6); // match pixel size
+                // Use maxSize to scale sprite to fit container
+                const maxContainerSize = Math.min(petContainer.clientWidth, petContainer.clientHeight);
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, maxContainerSize);
+        
                 // Ensure container is fixed at top-right
                 petContainer.style.position = 'fixed';
                 petContainer.style.top = '10px';
