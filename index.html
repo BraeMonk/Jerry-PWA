@@ -1432,34 +1432,43 @@
             margin: 0;
         }
 
-        .upload-zone {
-            border: 2px dashed #aaa;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 10px 0;
-            background: rgba(0,0,0,0.05);
-            transition: background 0.2s, border-color 0.2s;
+        #spriteUploadInputs {
+            display: none;
+            margin-top: 10px;
         }
 
-        .upload-zone.dragover {
-            background: rgba(0, 150, 255, 0.1);
-            border-color: #0096ff;
+        #spriteUploadInputs input[type="text"],
+        #spriteUploadInputs select {
+            width: 100%;
+            padding: 6px 10px;
+            margin-bottom: 5px;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background-color: rgba(0,0,0,0.2);
+            color: #e2e8f0;
+            font-size: 0.9rem;
         }
 
-        #uploadedSpritesList {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
+        body.light-theme #spriteUploadInputs input[type="text"],
+        body.light-theme #spriteUploadInputs select {
+            border: 1px solid #ccc;
+            background-color: rgba(255,255,255,0.8);
+            color: #3e3e3e;
         }
 
-        #uploadedSpritesList li {
-            padding: 5px 10px;
-            margin: 3px 0;
-            background: rgba(0,0,0,0.05);
-            border-radius: 4px;
+        #spriteUploadInputs button {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background-color: #4a90e2;
+            color: white;
+            font-size: 0.9rem;
         }
+
+        #spriteUploadInputs button:hover {
+            opacity: 0.9;
+        }
+
         
         @media (max-width: 480px) {
             .app-container {
