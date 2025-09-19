@@ -5251,30 +5251,33 @@
             const inputs = document.querySelectorAll('input, textarea');
 
             inputs.forEach(input => {
-                // Scroll input into view when focused
                 input.addEventListener('focus', () => {
                     // Hide overlay if active
                     if (window.radialOverlay?.classList.contains('active')) {
                         radialOverlay.style.display = 'none';
                     }
 
-                    // Scroll smoothly to center
+                    // Delay scrolling so keyboard animation is done
                     setTimeout(() => {
-                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 50);
+                        const rect = input.getBoundingClientRect();
+                        const scrollY = window.scrollY || window.pageYOffset;
+                        const yOffset = 10; // space from top
+                        window.scrollTo({
+                            top: rect.top + scrollY - yOffset,
+                            behavior: 'smooth'
+                        });
+                    }, 300); // 300ms is usually enough
                 });
 
-                // Force focus on touchend for mobile PWA
                 input.addEventListener('touchend', (e) => {
                     if (document.activeElement !== input) {
-                        // Hide overlay before focusing
                         if (window.radialOverlay?.classList.contains('active')) {
-                    radialOverlay.style.display = 'none';
+                            radialOverlay.style.display = 'none';
                         }
                         input.focus({ preventScroll: true });
                     }
                 });
-                // Restore overlay on blur
+
                 input.addEventListener('blur', () => {
                     if (window.radialMenu?.classList.contains('open')) {
                         radialOverlay.style.display = 'block';
@@ -5294,8 +5297,6 @@
             }
         }
 
-
-        
         // =======================
         // Async App Initialization
         // =======================
