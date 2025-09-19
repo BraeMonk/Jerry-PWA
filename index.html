@@ -3556,34 +3556,31 @@
         // =====================
 
         // Render a pet sprite from array + theme colors
-        function renderPetSprite(spriteArray, colors) {
+        function renderPetSprite(spriteArray, colors, pixelSize = 16) {
             const spriteDiv = document.createElement('div');
             spriteDiv.classList.add('pet-sprite', 'pulse');
             spriteDiv.style.display = 'grid';
-            spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, 1fr)`;
-            spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, 1fr)`;
-            spriteDiv.style.width = '100%';
-            spriteDiv.style.height = '100%';
+            spriteDiv.style.gridTemplateColumns = `repeat(${spriteArray[0].length}, ${pixelSize}px)`;
+            spriteDiv.style.gridTemplateRows = `repeat(${spriteArray.length}, ${pixelSize}px)`;
+            spriteDiv.style.width = `${spriteArray[0].length * pixelSize}px`;
+            spriteDiv.style.height = `${spriteArray.length * pixelSize}px`;
             spriteDiv.style.background = 'transparent';
-
+            spriteDiv.style.pointerEvents = 'auto'; // allow click animation
+            
             for (let y = 0; y < spriteArray.length; y++) {
                 for (let x = 0; x < spriteArray[y].length; x++) {
                     const pixelValue = spriteArray[y][x];
                     const px = document.createElement('div');
-
-                    if (pixelValue !== 0) {
-                        px.style.backgroundColor = colors[pixelValue];
-                    } else {
-                        px.style.backgroundColor = 'transparent';
-                    }
-
-                    px.style.width = '100%';
-                    px.style.height = '100%';
+            
+                    px.style.width = `${pixelSize}px`;
+                    px.style.height = `${pixelSize}px`;
+                    px.style.backgroundColor = pixelValue !== 0 ? colors[pixelValue] : 'transparent';
+            
                     spriteDiv.appendChild(px);
                 }
             }
-
-            // Quick click animation only (no audio)
+            
+            // Optional click animation
             spriteDiv.addEventListener('click', () => {
                 spriteDiv.style.transform = 'scale(1.2)';
                 setTimeout(() => spriteDiv.style.transform = '', 200);
@@ -3591,6 +3588,7 @@
             
             return spriteDiv;
         }
+
 
         // Render the pet preview in settings
         function renderPetPreview() {
