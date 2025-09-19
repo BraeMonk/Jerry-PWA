@@ -5225,8 +5225,30 @@
                         .catch(() => console.log('ServiceWorker registration failed'));
                 });
             }
-        }
 
+            // --- Mobile Keyboard / Overlay Fix ---
+            const inputs = document.querySelectorAll('input, textarea');
+
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    const overlay = document.getElementById('radialMenuOverlay');
+                    if (overlay && overlay.classList.contains('active')) {
+                        overlay.style.pointerEvents = 'none';
+                    }
+                    setTimeout(() => {
+                        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100)
+                });
+
+                input.addEventListener('blur', () => {
+                    const overlay = document.getElementById('radialMenuOverlay');
+                    if (overlay && overlay.classList.contains('active')) {
+                        overlay.style.pointerEvents = 'auto'
+                    }
+                });
+            });
+        }
+        
         // Initialize splash and app when DOM is loaded
         document.addEventListener('DOMContentLoaded', async () => {
             await fadeSplash();  // show splash first
