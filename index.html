@@ -2985,6 +2985,7 @@
                         pixelDiv.style.backgroundColor = colors[pixel];
                         pixelDiv.style.left = `${x * 10}px`;
                         pixelDiv.style.top = `${y * 10}px`;
+                        pixelDiv.style.pointerEvents = 'none';
                         container.appendChild(pixelDiv);
                     }
                 });
@@ -3031,6 +3032,7 @@
                         px.style.backgroundColor = colors[pixel];
                         px.style.left = `${x * pixelSize}px`;
                         px.style.top = `${y * pixelSize}px`;
+                        px.style.pointerEvents = 'none';
                         previewContainer.appendChild(px);
                     }
                 });
