@@ -1488,6 +1488,97 @@
             pointer-events: none; /* already set, fine to leave */
         }
 
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 2000;
+            overflow-y: auto;
+          }
+        
+          /* Overlay content */
+          .overlay-content {
+            background: #1e293b; /* dark slate default */
+            color: #f1f5f9;
+            max-width: 700px;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+          }
+        
+          /* Open button */
+          .overlay-open-btn {
+            margin: 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            font-size: 1em;
+          }
+        
+          /* Close button */
+          .overlay-close-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            cursor: pointer;
+            border: none;
+            background: #334155;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+          }
+        
+          /* Headings */
+          .overlay h2 {
+            margin-top: 1.5em;
+            border-bottom: 1px solid #475569;
+            padding-bottom: 0.25em;
+          }
+        
+          /* Lists */
+          .overlay ul {
+            margin: 0.5em 0 1.5em;
+            padding-left: 1.2em;
+          }
+
+        /* Light Mode Overrides */
+        body.light-theme .overlay {
+            background: rgba(240, 240, 240, 0.95); /* lighter overlay background */
+        }
+        
+        body.light-theme .overlay-content {
+            background: #ffffff;   /* white card */
+            color: #1f2937;        /* dark text */
+            border: 1px solid #d1d5db; /* subtle border */
+        }
+        
+        body.light-theme .overlay-open-btn {
+            background: #2563eb;   /* keep blue */
+            color: white;
+        }
+        
+        body.light-theme .overlay-close-btn {
+            background: #e3b88d;   /* warm tan for close */
+            color: #3e3e3e;        /* dark text */
+        }
+        
+        body.light-theme .overlay h2 {
+            border-bottom: 1px solid #d1d5db; /* lighter underline for headings */
+        }
+        
+        body.light-theme .overlay ul {
+            color: #1f2937; /* dark text for lists */
+        }
+
+
         @media (max-width: 480px) {
             .app-container {
                 max-width: 100%;
@@ -2098,7 +2189,7 @@
             </div>
             <!-- Rest of your existing settings content -->
             <div style="margin-top: 30px;">
-                <button class="def-button" id="openDBTOverlay">Cheat Sheet</button>
+                <button class="overlay-open-btn" id="openDBTOverlay">Cheat Sheet</button>
             </div>
     
             <div style="margin-top: 30px;">
@@ -2108,6 +2199,42 @@
         </div>
         
         <div class="notification" id="notification"></div>
+        <!-- Overlay -->
+        <div id="dbtDefinitionsOverlay" class="overlay">
+          <div class="overlay-content">
+            <!-- Close Button -->
+            <button id="closeDBTDefinitions" class="overlay-close-btn">&times; Close</button>
+        
+            <!-- DBT Section -->
+            <h2>🌀 DBT Definitions</h2>
+            <ul>
+              <li>🧘 <strong>Mindfulness:</strong> Staying present in the moment, non-judgmentally.</li>
+              <li>🔥 <strong>Distress Tolerance:</strong> Surviving crises without making them worse.</li>
+              <li>🎭 <strong>Emotion Regulation:</strong> Understanding and managing intense emotions.</li>
+              <li>🤝 <strong>Interpersonal Effectiveness:</strong> Balancing your needs with others while maintaining relationships.</li>
+            </ul>
+        
+            <!-- CBT Section -->
+            <h2>🧠 CBT Definitions</h2>
+            <ul>
+              <li>🔍 <strong>Cognitive Distortions:</strong> Biased ways of thinking (e.g., all-or-nothing thinking).</li>
+              <li>📝 <strong>Thought Records:</strong> Tracking situations, thoughts, feelings, and evidence for/against beliefs.</li>
+              <li>🏃 <strong>Behavioral Activation:</strong> Increasing activities that boost mood and motivation.</li>
+              <li>⚡ <strong>Exposure:</strong> Gradually facing fears to reduce avoidance.</li>
+            </ul>
+        
+            <!-- Mental Health Tips Section -->
+            <h2>💡 Mental Health Tips & Tricks</h2>
+            <ul>
+              <li>🌬️ Use <strong>box breathing</strong>: inhale 4s, hold 4s, exhale 4s, hold 4s.</li>
+              <li>🌳 Practice <strong>grounding</strong> with “5-4-3-2-1” senses technique.</li>
+              <li>📖 <strong>Journal daily</strong> for self-reflection and thought awareness.</li>
+              <li>🏃‍♂️ <strong>Movement:</strong> even a 10-minute walk reduces stress and clears the mind.</li>
+              <li>💖 <strong>Self-validation:</strong> remind yourself that your feelings make sense in context.</li>
+            </ul>
+          </div>
+        </div>
+        
 
     <script>
         // Application State
@@ -3607,7 +3734,7 @@
             spriteDiv.style.width = `${cols * pixelSize}px`;
             spriteDiv.style.height = `${rows * pixelSize}px`;
             spriteDiv.style.background = 'transparent';
-            spriteDiv.style.pointerEvents = 'auto'; // allow click animation
+            spriteDiv.style.pointerEvents = 'none'; // allow click animation
             spriteDiv.style.boxSizing = 'border-box';
         
             for (let y = 0; y < rows; y++) {
@@ -5178,12 +5305,17 @@
             const inputs = document.querySelectorAll('input, textarea');
         
             inputs.forEach(input => {
+                // Scroll input into view when focused
                 input.addEventListener('focus', () => {
-                    // Force scroll into view
-                    setTimeout(() => input.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 });
-                input.addEventListener('touchstart', () => {
-                    setTimeout(() => input.focus(), 50);
+        
+                // Ensure keyboard shows on mobile (use touchend, not touchstart)
+                input.addEventListener('touchend', (e) => {
+                    // Only focus if not already focused
+                    if (document.activeElement !== input) {
+                        input.focus();
+                    }
                 });
             });
         
@@ -5198,6 +5330,7 @@
                 });
             }
         }
+
 
         
         // =======================
