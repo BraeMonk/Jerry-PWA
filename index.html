@@ -1430,17 +1430,17 @@
         }
 
         #petPreview {
-            width: 60px;
+            display: flex;
+            justify-content: center;  /* horizontally center */
+            align-items: center;      /* vertically center */
+            width: 60px;              /* fixed preview box */
             height: 60px;
-            background: transparent;   /* Keep background clear */
+            background: transparent;
             border: none;
-            padding: 4px;              /* Add some space around the sprite */
-            margin: 0 auto;            /* Center container horizontally if needed */
-            display: flex;             /* Center sprite inside container */
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;    /* Include padding in width/height */
+            padding: 4px;             /* optional padding around sprite */
+            box-sizing: border-box;
         }
+
 
         .upload-zone {
             border: 2px dashed #aaa;
