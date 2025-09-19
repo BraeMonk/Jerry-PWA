@@ -286,7 +286,6 @@
             transition: background 0.5s ease;
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-            pointer-events: none;
         }
 
         /* Background inside container, above stats */
@@ -1385,6 +1384,7 @@
         input {
             position: relative;
             z-index: 1000; /* safely above any sprites/backgrounds */
+            pointer-events: auto !important;
         }
 
         #petContainer {
@@ -4572,37 +4572,57 @@
         });
 
         function renderJournalEntries() {
-            const journalContainer = document.getElementById('journalEntries');
-            if (!journalContainer) return;
+            const entriesList = document.getElementById('entriesList');
+            if (!entriesList) return;
         
-            journalContainer.innerHTML = '';
+            entriesList.innerHTML = '';
         
-            appState.journal.forEach(entry => {
+            if (!appState.journal || appState.journal.length === 0) {
+                entriesList.innerHTML = '<p style="text-align:center;color:#a0aec0;">No journal entries yet. Write something to see it here!</p>';
+                return;
+            }
+        
+            // Sort newest first
+            const sortedJournal = [...appState.journal].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+            sortedJournal.forEach(entry => {
                 const entryDiv = document.createElement('div');
-                entryDiv.className = 'journal-entry';
-                entryDiv.style.cursor = 'pointer';
-                entryDiv.style.marginBottom = '8px';
-                entryDiv.style.padding = '6px';
-                entryDiv.style.border = '1px solid rgba(0,0,0,0.1)';
-                entryDiv.style.borderRadius = '4px';
-                entryDiv.style.background = 'rgba(255,255,255,0.05)';
-                entryDiv.style.transition = 'background 0.2s';
+                entryDiv.className = 'journalEntry preview';
         
-                const timestamp = new Date(entry.timestamp).toLocaleString();
-                const fullText = entry.content;
-                const truncated = fullText.length > 100 ? fullText.slice(0, 100) + '…' : fullText;
+                const date = new Date(entry.timestamp).toLocaleDateString();
+                const time = new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
-                entryDiv.textContent = `${timestamp}: ${truncated}`;
+                const fullContent = entry.content;
+                const truncatedContent = fullContent.length > 100 ? fullContent.slice(0, 100) + '…' : fullContent;
         
-                if (fullText.length > 100) {
-                    let expanded = false;
-                    entryDiv.addEventListener('click', () => {
-                        expanded = !expanded;
-                        entryDiv.textContent = `${timestamp}: ${expanded ? fullText : truncated}`;
+                entryDiv.innerHTML = `
+                    <div class="entry-date">${date} at ${time}</div>
+                    <div class="entry-content">${truncatedContent}</div>
+                    <button class="delete-entry">Delete</button>
+                `;
+        
+                const contentDiv = entryDiv.querySelector('.entry-content');
+        
+                // Expand/collapse
+                if (fullContent.length > 100) {
+                    entryDiv.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('delete-entry')) return;
+        
+                        const isExpanded = entryDiv.classList.toggle('expanded');
+                        contentDiv.textContent = isExpanded ? fullContent : truncatedContent;
                     });
                 }
         
-                journalContainer.appendChild(entryDiv);
+                // Delete entry
+                entryDiv.querySelector('.delete-entry').addEventListener('click', () => {
+                    if (!confirm('Delete this entry?')) return;
+        
+                    appState.journal = appState.journal.filter(j => j.timestamp !== entry.timestamp);
+                    saveToLocalStorage('hush_journal', appState.journal);
+                    renderJournalEntries();
+                });
+        
+                entriesList.appendChild(entryDiv);
             });
         }
 
