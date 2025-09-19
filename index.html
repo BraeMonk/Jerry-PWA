@@ -3595,48 +3595,56 @@
             const styleElement = document.getElementById('petStyle');
             const themeElement = document.getElementById('petTheme');
             const preview = document.getElementById('petPreview');
-
+        
             if (!styleElement || !themeElement || !preview) {
-                console.warn('Pet elements not found');
+                console.warn('Pet preview elements not found');
                 return;
             }
-
+        
             const style = styleElement.value;
             const theme = themeElement.value;
             preview.innerHTML = '';
-
+        
             if (style === 'none') return;
-
+        
             const spriteData = petSprites[style];
             const themeColors = getPetThemeColors(theme);
-
+        
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors);
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 16); // 16px per pixel
                 preview.appendChild(petSpriteDiv);
             }
         }
-
+        
+        // Render the sticky top-right pet on every page
         function updateStickyPet() {
             const styleElement = document.getElementById('petStyle');
             const themeElement = document.getElementById('petTheme');
             const petContainer = document.getElementById('petContainer');
-
+        
             if (!styleElement || !themeElement || !petContainer) {
-                console.warn('Pet elements not found');
+                console.warn('Pet sticky elements not found');
                 return;
             }
-
+        
             const style = styleElement.value;
             const theme = themeElement.value;
             petContainer.innerHTML = '';
-
+        
             if (style === 'none') return;
-
+        
             const spriteData = petSprites[style];
             const themeColors = getPetThemeColors(theme);
-
+        
             if (spriteData && themeColors) {
-                const petSpriteDiv = renderPetSprite(spriteData, themeColors);
+                const petSpriteDiv = renderPetSprite(spriteData, themeColors, 16); // match pixel size
+                // Ensure container is fixed at top-right
+                petContainer.style.position = 'fixed';
+                petContainer.style.top = '10px';
+                petContainer.style.right = '10px';
+                petContainer.style.zIndex = '9999';
+                petContainer.style.pointerEvents = 'none'; // optional: pass clicks through
+        
                 petContainer.appendChild(petSpriteDiv);
             }
         }
