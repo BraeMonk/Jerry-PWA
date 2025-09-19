@@ -1882,23 +1882,7 @@
             <div style="margin-top: 30px;">
                 <h3 style="margin-bottom: 15px;">Sprite</h3>
             </div>
-            <div id="spriteUploadZone" class="upload-zone">
-                <p>Drag & drop your sprite JSON here or click to upload</p>
-                <input type="file" id="spriteFileInput" accept=".json" hidden>
-            </div>
-
-            <!-- Inline inputs for naming and category -->
-            <div id="spriteUploadInputs" style="display:none; margin-top:10px;">
-                <input type="text" id="spriteNameInputInline" placeholder="Sprite Name" style="width:100%; margin-bottom:5px;">
-                <select id="spriteCategorySelectInline" style="width:100%; margin-bottom:5px;">
-                    <option value="jerry">Jerry</option>
-                    <option value="pet">Pet</option>
-                </select>
-                <button id="spriteUploadSubmitInline" style="width:100%;">Add Sprite</button>
-            </div>
-            <ul id="uploadedSpritesList"></ul>
-            </div>
-            <!-- Rest of your existing settings content -->
+            
             <div class="form-group" style="margin-top: 20px;">
                 <label class="form-label">Sprite Preview</label>
                 <div id="spritePreview" style="width: 100px; height: 100px; position: relative; background: transparent; border: none;"></div>
@@ -2065,6 +2049,24 @@
                     <option value="retroPixel">Retro</option>
                 </select>
             </div>
+
+            <div id="spriteUploadZone" class="upload-zone">
+                <p>Drag & drop your sprite JSON here or click to upload</p>
+                <input type="file" id="spriteFileInput" accept=".json" hidden>
+            </div>
+
+            <!-- Inline inputs for naming and category -->
+            <div id="spriteUploadInputs" style="display:none; margin-top:10px;">
+                <input type="text" id="spriteNameInputInline" placeholder="Sprite Name" style="width:100%; margin-bottom:5px;">
+                <select id="spriteCategorySelectInline" style="width:100%; margin-bottom:5px;">
+                    <option value="jerry">Jerry</option>
+                    <option value="pet">Pet</option>
+                </select>
+                <button id="spriteUploadSubmitInline" style="width:100%;">Add Sprite</button>
+            </div>
+            <ul id="uploadedSpritesList"></ul>
+            </div>
+            <!-- Rest of your existing settings content -->
             <div style="margin-top: 30px;">
                 <button class="def-button" id="openDBTOverlay">Cheat Sheet</button>
             </div>
@@ -5066,7 +5068,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     const swCode = `
-                        const CACHE_NAME = 'jerry-pwa-v23';
+                        const CACHE_NAME = 'jerry-pwa-v24';
                         const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
                             event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
