@@ -3971,26 +3971,30 @@
             // Handle sprite file uploads
             // -----------------------------
             async function handleFile(file) {
-                if (!file || !nameInput) return;
+                if (!file || !nameInput || !categorySelect || !uploadInputs) return;
                 try {
                     const text = await file.text();
                     let data = JSON.parse(text);
-        
+
                     let spriteData = null;
-        
-                    if (data.sprite) spriteData = data.sprite;
-                    else if (Array.isArray(data.sprites) && data.sprites.length > 0) spriteData = data.sprites[0];
-                    else if (Array.isArray(data) && Array.isArray(data[0])) spriteData = { name: "Unnamed Sprite", data: data };
-        
+
+                    if (data.sprite) {
+                        spriteData = data.sprite;
+                    } else if (Array.isArray(data.sprites) && data.sprites.length > 0) {
+                        spriteData = data.sprites[0];
+                    } else if (Array.isArray(data) && Array.isArray(data[0])) {
+                        spriteData = { name: "Unnamed Sprite", data: data };
+                    }
+
                     if (spriteData && Array.isArray(spriteData.data)) {
-                        pendingUpload = { 
-                            type: "sprite", 
-                            data: spriteData.data, 
-                            name: spriteData.name || "Unnamed Sprite" 
+                        pendingUpload = {
+                            type: "sprite",
+                            data: spriteData.data,
+                            name: spriteData.name || "Unnamed Sprite"
                         };
-                        nameInput.value = pendingUpload.name;
-                        if (categorySelect) categorySelect.style.display = "block";
-                        if (uploadInputs) uploadInputs.style.display = "block";
+                        nameInput.value = pendingUpload.name; // initial name, user can change
+                        categorySelect.style.display = "block";
+                        uploadInputs.style.display = "block";
                     } else {
                         console.error("Invalid sprite format:", data);
                         alert("No valid sprite found in file.");
@@ -3999,67 +4003,67 @@
                     console.error("Error parsing file:", err);
                     alert("Error reading file: " + err.message);
                 } finally {
-                    if (spriteFileInput) spriteFileInput.value = "";
+                    if (spriteFileInput) spriteFileInput.value = ""; // reset inpu
                 }
             }
-        
-            // -----------------------------
-            // Upload submit
-            // -----------------------------
+
             if (uploadSubmit) {
                 uploadSubmit.addEventListener('click', () => {
-                    if (!pendingUpload) return alert('No sprite selected for upload.');
+                    if (!pendingUpload) return alert("No sprite selected to upload.");
                     const name = nameInput.value.trim();
                     if (!name) return alert('Please enter a name.');
-        
-                    const category = categorySelect.value || 'pet';
+
+                    const category = categorySelect.value;
                     const id = `${category}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
                     customSprites[category][id] = { name, data: pendingUpload.data };
-        
                     if (category === 'jerry') jerrySprites[id] = pendingUpload.data;
                     else petSprites[id] = pendingUpload.data;
-        
+
                     saveToLocalStorage('customSprites', customSprites);
-        
-                    pendingUpload = null;
+
+                    pendingUpload = null; // clear after successful upload
                     nameInput.value = '';
-                    if (uploadInputs) uploadInputs.style.display = 'none';
-        
+                    categorySelect.style.display = "none";
+                    uploadInputs.style.display = "none";
+
                     populatePetDropdowns();
                     updateUploadList();
                     refreshPetRender();
                 });
             }
-        
-            // -----------------------------
-            // File input + drag/drop
-            // -----------------------------
-            if (spriteUploadZone && spriteFileInput) {
-                spriteFileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-        
-                const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-                if (!isMobile) {
-                    spriteUploadZone.addEventListener('dragover', (e) => {
-                        if (e.dataTransfer?.types?.includes('Files')) {
-                            e.preventDefault();
-                            spriteUploadZone.classList.add('dragover');
-                        }
-                    });
-        
-                                spriteUploadZone.addEventListener('dragleave', (e) => {
-                        if (!spriteUploadZone.contains(e.relatedTarget)) {
-                            spriteUploadZone.classList.remove('dragover');
-                        }
-                    });
-        
-                    spriteUploadZone.addEventListener('drop', (e) => {
-                        if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
-                            e.preventDefault();
-                            spriteUploadZone.classList.remove('dragover');
-                            handleFile(e.dataTransfer.files[0]);
-                        }
-                    });
-                }
+
+            // File input change handler
+            if (spriteFileInput) {
+                spriteFileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                        handleFile(e.target.files[0]);
+                    }
+                });
+            }
+
+            // Drag & drop
+            if (spriteUploadZone) {
+                spriteUploadZone.addEventListener('dragover', (e) => {
+                    if (e.dataTransfer?.types.includes('Files')) {
+                        e.preventDefault();
+                        spriteUploadZone.classList.add('dragover');
+                    }
+                });    
+
+                spriteUploadZone.addEventListener('dragleave', (e) => {
+                    if (!spriteUploadZone.contains(e.relatedTarget)) {
+                        spriteUploadZone.classList.remove('dragover');
+                    }
+                });
+
+                spriteUploadZone.addEventListener('drop', (e) => {
+                    if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+                        e.preventDefault();
+                        spriteUploadZone.classList.remove('dragover');
+                        handleFile(e.dataTransfer.files[0]);
+                    }
+                });
             }
         
             // -----------------------------
