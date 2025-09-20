@@ -4112,7 +4112,12 @@
                         return;
                     }
                     
-                    const name = nameInput ? nameInput.value.trim() : '';
+                    if (!nameInput) {
+                        alert('Name input not found.');
+                        return;
+                    }
+                    
+                    const name = nameInput.value.trim();
                     
                     if (!name) {
                         alert('Please enter a name.');
