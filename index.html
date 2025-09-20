@@ -4143,110 +4143,110 @@
 
             if (uploadSubmit) {
                 uploadSubmit.addEventListener('click', () => {
-        console.log('Upload submit clicked');
-        console.log('pendingUpload:', pendingUpload);
-        console.log('nameInput element:', nameInput);
-        console.log('nameInput value:', nameInput?.value);
+                    console.log('Upload submit clicked');
+                    console.log('pendingUpload:', pendingUpload);
+                    console.log('nameInput element:', nameInput);
+                    console.log('nameInput value:', nameInput?.value);
         
-        if (!pendingUpload) {
-            alert("No sprite selected to upload.");
-            return;
-        }
+                    if (!pendingUpload) {
+                        alert("No sprite selected to upload.");
+                        return;
+                    }
         
-        if (!nameInput) {
-            alert('Name input element not found.');
-            return;
-        }
+                    if (!nameInput) {
+                        alert('Name input element not found.');
+                        return;
+                    }
         
-        const name = nameInput.value ? nameInput.value.trim() : '';
-        console.log('Trimmed name:', name);
+                    const name = nameInput.value ? nameInput.value.trim() : '';
+                    console.log('Trimmed name:', name);
         
-        if (!name) {
-            alert('Please enter a name.');
-            return;
-        }
+                    if (!name) {
+                        alert('Please enter a name.');
+                        return;
+                    }
 
-        const category = categorySelect.value;
-        const id = `${category}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    const category = categorySelect.value;
+                    const id = `${category}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-        // Add to custom sprites storage
-        customSprites[category][id] = { name, data: pendingUpload.data };
+                    // Add to custom sprites storage
+                    customSprites[category][id] = { name, data: pendingUpload.data };
+       
+                    // Add to runtime sprite objects based on category
+                    if (category === 'jerry') {
+                        jerrySprites[id] = pendingUpload.data
+                    } else {
+                        petSprites[id] = pendingUpload.data;
+                    }
+
+                    // Save to localStorage
+                    saveToLocalStorage('customSprites', customSprites);
+
+                    // Clear pending upload and UI
+                    pendingUpload = null;
+                    nameInput.value = '';
+                    categorySelect.style.display = "none";
+                    uploadInputs.style.display = "none";
+
+                    // Update appropriate dropdown based on category
+                    if (category === 'jerry') {
+                        populateSpriteDropdown();
+                        loadSavedSettings(); // Reload settings after repopulating
+                        refreshSpriteRender();
+                    } else {
+                        populatePetDropdown();
+                        loadSavedSettings(); // Reload settings after repopulating
+                        refreshPetRender();
+                    }
         
-        // Add to runtime sprite objects based on category
-        if (category === 'jerry') {
-            jerrySprites[id] = pendingUpload.data;
-        } else {
-            petSprites[id] = pendingUpload.data;
-        }
+                    updateUploadList();
+        
+                    const categoryLabel = category === 'jerry' ? 'Main Character' : 'Pet/Companion';
+                    console.log(`Successfully uploaded sprite "${name}" to ${categoryLabel} category`)
+                });
+            }
 
-        // Save to localStorage
-        saveToLocalStorage('customSprites', customSprites);
+            // File input change handler
+            if (spriteFileInput) {
+                spriteFileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                        handleFile(e.target.files[0]);
+                    }
+                });
+            }
 
-        // Clear pending upload and UI
-        pendingUpload = null;
-        nameInput.value = '';
-        categorySelect.style.display = "none";
-        uploadInputs.style.display = "none";
+            // Drag & drop
+            if (spriteUploadZone) {
+                spriteUploadZone.addEventListener('dragover', (e) => {
+                    if (e.dataTransfer?.types.includes('Files')) {
+                        e.preventDefault();
+                        spriteUploadZone.classList.add('dragover');
+                    }
+                });    
 
-        // Update appropriate dropdown based on category
-        if (category === 'jerry') {
-            populateSpriteDropdown();
-            loadSavedSettings(); // Reload settings after repopulating
+                spriteUploadZone.addEventListener('dragleave', (e) => {
+                    if (!spriteUploadZone.contains(e.relatedTarget)) {
+                        spriteUploadZone.classList.remove('dragover');
+                    }
+                });
+
+                spriteUploadZone.addEventListener('drop', (e) => {
+                    if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
+                        e.preventDefault();
+                        spriteUploadZone.classList.remove('dragover');
+                        handleFile(e.dataTransfer.files[0]);
+                    }
+                });
+            }
+
+            // -----------------------------
+            // Final render
+            // -----------------------------
             refreshSpriteRender();
-        } else {
-            populatePetDropdown();
-            loadSavedSettings(); // Reload settings after repopulating
             refreshPetRender();
+            updateUploadList();
+
         }
-        
-        updateUploadList();
-        
-        const categoryLabel = category === 'jerry' ? 'Main Character' : 'Pet/Companion';
-        console.log(`Successfully uploaded sprite "${name}" to ${categoryLabel} category`);
-    });
-}
-
-// File input change handler
-if (spriteFileInput) {
-    spriteFileInput.addEventListener('change', (e) => {
-        if (e.target.files && e.target.files.length > 0) {
-            handleFile(e.target.files[0]);
-        }
-    });
-}
-
-// Drag & drop
-if (spriteUploadZone) {
-    spriteUploadZone.addEventListener('dragover', (e) => {
-        if (e.dataTransfer?.types.includes('Files')) {
-            e.preventDefault();
-            spriteUploadZone.classList.add('dragover');
-        }
-    });    
-
-    spriteUploadZone.addEventListener('dragleave', (e) => {
-        if (!spriteUploadZone.contains(e.relatedTarget)) {
-            spriteUploadZone.classList.remove('dragover');
-        }
-    });
-
-    spriteUploadZone.addEventListener('drop', (e) => {
-        if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
-            e.preventDefault();
-            spriteUploadZone.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
-        }
-    });
-}
-
-// -----------------------------
-// Final render
-// -----------------------------
-refreshSpriteRender();
-refreshPetRender();
-updateUploadList();
-
-}
 
         // === Chat Functions ===
         async function sendMessage() {
