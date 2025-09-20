@@ -159,6 +159,21 @@
         body.light-theme .screen {
             background-color: #f7ede5;
         }
+
+        /* ============================= */
+        /* Ensure settings inputs receive focus above visuals */
+        /* ============================= */
+        #settings {
+            position: relative;
+            z-index: 10; /* make the settings container above your Jerry visuals */
+        }
+
+        #settings input,
+        #settings select,
+        #settings textarea {
+            position: relative; /* prevent them from being behind anything */
+            z-index: 11;        /* above the settings container */
+        }
         
         /* ============================= */
         /* Jerry Sprite & Container      */
@@ -175,6 +190,12 @@
             transition: background 0.5s ease;
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+        }
+
+        .jerry-visuals {
+            position: relative;
+            pointer-events: none; /* visuals ignore mouse/touch events */
+            width: 100%;
         }
         
         .jerry-background {
@@ -1017,6 +1038,8 @@
             pointer-events: none; /* already set, fine to leave */
         }
 
+        
+
         @media (max-width: 480px) {
             .app-container {
                 max-width: 100%;
@@ -1071,8 +1094,10 @@
         <div class="screen active" id="jerry">
             <div class="jerry-container" id="jerryWrapper">
                 <!--- <div id="jerryHalo"></div> --->
-                <div class="jerry-sprite" id="jerrySprite"></div>
-                <div class="jerry-shadow"></div>
+                <div class="jerry-visuals">
+                    <div class="jerry-sprite" id="jerrySprite"></div>
+                    <div class="jerry-shadow"></div>
+                </div>
                 <div class="jerry-stats">
                     <div class="stat-bar">
                         <div class="stat-label">
