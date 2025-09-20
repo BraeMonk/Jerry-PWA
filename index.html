@@ -3943,23 +3943,40 @@
                 try {
                     const text = await file.text();
                     let data = JSON.parse(text);
-        
-                    if (Array.isArray(data)) data = { sprites: data };
-                    pendingUpload = null;
-        
-                    const spriteData = data.sprite || (data.sprites && data.sprites[0]);
-                    if (spriteData && (Array.isArray(spriteData.data) || Array.isArray(spriteData))) {
-                        pendingUpload = { type: 'sprite', data: spriteData.data || spriteData, name: spriteData.name || '' };
+
+                    let spriteData = null;
+
+                    // Case 1: { "sprite": { name, data } }
+                    if (data.sprite) {
+                        spriteData = data.sprite;
+                    }
+                    // Case 2: { "sprites": [ { name, data }, ... ] }
+                    else if (Array.isArray(data.sprites) && data.sprites.length > 0) {
+                        spriteData = data.sprites[0];
+                    }
+                    // Case 3: raw 2D array
+                    else if (Array.isArray(data) && Array.isArray(data[0])) {
+                        spriteData = { name: "Unnamed Sprite", data: data };
+                    }
+
+                    if (spriteData && Array.isArray(spriteData.data || spriteData)) {
+                        pendingUpload = { 
+                            type: "sprite", 
+                            data: spriteData.data || spriteData, 
+                            name: spriteData.name || "Unnamed Sprite" 
+                        };
                         nameInput.value = pendingUpload.name;
-                        if (categorySelect) categorySelect.style.display = 'block';
-                        if (uploadInputs) uploadInputs.style.display = 'block';
+                        if (categorySelect) categorySelect.style.display = "block";
+                        if (uploadInputs) uploadInputs.style.display = "block";
                     } else {
-                        alert('No valid sprite found.');
+                        console.error("Invalid sprite format:", data);
+                        alert("No valid sprite found in file.");
                     }
                 } catch (err) {
-                    alert('Error reading file: ' + err.message);
+                    console.error("Error parsing file:", err);
+                    alert("Error reading file: " + err.message);
                 } finally {
-                    if (spriteFileInput) spriteFileInput.value = '';
+                    if (spriteFileInput) spriteFileInput.value = "";
                 }
             }
         
