@@ -3867,27 +3867,27 @@
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
-
+            
                 // Store existing built-in options
                 const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
                 }));
-
+            
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
-
+            
                 // Re-add built-in options
                 builtInOptions.forEach(option => {
                     spriteStyleSelect.appendChild(new Option(option.text, option.value));
                 });
-
+            
                 // Add custom Jerry sprites
                 Object.keys(customSprites.jerry).forEach(key => {
                     const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
                     spriteStyleSelect.appendChild(option);
                 });
-
+            
                 // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
@@ -3895,54 +3895,51 @@
                         theme.charAt(0).toUpperCase() + theme.slice(1);
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
-
-                // ---- Persistence Fix ----
+            
+                // ---- Persistence Fix ---- (MOVED BELOW custom options)
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
                 let savedStyle = savedSpriteSettings.style || 'default';
                 let savedTheme = savedSpriteSettings.theme || 'default';
-
-                // Normalize: underscores instead of spaces for ID matching
-                savedStyle = savedStyle.replace(/\s+/g, '_');
-
+            
                 // Validate against all available options
                 const allOptionValues = Array.from(spriteStyleSelect.options).map(opt => opt.value);
                 if (!allOptionValues.includes(savedStyle)) {
                     savedStyle = 'default';
                 }
-
+            
                 appState.sprite.currentSprite = savedStyle;
                 appState.sprite.theme = savedTheme;
-
+            
                 spriteStyleSelect.value = savedStyle;
                 spriteThemeSelect.value = savedTheme;
             }
-
+            
             // -----------------------------
             // Populate pet dropdown
             // -----------------------------
             function populatePetDropdown() {
                 if (!petStyleSelect || !petThemeSelect) return;
-
+            
                 // Store existing built-in options
                 const builtInOptions = Array.from(petStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
                 }));
-
+            
                 petStyleSelect.innerHTML = '';
                 petThemeSelect.innerHTML = '';
-
+            
                 // Re-add built-in options
                 builtInOptions.forEach(option => {
                     petStyleSelect.appendChild(new Option(option.text, option.value));
                 });
-
+            
                 // Add custom pet sprites
                 Object.keys(customSprites.pet).forEach(key => {
                     const option = new Option(`${customSprites.pet[key].name} (Custom)`, key);
                     petStyleSelect.appendChild(option);
                 });
-
+            
                 // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
@@ -3950,24 +3947,21 @@
                         theme.charAt(0).toUpperCase() + theme.slice(1);
                     petThemeSelect.appendChild(new Option(displayName, theme));
                 });
-
-                // ---- Persistence Fix ----
+            
+                // ---- Persistence Fix ---- (MOVED BELOW custom options)
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
-                let savedStyle = savedPetSettings.style || 'default';
+                let savedStyle = savedPetSettings.style || 'none';
                 let savedTheme = savedPetSettings.theme || 'default';
-
-                // Normalize: underscores instead of spaces for ID matching
-                savedStyle = savedStyle.replace(/\s+/g, '_');
-
+            
                 // Validate against all available options
                 const allOptionValues = Array.from(petStyleSelect.options).map(opt => opt.value);
                 if (!allOptionValues.includes(savedStyle)) {
-                    savedStyle = 'default';
+                    savedStyle = 'none';
                 }
-
+            
                 appState.pet.currentSprite = savedStyle;
                 appState.pet.theme = savedTheme;
-
+            
                 petStyleSelect.value = savedStyle;
                 petThemeSelect.value = savedTheme;
             }
