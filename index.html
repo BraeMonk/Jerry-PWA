@@ -3977,10 +3977,10 @@
                         spriteData = { name: "Unnamed Sprite", data: data };
                     }
 
-                    if (spriteData && Array.isArray(spriteData.data || spriteData)) {
+                    if (spriteData && Array.isArray(spriteData.data)) {
                         pendingUpload = { 
                             type: "sprite", 
-                            data: spriteData.data || spriteData, 
+                            data: spriteData.data,      // guaranteed to be the 2D array
                             name: spriteData.name || "Unnamed Sprite" 
                         };
                         nameInput.value = pendingUpload.name;
