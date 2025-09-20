@@ -3989,11 +3989,40 @@
             }
         
             if (spriteUploadZone && spriteFileInput) {
+                // Click handler for file selection
                 spriteUploadZone.addEventListener('click', () => spriteFileInput.click());
+    
+                // File input change handler
                 spriteFileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-                spriteUploadZone.addEventListener('dragover', (e) => { e.preventDefault(); spriteUploadZone.classList.add('dragover'); });
-                spriteUploadZone.addEventListener('dragleave', () => spriteUploadZone.classList.remove('dragover'));
-                spriteUploadZone.addEventListener('drop', (e) => { e.preventDefault(); spriteUploadZone.classList.remove('dragover'); handleFile(e.dataTransfer.files[0]); });
+    
+                // Only add drag/drop handlers on desktop devices
+                const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    
+                if (!isMobile) {
+                    spriteUploadZone.addEventListener('dragover', (e) => {
+                        // Only prevent default for actual file drag operations
+                        if (e.dataTransfer && e.dataTransfer.types && e.dataTransfer.types.includes('Files')) {
+                            e.preventDefault();
+                spriteUploadZone.classList.add('dragover');
+                        }
+                    });
+        
+                    spriteUploadZone.addEventListener('dragleave', (e) => {
+                        // Only remove dragover if we're actually leaving the zone
+                        if (!spriteUploadZone.contains(e.relatedTarget)) {
+                            spriteUploadZone.classList.remove('dragover');
+                        }
+                    });
+        
+                    spriteUploadZone.addEventListener('drop', (e) => {
+                        // Only handle actual file drops
+                        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                            e.preventDefault();
+                            spriteUploadZone.classList.remove('dragover');
+                            handleFile(e.dataTransfer.files[0]);
+                        }
+                    });
+                }
             }
         
             // -----------------------------
