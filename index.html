@@ -22,18 +22,186 @@
     <link rel="apple-touch-icon" sizes="167x167" href="./jerryIcon3.PNG">
     
     <style>
-        /* ============================= */
-        /* Global Reset & Box Sizing     */
-        /* ============================= */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* Light Theme Overrides */
+        body.light-theme {
+            background: linear-gradient(135deg, #fdf6f0 0%, #f7ede5 100%);
+            color: #3e3e3e;
+    }
+
+        body.light-theme .app-container {
+            background: #f7ede5;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        body.light-theme .affirmation-banner {
+            background: linear-gradient(90deg, #e3b88d, #f0c9a2);
+            color: #3e3e3e;
+        }
+
+        body.light-theme .tab-container {
+            background: #eae3de;
+            border-bottom: 1px solid #d8cfc4;
+        }
+
+        body.light-theme .tab {
+            color: #6b7280;
+        }
+
+        body.light-theme .tab.active {
+            color: #e3b88d;
+            background: #f7ede5;
+            border-bottom: 2px solid #e3b88d;
+        }
+
+        body.light-theme .tab:hover {
+            background: rgba(227,184,141,0.1);
+            color: #c27c48;
+        }
+
+        body.light-theme .screen {
+            background-color: #f7ede5;
+        }
+
+        body.light-theme .form-label {
+            color: #4b4b4b;
+        }
+
+        body.light-theme .form-input,
+        body.light-theme .form-textarea {
+            background: #ffffff;
+            border: 1px solid #d8cfc4;
+            color: #3e3e3e;
+        }
+
+        body.light-theme .form-input:focus {
+            border-color: #e3b88d;
+        }
+
+        body.light-theme .btn {
+            background: #e3b88d;
+            color: #3e3e3e;
+        }
+
+        body.light-theme .btn:hover {
+            background: #cfa273;
+        }
+
+        body.light-theme .btn-secondary {
+            background: #d8cfc4;
+            color: #3e3e3e;
+        }
+
+        body.light-theme .btn-secondary:hover {
+            background: #cbb7a2;
+        }
+
+        body.light-theme .rating-btn {
+            background: #ffffff;
+            border: 1px solid #d8cfc4;
+            color: #6b7280;
+        }
+
+        body.light-theme .rating-btn.active,
+        body.light-theme .rating-btn:hover {
+            background: #e3b88d;
+            color: #3e3e3e;
+            border-color: #e3b88d;
+        }
+
+        body.light-theme .timer-display {
+            color: #e3b88d;
+        }
+
+        body.light-theme .progress-section,
+        body.light-theme .entry-item,
+        body.light-theme .checkbox-container {
+            background: #ffffff;
+            border-color: #d8cfc4;
+            color: #3e3e3e;
+        }
+
+        body.light-theme .notification {
+            background: #e3b88d;
+            color: #3e3e3e;
+        }
+
+        /* Light Theme Overrides */
+        body.light-theme #journalInput {
+            background: #ffffff;
+            color: #3e3e3e;
+            border: 1px solid #d8cfc4;
+        }
+
+        body.light-theme #saveJournalEntry {
+            background: #e3b88d;
+            color: #3e3e3e;
+        }
+
+        body.light-theme #saveJournalEntry:hover {
+            background: #cfa273;
+        }
+
+        /* Light mode premium subscription card */
+        body.light-theme #premiumSection .subscription-card {
+            background: #A0522D;          /* main brown background */
+            border: 2px solid #8B4513;    /* slightly darker brown border */
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            color: #ffffff;               /* default text color */
+        }
+
+        /* Title */
+        body.light-theme #premiumSection .subscription-title {
+            color: #ffffff;               /* white text */
+        }
+
+        /* Price */
+        body.light-theme #premiumSection .subscription-price {
+            color: #ffffff;
+        }
+
+        body.light-theme #premiumSection .subscription-price span {
+            color: #f0e6d2; /* slightly lighter for /month text */
+        }
+
+        /* Features list */
+        body.light-theme #premiumSection .subscription-features li {
+            color: #ffffff;               /* white text */
+        }
+
+        body.light-theme #premiumSection .subscription-features li span {
+            color: #68d391;               /* keep green checkmarks */
+        }
+
+        /* Subscription status */
+        body.light-theme #premiumSection #subscriptionStatusDisplay .subscription-status.active {
+            background: #8B4513;          /* darker brown for status box */
+            border: 1px solid #cfa273;   /* matching border */
+            color: #ffffff;               /* white text */
+        }
+
+        body.light-theme #premiumSection #subscriptionStatusDisplay .subscription-status.active div {
+            color: #ffffff;               /* white text */
+        }
+
+        /* Cancel button */
+        body.light-theme #premiumSection #subscriptionStatusDisplay .btn.btn-danger {
+            background: #c03b1f;          /* dark reddish-brown button */
+            color: #ffffff;               /* white text */
+            width: 100%;
+        }
+
+        body.light-theme #premiumSection #subscriptionStatusDisplay .btn.btn-danger:hover {
+            background: #a52d1a;          /* slightly darker on hover */
+        }
         
-        /* ============================= */
-        /* Body & Themes                 */
-        /* ============================= */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
@@ -42,22 +210,6 @@
             overflow-x: hidden;
         }
         
-        /* Theme Variables */
-        body.light-theme {
-            --stat-bg: #e3b88d;
-            --stat-text: #000000;
-            background: linear-gradient(135deg, #fdf6f0 0%, #f7ede5 100%);
-            color: #3e3e3e;
-        }
-        
-        body.dark-theme {
-            --stat-bg: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
-            --stat-text: #ffffff;
-        }
-        
-        /* ============================= */
-        /* App Container                 */
-        /* ============================= */
         .app-container {
             max-width: 430px;
             margin: 0 auto;
@@ -67,14 +219,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
         
-        body.light-theme .app-container {
-            background: #f7ede5;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-        
-        /* ============================= */
-        /* Affirmation Banner            */
-        /* ============================= */
         .affirmation-banner {
             background: linear-gradient(90deg, #3355d4, #4f46e5);
             padding: 8px 16px;
@@ -87,23 +231,10 @@
             justify-content: center;
         }
         
-        body.light-theme .affirmation-banner {
-            background: linear-gradient(90deg, #e3b88d, #f0c9a2);
-            color: #3e3e3e;
-        }
-        
-        /* ============================= */
-        /* Tabs                          */
-        /* ============================= */
         .tab-container {
             display: flex;
             background: #2d3748;
             border-bottom: 1px solid #4a5568;
-        }
-        
-        body.light-theme .tab-container {
-            background: #eae3de;
-            border-bottom: 1px solid #d8cfc4;
         }
         
         .tab {
@@ -125,25 +256,11 @@
             border-bottom: 2px solid #3355d4;
         }
         
-        body.light-theme .tab.active {
-            color: #e3b88d;
-            background: #f7ede5;
-            border-bottom: 2px solid #e3b88d;
-        }
-        
         .tab:hover {
             background: rgba(51, 85, 212, 0.1);
             color: #63b3ed;
         }
         
-        body.light-theme .tab:hover {
-            background: rgba(227,184,141,0.1);
-            color: #c27c48;
-        }
-        
-        /* ============================= */
-        /* Screen Sections               */
-        /* ============================= */
         .screen {
             display: none;
             padding: 20px;
@@ -156,28 +273,7 @@
             display: block;
         }
         
-        body.light-theme .screen {
-            background-color: #f7ede5;
-        }
-
-        /* ============================= */
-        /* Ensure settings inputs receive focus above visuals */
-        /* ============================= */
-        #settings {
-            position: relative;
-            z-index: 10; /* make the settings container above your Jerry visuals */
-        }
-
-        #settings input,
-        #settings select,
-        #settings textarea {
-            position: relative; /* prevent them from being behind anything */
-            z-index: 11;        /* above the settings container */
-        }
-        
-        /* ============================= */
-        /* Jerry Sprite & Container      */
-        /* ============================= */
+        /* Jerry Sprite Styles */
         .jerry-container {
             display: flex;
             flex-direction: column;
@@ -189,33 +285,30 @@
             justify-content: center;
             transition: background 0.5s ease;
             border-radius: 12px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
         }
 
-        .jerry-visuals {
-            position: relative;
-            pointer-events: none; /* visuals ignore mouse/touch events */
-            width: 100%;
-        }
-        
+        /* Background inside container, above stats */
         .jerry-background {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100%; /* leave room for stats at bottom */
             z-index: 0;
-            pointer-events: none;
-            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc);
+            pointer-events: none; /* don’t block Jerry clicks */
+            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc); /* initial gradient */
         }
         
+        /* Pedestal / shadow above stats */
         .jerry-shadow {
             position: absolute;
-            bottom: 100px;
-            width: 120px;
-            height: 20px;
-            background: rgba(0,0,0,0.25);
-            border-radius: 50%;
+            bottom: 100px;   /* adjust so it sits just above stats */
+            width: 120px;    /* slightly smaller than sprite */
+            height: 20px;    /* shadow thickness */
+            background: rgba(0, 0, 0, 0.25); /* subtle shadow */
+            border-radius: 50%; 
             filter: blur(4px);
             z-index: 3;
         }
@@ -223,19 +316,27 @@
         .jerry-sprite {
             width: 160px;
             height: 160px;
-            margin: 40px auto;
+            margin: 40px auto 40px;
             position: relative;
             z-index: 4;
-            pointer-events: none;
         }
         
-        .jerry-sprite .pixel {
+        .pixel {
             width: 10px;
             height: 10px;
             position: absolute;
-            border-radius: 0;
+            z-index: 4;
+        }
+
+        /* Ensure Jerry sprite pixels are full like the preview */
+        .jerry-sprite .pixel {
+            width: 10px;        /* same as sprite pixel size */
+            height: 10px;
+            position: absolute;
+            border-radius: 0;   /* remove subtle rounding */
             margin: 0;
             padding: 0;
+            z-index: 4;
         }
         
         .jerry-stats {
@@ -257,15 +358,23 @@
             justify-content: space-between;
             padding: 4px 8px;
             border-radius: 6px;
-            border: 1px solid;
-            background-color: var(--stat-bg);
+            border: 1px solid; /* border color will depend on theme */
+            background-color: var(--stat-bg); /* dynamic based on theme */
             color: var(--stat-text);
             z-index: 4;
         }
-        
-        /* ============================= */
-        /* Progress Bars                 */
-        /* ============================= */
+
+        /* Light theme */
+        body.light-theme {
+            --stat-bg: #e3b88d;
+            --stat-text: #000000;
+        }
+
+        /* Dark theme */
+        body.dark-theme {
+            --stat-bg: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
+            --stat-text: #ffffff;
+        }
         .progress-bar {
             width: 100%;
             height: 8px;
@@ -284,106 +393,15 @@
         .insight-bar { background: linear-gradient(90deg, #8b5cf6, #5b21b6); }
         .calm-bar { background: linear-gradient(90deg, #10b981, #047857); }
         
-        /* ============================= */
-        /* Forms & Inputs                */
-        /* ============================= */
-        .form-group { margin-bottom: 20px; }
-        
-        .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: #cbd5e0; }
-        
-        .form-input,
-        .form-textarea,
-        #journalInput,
-        .chat-input {
-            width: 100%;
-            padding: 12px;
-            background: #2d3748;
-            border: 1px solid #4a5568;
-            border-radius: 8px;
-            color: #e2e8f0;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.3s ease;
-            position: relative;
-            z-index: 1000;
-        }
-        
-        .form-input:focus,
-        #journalInput:focus,
-        .chat-input:focus {
-            border-color: #3355d4;
-        }
-        
-        textarea { resize: vertical; overflow-y: auto; }
-        
-        body.light-theme .form-input,
-        body.light-theme .form-textarea,
-        body.light-theme #journalInput,
-        body.light-theme .chat-input {
-            background: #ffffff;
-            color: #3e3e3e;
-            border: 1px solid #d8cfc4;
-        }
-        
-        /* ============================= */
-        /* Buttons                        */
-        /* ============================= */
-        .btn,
-        .def-button {
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 500;
-            border: none;
-            margin: 8px auto;
-            text-decoration: none;
-        }
-        
-        .btn { background: #3355d4; color: white; }
-        .btn:hover { background: #2d4aa7; transform: translateY(-1px); }
-        
-        .btn-secondary { background: #4a5568; color: white; }
-        .btn-secondary:hover { background: #2d3748; }
-        
-        .rating-btn {
-            flex: 1;
-            padding: 8px;
-            background: #2d3748;
-            border: 1px solid #4a5568;
-            color: #a0aec0;
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-        
-        .rating-btn.active,
-        .rating-btn:hover {
-            background: #3355d4;
-            color: white;
-            border-color: #3355d4;
-        }
-        
-        body.light-theme .btn,
-        body.light-theme .def-button { background: #e3b88d; color: #3e3e3e; }
-        body.light-theme .btn:hover,
-        body.light-theme .def-button:hover { background: #cfa273; }
-        
-        /* ============================= */
-        /* Chat Interface                */
-        /* ============================= */
+        /* Chat Interface */
         .chat-container {
             background: #2d3748;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 20px;
+            height: 300px;
             display: flex;
             flex-direction: column;
-            height: 300px;
             z-index: 4;
         }
         
@@ -397,10 +415,44 @@
             z-index: 5;
         }
         
-        .message.user { color: #63b3ed; }
-        .message.jerry { color: #68d391; }
+        .message {
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-size: 14px;
+        }
         
-        .chat-input-container { display: flex; gap: 8px; align-items: flex-start; z-index: 10; }
+        .message.user {
+            color: #63b3ed;
+        }
+        
+        .message.jerry {
+            color: #68d391;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            z-index: 10;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 8px 12px;
+            background: #1a202c;
+            border: 1px solid #4a5568;
+            border-radius: 20px;
+            color: #e2e8f0;
+            outline: none;
+            font-size: 16px;
+
+            resize: none;               /* prevent manual resizing */
+            overflow-y: auto;           /* scroll when text exceeds box height */
+            min-height: 36px;           /* same as original input height */
+            max-height: 100px;          /* maximum height before scroll */
+            white-space: pre-wrap;
+        }
+        
         .send-button {
             background: #3355d4;
             border: none;
@@ -414,74 +466,454 @@
             justify-content: center;
             transition: background 0.3s ease;
         }
-        .send-button:hover { background: #2d4aa7; }
         
-        body.light-theme .chat-container { background: #A0522D; }
-        body.light-theme .chat-log { background: #e3b88d; }
-        body.light-theme .message.user { color: #ffffff; }
-        body.light-theme .message.jerry { color: #3e3e3e; }
-        body.light-theme .chat-input { background: #ffffff; color: #3e3e3e; border: 1px solid #d8cfc4; }
-        body.light-theme .chat-input::placeholder { color: #a0aec0; }
-        body.light-theme .send-button { background: #e3b88d; color: #3e3e3e; }
-        body.light-theme .send-button:hover { background: #cfa273; }
-        
-        /* ============================= */
-        /* Journal Entries & Filters     */
-        /* ============================= */
-        .journalEntry,
-        .entry-item { background: #2d3748; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #3355d4; color: #e2e8f0; line-height: 1.5; transition: background 0.3s ease; }
-        
-        body.light-theme .journalEntry,
-        body.light-theme .entry-item { background: #ffffff; color: #3e3e3e; border-left-color: #e3b88d; }
-        
-        .entry-date { font-size: 12px; color: #a0aec0; margin-bottom: 8px; }
-        .delete-entry { margin-top: 8px; padding: 8px 16px; background: #c53030; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; transition: background 0.3s ease, transform 0.2s ease; }
-        .delete-entry:hover { background: #9b2c2c; transform: translateY(-1px); }
-        
-        body.light-theme .delete-entry { background: #e53e3e; }
-        body.light-theme .delete-entry:hover { background: #c53030; }
-        
-        #entryFilter { width: 100%; padding: 8px 12px; font-size: 14px; border-radius: 8px; border: 1px solid #4a5568; background: #2d3748; color: #e2e8f0; margin-bottom: 12px; outline: none; }
-        #entryFilter:focus { border-color: #3355d4; }
-        
-        body.light-theme #entryFilter { background: #ffffff; color: #3e3e3e; border: 1px solid #d8cfc4; }
-        body.light-theme #entryFilter:focus { border-color: #e3b88d; }
-        
-        /* ============================= */
-        /* Splash Screen                 */
-        /* ============================= */
-        #splashScreen {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 10000; transition: opacity 0.5s ease; overflow: hidden; pointer-events: none;
+        .send-button:hover {
+            background: #2d4aa7;
+        }
+
+        /* Light mode chat box */
+        body.light-theme .chat-container {
+            background: #A0522D;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.light-theme .chat-log {
+            background: #e3b88d; /* darker brown for messages area */
+            border-radius: 8px;
+        }
+
+        body.light-theme .message.user {
+            color: #ffffff; /* user messages white */
+        }
+
+        body.light-theme .message.jerry {
+            color: #3e3e3e; /* Jerry messages dark for contrast */
+        }
+
+        body.light-theme .chat-input {
+            background: #ffffff; /* input box light */
+            color: #3e3e3e;      /* text dark */
+            border: 1px solid #d8cfc4;
+
+            resize: none;               /* prevent manual resizing */
+            overflow-y: auto;           /* scroll when text exceeds box height */
+            min-height: 36px;           /* same as original input height */
+            max-height: 100px;          /* maximum height before scroll */
+            white-space: pre-wrap;
+        }
+
+        body.light-theme .chat-input::placeholder {
+            color: #a0aec0; /* placeholder text lighter */
+        }
+
+        body.light-theme .send-button {
+            background: #e3b88d; /* button brown */
+            color: #3e3e3e;      /* button text dark */
+        }
+
+        body.light-theme .send-button:hover {
+            background: #cfa273; /* slightly darker on hover */
         }
         
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #cbd5e0;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #3355d4;
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: #3355d4;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            margin: 8px auto;
+        }
+        
+        .btn:hover {
+            background: #2d4aa7;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #2d3748;
+        }
+        
+        /* Rating buttons */
+        .rating-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .rating-btn {
+            flex: 1;
+            padding: 8px;
+            background: #2d3748;
+            border: 1px solid #4a5568;
+            color: #a0aec0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .rating-btn.active,
+        .rating-btn:hover {
+            background: #3355d4;
+            color: white;
+            border-color: #3355d4;
+        }
+        
+        /* Timer Styles */
+        .timer-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #3355d4;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-btn {
+            font-size: 18px;
+            padding: 16px 32px;
+            border-radius: 50px;
+        }
+        
+        /* Progress Tracking */
+        .progress-section {
+            background: #2d3748;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .progress-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #e2e8f0;
+        }
+        
+        /* Entries and History */
+        .entry-item {
+            background: #2d3748;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3355d4;
+        }
+        
+        .entry-date {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-bottom: 8px;
+        }
+        
+        .entry-content {
+            line-height: 1.5;
+        }
+        
+        .loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #48bb78;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .notification.show {
+            opacity: 1;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: #2d3748;
+            border-radius: 6px;
+        }
+        
+        .checkbox {
+            margin-right: 12px;
+            margin-top: 2px;
+        }
+        
+        .checkbox-label {
+            flex: 1;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        #spritePreview {
+            position: relative;
+            width: 160px;              /* fixed preview size */
+            height: 160px;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
+            display: flex;
+            justify-content: center;    /* center horizontally */
+            align-items: center;        /* center vertically */
+            padding: 8px;               /* optional padding so sprite isn’t flush with edges */
+            box-sizing: border-box;     /* include padding in width/height */
+        }
+
+
+        #spritePreview .pixel {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+        }
+
+        #journal {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 0px);        /* fill full viewport */
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        #journalInput {
+            flex: 1;        /* fill remaining space above button */
+            min-height: 200px;
+            width: 100%;
+            padding: 16px;
+            font-size: 1rem;
+            border: 1px solid #4a5568;
+            border-radius: 8px;
+            background: #2d3748;
+            color: #e2e8f0;
+            resize: none;
+            overflow-y: auto;
+            box-sizing: border-box;
+            margin-bottom: 80px;   /* spacing above button */
+        }
+
+        #saveJournalEntry {
+            position: relative;       /* fixed at bottom of viewport */
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            padding: 12px 30px;
+            width: 100%;           /* inherits button style */
+            border-radius: 8px;
+            background: #3355d4;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            margin-top: 12px;
+        }
+
+        #saveJournalEntry:hover {
+            background: #2d4aa7;
+            transform: translateX(-50%);
+        }
+
+        /* --- Journal Entries & Delete Buttons --- */
+
+        /* Entry container */
+        .journalEntry,
+        .entry-item {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3355d4;
+            color: #e2e8f0;
+            line-height: 1.5;
+            transition: background 0.3s ease;
+            cursor: default;
+        }
+
+        /* Entry date */
+        .entry-date {
+            font-size: 12px;
+            color: #a0aec0;
+            margin-bottom: 8px;
+        }
+
+        /* Delete button */
+        .delete-entry {
+            margin-top: 8px;
+            padding: 8px 16px;
+            background: #c53030;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .delete-entry:hover {
+            background: #9b2c2c;
+            transform: translateY(-1px);
+        }
+
+        /* --- Filter Dropdown --- */
+        #entryFilter {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #4a5568;
+            background: #2d3748;
+            color: #e2e8f0;
+            margin-bottom: 12px;
+            outline: none;
+        }
+
+        #entryFilter:focus {
+            border-color: #3355d4;
+        }
+
+        /* --- Light Theme Overrides --- */
+        body.light-theme .journalEntry,
+        body.light-theme .entry-item {
+            background: #ffffff;
+            color: #3e3e3e;
+            border-left-color: #e3b88d;
+        }
+
+        body.light-theme .journalEntry.expanded {
+            background: #f0e8e0;
+        }
+
+        body.light-theme .delete-entry {
+            background: #e53e3e;
+            color: white;
+        }
+
+        body.light-theme .delete-entry:hover {
+            background: #c53030;
+        }
+
+        body.light-theme #entryFilter {
+            background: #ffffff;
+            color: #3e3e3e;
+            border: 1px solid #d8cfc4;
+        }
+
+        /* Ensure hover, focus, and expanded states look good */
+        body.light-theme #entryFilter:focus {
+            border-color: #e3b88d;
+        }
+
+        /* Splash Screen */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;              
+            transition: opacity 0.5s ease; 
+            overflow: hidden; /* needed for pseudo-element */
+            pointer-events: none;
+        }
+
+        /* Blurred background */
         #splashScreen::before {
             content: "";
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: url('./jerrySplash2.PNG') no-repeat center center;
             background-size: cover;
-            filter: blur(10px);
-            z-index: 0; pointer-events: none;
+            filter: blur(10px); /* adjust blur intensity */
+            z-index: 0; /* behind everything */
+            pointer-events: none;
         }
-        
-        #splashScreen img {
-            max-width: 80%; max-height: 80%;
-            object-fit: contain;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            position: relative; z-index: 1;
-        }
-        
-        body.light-theme #splashScreen::before { background: url('./jerrySplash.png.png') no-repeat center center; background-size: cover; }
-        
-        /* ============================= */
-        /* Pet, Radial Menus, Backgrounds*/
-        /* ============================= */
-        /* ... All other backgrounds & radial menu styles remain, with duplicate rules removed and consolidated */
 
+        /* Splash image stays above the blurred background */
+        #splashScreen img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+            border-radius: 12px;           
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+            position: relative; /* make sure it’s above the pseudo-element */
+            z-index: 1;
+        }
+
+        /* Light theme version */
+        body.light-theme #splashScreen::before {
+            background: url('./jerrySplash.png.png') no-repeat center center;
+            background-size: cover;
+        }
 
         /* Header always visible */
         .journalEntry .entryHeader {
@@ -1037,8 +1469,6 @@
         #spritePreview .pixel {
             pointer-events: none; /* already set, fine to leave */
         }
-
-        
 
         @media (max-width: 480px) {
             .app-container {
