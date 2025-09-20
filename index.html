@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Jerry - Mental Health Companion</title>
 
     <script src="https://www.paypal.com/sdk/js?client-id=AQQjfHs0zv-KHqb4Rtn8c8UYMZSb1chU62eafw_y7s3XzUNLZ3HQpQvfV3M-lx5oesJaaC6hNSr1qG7_&vault=true&intent=subscription"></script>
@@ -451,6 +451,7 @@
             min-height: 36px;           /* same as original input height */
             max-height: 100px;          /* maximum height before scroll */
             white-space: pre-wrap;
+            pointer-events: auto !important;
         }
         
         .send-button {
@@ -539,9 +540,10 @@
             border: 1px solid #4a5568;
             border-radius: 8px;
             color: #e2e8f0;
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             transition: border-color 0.3s ease;
+            pointer-events: auto !important;
         }
         
         .form-input:focus {
@@ -742,7 +744,7 @@
             min-height: 200px;
             width: 100%;
             padding: 16px;
-            font-size: 1rem;
+            font-size: 16px;
             border: 1px solid #4a5568;
             border-radius: 8px;
             background: #2d3748;
@@ -751,6 +753,7 @@
             overflow-y: auto;
             box-sizing: border-box;
             margin-bottom: 80px;   /* spacing above button */
+            pointer-events: auto !important;
         }
 
         #saveJournalEntry {
@@ -1364,7 +1367,12 @@
         .chat-input,
         textarea,
         input {
-            font-size: 16px;
+            font-size: 16px !important;
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            touch-action: manipulation !important;
+            -webkit-user-select: text !important;
+            user-select: text !important;
             -webkit-appearance: none;
             appearance: none;
             position: relative;
