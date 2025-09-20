@@ -3863,107 +3863,104 @@
             let pendingUpload = null;
 
             // -----------------------------
+            // -----------------------------
             // Populate main character (Jerry) dropdown
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
-            
-                // Store existing built-in options
-                const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
-                    value: opt.value,
-                    text: opt.textContent
-                }));
-            
+
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
-            
-                // Re-add built-in options
-                builtInOptions.forEach(option => {
-                    spriteStyleSelect.appendChild(new Option(option.text, option.value));
+
+                // --- Add built-in options ---
+                const builtInOptions = ['default']; // Add more if needed
+                builtInOptions.forEach(opt => spriteStyleSelect.appendChild(new Option(opt, opt)));
+
+                // --- Add custom Jerry sprites ---
+                Object.entries(customSprites.jerry).forEach(([id, sprite]) => {
+                    spriteStyleSelect.appendChild(new Option(`${sprite.name} (Custom)`, id));
                 });
-            
-                // Add custom Jerry sprites
-                Object.keys(customSprites.jerry).forEach(key => {
-                    const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
-                    spriteStyleSelect.appendChild(option);
-                });
-            
-                // Populate themes
+
+                // --- Populate themes ---
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
                         theme === 'retroPixel' ? 'Retro' :
                         theme.charAt(0).toUpperCase() + theme.slice(1);
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
-            
-                // ---- Persistence Fix ---- (MOVED BELOW custom options)
+
+                // --- Restore selection from localStorage ---
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                let savedStyle = savedSpriteSettings.style || 'default';
-                let savedTheme = savedSpriteSettings.theme || 'default';
-            
-                // Validate against all available options
-                const allOptionValues = Array.from(spriteStyleSelect.options).map(opt => opt.value);
-                if (!allOptionValues.includes(savedStyle)) {
-                    savedStyle = 'default';
-                }
-            
-                appState.sprite.currentSprite = savedStyle;
+                const savedStyle = savedSpriteSettings.style || 'default';
+                const savedTheme = savedSpriteSettings.theme || 'default';
+
+                // Ensure saved style exists in dropdown
+                const optionValues = Array.from(spriteStyleSelect.options).map(o => o.value);
+                appState.sprite.currentSprite = optionValues.includes(savedStyle) ? savedStyle : 'default';
                 appState.sprite.theme = savedTheme;
-            
-                spriteStyleSelect.value = savedStyle;
-                spriteThemeSelect.value = savedTheme;
+
+                spriteStyleSelect.value = appState.sprite.currentSprite;
+                spriteThemeSelect.value = appState.sprite.theme;
             }
-            
+
             // -----------------------------
             // Populate pet dropdown
             // -----------------------------
             function populatePetDropdown() {
                 if (!petStyleSelect || !petThemeSelect) return;
-            
-                // Store existing built-in options
-                const builtInOptions = Array.from(petStyleSelect.options).map(opt => ({
-                    value: opt.value,
-                    text: opt.textContent
-                }));
-            
+
                 petStyleSelect.innerHTML = '';
                 petThemeSelect.innerHTML = '';
-            
-                // Re-add built-in options
-                builtInOptions.forEach(option => {
-                    petStyleSelect.appendChild(new Option(option.text, option.value));
+
+                // --- Add built-in options ---
+                const builtInOptions = ['none']; // Add more if needed
+                builtInOptions.forEach(opt => petStyleSelect.appendChild(new Option(opt, opt)));
+
+                // --- Add custom pet sprites ---
+                Object.entries(customSprites.pet).forEach(([id, sprite]) => {
+                    petStyleSelect.appendChild(new Option(`${sprite.name} (Custom)`, id));
                 });
-            
-                // Add custom pet sprites
-                Object.keys(customSprites.pet).forEach(key => {
-                    const option = new Option(`${customSprites.pet[key].name} (Custom)`, key);
-                    petStyleSelect.appendChild(option);
-                });
-            
-                // Populate themes
+
+                // --- Populate themes ---
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
                         theme === 'retroPixel' ? 'Retro' :
                         theme.charAt(0).toUpperCase() + theme.slice(1);
                     petThemeSelect.appendChild(new Option(displayName, theme));
                 });
-            
-                // ---- Persistence Fix ---- (MOVED BELOW custom options)
+
+                // --- Restore selection from localStorage ---
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
-                let savedStyle = savedPetSettings.style || 'none';
-                let savedTheme = savedPetSettings.theme || 'default';
-            
-                // Validate against all available options
-                const allOptionValues = Array.from(petStyleSelect.options).map(opt => opt.value);
-                if (!allOptionValues.includes(savedStyle)) {
-                    savedStyle = 'none';
-                }
-            
-                appState.pet.currentSprite = savedStyle;
+                const savedStyle = savedPetSettings.style || 'none';
+                const savedTheme = savedPetSettings.theme || 'default';
+
+                const optionValues = Array.from(petStyleSelect.options).map(o => o.value);
+                appState.pet.currentSprite = optionValues.includes(savedStyle) ? savedStyle : 'none';
                 appState.pet.theme = savedTheme;
             
-                petStyleSelect.value = savedStyle;
-                petThemeSelect.value = savedTheme;
+                petStyleSelect.value = appState.pet.currentSprite;
+                petThemeSelect.value = appState.pet.theme;
+            }
+            
+            // 2. Load and merge custom sprites
+            let customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
+            if (!customSprites.jerry) customSprites.jerry = {};
+            if (!customSprites.pet) customSprites.pet = {};
+
+            for (const [id, sprite] of Object.entries(customSprites.jerry)) {
+                if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
+                    jerrySprites[id] = sprite.data;
+                } else {
+                    delete customSprites.jerry[id];
+                }
+            }
+
+            for (const [id, sprite] of Object.entries(customSprites.pet)) {
+                if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
+                    petSprites[id] = sprite.data;
+                } else {
+                    delete customSprites.pet[id];
+                }
             }
 
             populateSpriteDropdown();
