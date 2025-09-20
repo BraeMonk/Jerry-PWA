@@ -342,12 +342,12 @@
             width: 100%;
             max-width: 300px;
             margin-bottom: 20px;
-            z-index: 4;
+            z-index: 3;
         }
         
         .stat-bar {
             margin-bottom: 12px;
-            z-index: 4;
+            z-index: 3;
         }
         
         .stat-label {
@@ -360,7 +360,7 @@
             border: 1px solid; /* border color will depend on theme */
             background-color: var(--stat-bg); /* dynamic based on theme */
             color: var(--stat-text);
-            z-index: 4;
+            z-index: 3;
         }
 
         /* Light theme */
@@ -704,41 +704,43 @@
             font-size: 14px;
         }
 
+        /* Ensure sprite preview is visually on top but untouchable */
         #spritePreview {
-            position: relative;
-            width: 160px;              /* fixed preview size */
+            position: relative;               /* keep it relative for centering */
+            z-index: 1;                       /* behind inputs */
+            pointer-events: none;             /* allow taps to pass through */
+            width: 160px;
             height: 160px;
-            background-color: transparent;
-            border: none;
-            outline: none;
-            box-shadow: none;
             background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
             display: flex;
-            justify-content: center;    /* center horizontally */
-            align-items: center;        /* center vertically */
-            padding: 8px;               /* optional padding so sprite isn’t flush with edges */
-            box-sizing: border-box;     /* include padding in width/height */
-            pointer-events: none;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            box-sizing: border-box;
         }
-
-
+        
+        /* Pixel children also untouchable */
         #spritePreview .pixel {
             position: absolute;
             width: 10px;
             height: 10px;
+            pointer-events: none;             /* explicitly for iOS */
         }
-
+        
+        /* Journal container */
         #journal {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 0px);        /* fill full viewport */
+            height: 100vh;
             padding: 20px;
             box-sizing: border-box;
             position: relative;
+            z-index: 0;                       /* base layer */
         }
-
+        
+        /* Journal input */
         #journalInput {
-            flex: 1;        /* fill remaining space above button */
+            flex: 1;
             min-height: 200px;
             width: 100%;
             padding: 16px;
@@ -750,7 +752,9 @@
             resize: none;
             overflow-y: auto;
             box-sizing: border-box;
-            margin-bottom: 80px;   /* spacing above button */
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 2;                       /* above sprite preview */
         }
 
         #saveJournalEntry {
@@ -1366,7 +1370,7 @@
         input {
             pointer-events: auto;
             position: relative;
-            z-index: 1000; /* safely above any sprites/backgrounds */
+            z-index: 500; /* safely above any sprites/backgrounds */
         }
 
         #petContainer {
@@ -1379,7 +1383,7 @@
             cursor: pointer;
             background: transparent;
             border: none;
-            pointer-events: none;
+            pointer-events: auto;
         }
 
         .pet-sprite {
