@@ -4382,33 +4382,42 @@
 
         // Update chat interface based on API option
         function updateChatInterface() {
-        const chatInput = document.getElementById('chatInput');
-        const sendButton = document.getElementById('sendButton');
-        const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
-
-        if (apiOption === 'premium') {
+            const chatInput = document.getElementById('chatInput');
+            const sendButton = document.getElementById('sendButton');
+            const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+        
+            // Always keep inputs enabled so iOS can bring up the keyboard
+            if (!chatInput || !sendButton) return;
+        
+            let canSend = false;
+        
+            if (apiOption === 'premium') {
                 if (subscriptionState.isSubscribed) {
-                if (subscriptionState.messageCount >= 1000) {
-                        chatInput.disabled = true;
-                        sendButton.disabled = true;
+                    if (subscriptionState.messageCount >= 1000) {
                         chatInput.placeholder = 'Monthly limit reached. Resets next billing cycle.';
-                } else {
-                        chatInput.disabled = false;
-                        sendButton.disabled = false;
+                    } else {
                         chatInput.placeholder = 'Type your message... (Premium)';
-                }
+                        canSend = true;
+                    }
                 } else {
-                chatInput.disabled = true;
-                sendButton.disabled = true;
-                chatInput.placeholder = 'Premium subscription required';
+                    chatInput.placeholder = 'Premium subscription required';
                 }
-        } else {
+            } else {
                 const hasApiKey = appState.apiKey || document.getElementById('apiKey')?.value?.trim();
-                chatInput.disabled = !hasApiKey;
-                sendButton.disabled = !hasApiKey;
-                chatInput.placeholder = hasApiKey ? 'Type your message...' : 'Please enter your API key in Settings';
+                if (hasApiKey) {
+                    chatInput.placeholder = 'Type your message...';
+                    canSend = true;
+                } else {
+                    chatInput.placeholder = 'Please enter your API key in Settings';
+                }
+            }
+        
+            // Never disable the textarea → only toggle the send button
+            chatInput.readOnly = false; 
+            chatInput.disabled = false;
+            sendButton.disabled = !canSend;
         }
-        }
+
 
         // Cancel subscription
         async function cancelSubscription() {
