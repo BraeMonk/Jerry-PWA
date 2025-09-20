@@ -286,7 +286,6 @@
             transition: background 0.5s ease;
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-            pointer-events: none;
         }
 
         /* Background inside container, above stats */
@@ -337,6 +336,7 @@
             margin: 0;
             padding: 0;
             z-index: 4;
+            pointer-events: none;
         }
         
         .jerry-stats {
@@ -542,8 +542,6 @@
             color: #e2e8f0;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s ease;
-            pointer-events: auto !important;
         }
         
         .form-input:focus {
@@ -1361,22 +1359,9 @@
             border-radius: 4px;
         }
 
-        .form-input,
-        .form-textarea,
-        #journalInput,
-        .chat-input,
         textarea,
         input {
-            font-size: 16px !important;
-            -webkit-appearance: none !important;
-            appearance: none !important;
-            touch-action: manipulation !important;
-            -webkit-user-select: text !important;
-            user-select: text !important;
-            -webkit-appearance: none;
-            appearance: none;
-            position: relative;
-            z-index: 1000; /* safely above any sprites/backgrounds */
+            font-size: 16px;
         }
 
         #petContainer {
@@ -1470,10 +1455,6 @@
         }
 
         /* Make the sprite containers non-blocking for pointer events */
-        .jerry-sprite,
-        #spritePreview {
-            pointer-events: none;
-        }
 
         /* Keep your individual pixel styling intact */
         .jerry-sprite .pixel,
