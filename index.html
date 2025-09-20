@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
     <title>Jerry - Mental Health Companion</title>
 
     <script src="https://www.paypal.com/sdk/js?client-id=AQQjfHs0zv-KHqb4Rtn8c8UYMZSb1chU62eafw_y7s3XzUNLZ3HQpQvfV3M-lx5oesJaaC6hNSr1qG7_&vault=true&intent=subscription"></script>
@@ -1364,6 +1364,9 @@
         .chat-input,
         textarea,
         input {
+            font-size: 16px;
+            -webkit-appearance: none;
+            appearance: none;
             position: relative;
             z-index: 1000; /* safely above any sprites/backgrounds */
         }
@@ -1524,10 +1527,8 @@
         <div class="screen active" id="jerry">
             <div class="jerry-container" id="jerryWrapper">
                 <!--- <div id="jerryHalo"></div> --->
-                <div class="jerry-visuals">
-                    <div class="jerry-sprite" id="jerrySprite"></div>
-                    <div class="jerry-shadow"></div>
-                </div>
+                <div class="jerry-sprite" id="jerrySprite"></div>
+                <div class="jerry-shadow"></div>
                 <div class="jerry-stats">
                     <div class="stat-bar">
                         <div class="stat-label">
@@ -4292,11 +4293,14 @@
             const sendButton = document.getElementById('sendButton');
             const apiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
         
-            // Always keep inputs enabled so iOS can bring up the keyboard
             if (!chatInput || !sendButton) return;
         
             let canSend = false;
-        
+            
+            // NEVER disable or make readonly the textarea
+            chatInput.disabled = false;
+            chatInput.readOnly = false;
+            
             if (apiOption === 'premium') {
                 if (subscriptionState.isSubscribed) {
                     if (subscriptionState.messageCount >= 1000) {
@@ -4317,10 +4321,8 @@
                     chatInput.placeholder = 'Please enter your API key in Settings';
                 }
             }
-        
-            // Never disable the textarea → only toggle the send button
-            chatInput.readOnly = false; 
-            chatInput.disabled = false;
+            
+            // Only disable the send button, never the input
             sendButton.disabled = !canSend;
         }
 
