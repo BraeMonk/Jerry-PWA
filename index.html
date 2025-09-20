@@ -3863,11 +3863,12 @@
             let pendingUpload = null;
 
             // -----------------------------
-            // Populate sprite dropdown
+            // Populate main character (Jerry) dropdown
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
 
+                // Store existing built-in options
                 const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
@@ -3887,7 +3888,7 @@
                     spriteStyleSelect.appendChild(option);
                 });
 
-                // Populate theme
+                // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
                         theme === 'retroPixel' ? 'Retro' :
@@ -3895,18 +3896,25 @@
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
 
-                // ---- TIMING FIX ----
+                // ---- Persistence Fix ----
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedStyle = savedSpriteSettings.style || 'default';
-                const savedTheme = savedSpriteSettings.theme || 'default';
-                const allOptionValues = Array.from(spriteStyleSelect.options).map(opt => opt.value);
-                const styleExists = allOptionValues.includes(savedStyle);
+                let savedStyle = savedSpriteSettings.style || 'default';
+                let savedTheme = savedSpriteSettings.theme || 'default';
 
-                appState.sprite.currentSprite = styleExists ? savedStyle : 'default';
+                // Normalize: underscores instead of spaces for ID matching
+                savedStyle = savedStyle.replace(/\s+/g, '_');
+
+                // Validate against all available options
+                const allOptionValues = Array.from(spriteStyleSelect.options).map(opt => opt.value);
+                if (!allOptionValues.includes(savedStyle)) {
+                    savedStyle = 'default';
+                }
+
+                appState.sprite.currentSprite = savedStyle;
                 appState.sprite.theme = savedTheme;
 
-                spriteStyleSelect.value = appState.sprite.currentSprite;
-                spriteThemeSelect.value = appState.sprite.theme;
+                spriteStyleSelect.value = savedStyle;
+                spriteThemeSelect.value = savedTheme;
             }
 
             // -----------------------------
@@ -3915,6 +3923,7 @@
             function populatePetDropdown() {
                 if (!petStyleSelect || !petThemeSelect) return;
 
+                // Store existing built-in options
                 const builtInOptions = Array.from(petStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
@@ -3928,7 +3937,7 @@
                     petStyleSelect.appendChild(new Option(option.text, option.value));
                 });
 
-                // Add custom Pet sprites
+                // Add custom pet sprites
                 Object.keys(customSprites.pet).forEach(key => {
                     const option = new Option(`${customSprites.pet[key].name} (Custom)`, key);
                     petStyleSelect.appendChild(option);
@@ -3942,18 +3951,25 @@
                     petThemeSelect.appendChild(new Option(displayName, theme));
                 });
 
-                // ---- TIMING FIX ----
+                // ---- Persistence Fix ----
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
-                const savedStyle = savedPetSettings.style || 'none';
-                const savedTheme = savedPetSettings.theme || 'default';
-                const allOptionValues = Array.from(petStyleSelect.options).map(opt => opt.value);
-                const styleExists = allOptionValues.includes(savedStyle);
+                let savedStyle = savedPetSettings.style || 'default';
+                let savedTheme = savedPetSettings.theme || 'default';
 
-                appState.pet.currentSprite = styleExists ? savedStyle : 'none';
+                // Normalize: underscores instead of spaces for ID matching
+                savedStyle = savedStyle.replace(/\s+/g, '_');
+
+                // Validate against all available options
+                const allOptionValues = Array.from(petStyleSelect.options).map(opt => opt.value);
+                if (!allOptionValues.includes(savedStyle)) {
+                    savedStyle = 'default';
+                }
+
+                appState.pet.currentSprite = savedStyle;
                 appState.pet.theme = savedTheme;
 
-                petStyleSelect.value = appState.pet.currentSprite;
-                petThemeSelect.value = appState.pet.theme;
+                petStyleSelect.value = savedStyle;
+                petThemeSelect.value = savedTheme;
             }
 
             populateSpriteDropdown();
