@@ -3899,8 +3899,14 @@
                 
                 // Load saved settings
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                if (savedSpriteSettings.style) appState.sprite.currentSprite = savedSpriteSettings.style;
-                if (savedSpriteSettings.theme) appState.sprite.theme = savedSpriteSettings.theme;
+                const savedStyle = savedSpriteSettings.style || 'default';
+                const savedTheme = savedSpriteSettings.theme || 'default';
+                
+                // Validate saved style exists in either built-in or custom sprites
+                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
+                
+                appState.sprite.currentSprite = styleExists ? savedStyle : 'default';
+                appState.sprite.theme = savedTheme;
                 
                 spriteStyleSelect.value = appState.sprite.currentSprite;
                 spriteThemeSelect.value = appState.sprite.theme;
@@ -3942,8 +3948,14 @@
                 
                 // Load saved settings
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
-                if (savedPetSettings.style) appState.pet.currentSprite = savedPetSettings.style;
-                if (savedPetSettings.theme) appState.pet.theme = savedPetSettings.theme;
+                const savedStyle = savedPetSettings.style || 'none';
+                const savedTheme = savedPetSettings.theme || 'default';
+                
+                // Validate saved style exists in either built-in or custom sprites
+                const styleExists = Array.from(petStyleSelect.options).some(opt => opt.value === savedStyle);
+                
+                appState.pet.currentSprite = styleExists ? savedStyle : 'none';
+                appState.pet.theme = savedTheme;
                 
                 petStyleSelect.value = appState.pet.currentSprite;
                 petThemeSelect.value = appState.pet.theme;
@@ -5459,7 +5471,7 @@
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     const swCode = `
-                        const CACHE_NAME = 'jerry-pwa-v31';
+                        const CACHE_NAME = 'jerry-pwa-v32';
                         const urlsToCache = ['/', '/index.html', '/manifest.json', '/JerryIcon.png'];
                         self.addEventListener('install', (event) => {
                             event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)));
