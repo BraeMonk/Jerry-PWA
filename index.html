@@ -22,1566 +22,621 @@
     <link rel="apple-touch-icon" sizes="167x167" href="./jerryIcon3.PNG">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Light Theme Overrides */
-        body.light-theme {
-            background: linear-gradient(135deg, #fdf6f0 0%, #f7ede5 100%);
-            color: #3e3e3e;
-    }
-
-        body.light-theme .app-container {
-            background: #f7ede5;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        body.light-theme .affirmation-banner {
-            background: linear-gradient(90deg, #e3b88d, #f0c9a2);
-            color: #3e3e3e;
-        }
-
-        body.light-theme .tab-container {
-            background: #eae3de;
-            border-bottom: 1px solid #d8cfc4;
-        }
-
-        body.light-theme .tab {
-            color: #6b7280;
-        }
-
-        body.light-theme .tab.active {
-            color: #e3b88d;
-            background: #f7ede5;
-            border-bottom: 2px solid #e3b88d;
-        }
-
-        body.light-theme .tab:hover {
-            background: rgba(227,184,141,0.1);
-            color: #c27c48;
-        }
-
-        body.light-theme .screen {
-            background-color: #f7ede5;
-        }
-
-        body.light-theme .form-label {
-            color: #4b4b4b;
-        }
-
-        body.light-theme .form-input,
-        body.light-theme .form-textarea {
-            background: #ffffff;
-            border: 1px solid #d8cfc4;
-            color: #3e3e3e;
-        }
-
-        body.light-theme .form-input:focus {
-            border-color: #e3b88d;
-        }
-
-        body.light-theme .btn {
-            background: #e3b88d;
-            color: #3e3e3e;
-        }
-
-        body.light-theme .btn:hover {
-            background: #cfa273;
-        }
-
-        body.light-theme .btn-secondary {
-            background: #d8cfc4;
-            color: #3e3e3e;
-        }
-
-        body.light-theme .btn-secondary:hover {
-            background: #cbb7a2;
-        }
-
-        body.light-theme .rating-btn {
-            background: #ffffff;
-            border: 1px solid #d8cfc4;
-            color: #6b7280;
-        }
-
-        body.light-theme .rating-btn.active,
-        body.light-theme .rating-btn:hover {
-            background: #e3b88d;
-            color: #3e3e3e;
-            border-color: #e3b88d;
-        }
-
-        body.light-theme .timer-display {
-            color: #e3b88d;
-        }
-
-        body.light-theme .progress-section,
-        body.light-theme .entry-item,
-        body.light-theme .checkbox-container {
-            background: #ffffff;
-            border-color: #d8cfc4;
-            color: #3e3e3e;
-        }
-
-        body.light-theme .notification {
-            background: #e3b88d;
-            color: #3e3e3e;
-        }
-
-        /* Light Theme Overrides */
-        body.light-theme #journalInput {
-            background: #ffffff;
-            color: #3e3e3e;
-            border: 1px solid #d8cfc4;
-        }
-
-        body.light-theme #saveJournalEntry {
-            background: #e3b88d;
-            color: #3e3e3e;
-        }
-
-        body.light-theme #saveJournalEntry:hover {
-            background: #cfa273;
-        }
-
-        /* Light mode premium subscription card */
-        body.light-theme #premiumSection .subscription-card {
-            background: #A0522D;          /* main brown background */
-            border: 2px solid #8B4513;    /* slightly darker brown border */
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            color: #ffffff;               /* default text color */
-        }
-
-        /* Title */
-        body.light-theme #premiumSection .subscription-title {
-            color: #ffffff;               /* white text */
-        }
-
-        /* Price */
-        body.light-theme #premiumSection .subscription-price {
-            color: #ffffff;
-        }
-
-        body.light-theme #premiumSection .subscription-price span {
-            color: #f0e6d2; /* slightly lighter for /month text */
-        }
-
-        /* Features list */
-        body.light-theme #premiumSection .subscription-features li {
-            color: #ffffff;               /* white text */
-        }
-
-        body.light-theme #premiumSection .subscription-features li span {
-            color: #68d391;               /* keep green checkmarks */
-        }
-
-        /* Subscription status */
-        body.light-theme #premiumSection #subscriptionStatusDisplay .subscription-status.active {
-            background: #8B4513;          /* darker brown for status box */
-            border: 1px solid #cfa273;   /* matching border */
-            color: #ffffff;               /* white text */
-        }
-
-        body.light-theme #premiumSection #subscriptionStatusDisplay .subscription-status.active div {
-            color: #ffffff;               /* white text */
-        }
-
-        /* Cancel button */
-        body.light-theme #premiumSection #subscriptionStatusDisplay .btn.btn-danger {
-            background: #c03b1f;          /* dark reddish-brown button */
-            color: #ffffff;               /* white text */
-            width: 100%;
-        }
-
-        body.light-theme #premiumSection #subscriptionStatusDisplay .btn.btn-danger:hover {
-            background: #a52d1a;          /* slightly darker on hover */
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
-            color: #e2e8f0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        
-        .app-container {
-            max-width: 430px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: #1a202c;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        
-        .affirmation-banner {
-            background: linear-gradient(90deg, #3355d4, #4f46e5);
-            padding: 8px 16px;
-            text-align: center;
-            font-size: 12px;
-            color: white;
-            min-height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .tab-container {
-            display: flex;
-            background: #2d3748;
-            border-bottom: 1px solid #4a5568;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 12px 8px;
-            text-align: center;
-            background: none;
-            border: none;
-            color: #a0aec0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 11px;
-            font-weight: 500;
-        }
-        
-        .tab.active {
-            color: #3355d4;
-            background: #1a202c;
-            border-bottom: 2px solid #3355d4;
-        }
-        
-        .tab:hover {
-            background: rgba(51, 85, 212, 0.1);
-            color: #63b3ed;
-        }
-        
-        .screen {
-            display: none;
-            padding: 20px;
-            min-height: 100vh;         /* allow full viewport */
-            position: relative;        /* prevent z-index traps */
-        }
-
-        /* only show active screen */
-        .screen.active {
-            display: block;
-        }
-        
-        /* Jerry Sprite Styles */
-        .jerry-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px 0;
-            position: relative;
-            z-index: 1;
-            top: -15px;
-            justify-content: center;
-            transition: background 0.5s ease;
-            border-radius: 12px;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Background inside container, above stats */
-        .jerry-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%; /* leave room for stats at bottom */
-            z-index: 0;
-            pointer-events: none; /* don’t block Jerry clicks */
-            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc); /* initial gradient */
-        }
-        
-        /* Pedestal / shadow above stats */
-        .jerry-shadow {
-            position: absolute;
-            bottom: 100px;   /* adjust so it sits just above stats */
-            width: 120px;    /* slightly smaller than sprite */
-            height: 20px;    /* shadow thickness */
-            background: rgba(0, 0, 0, 0.25); /* subtle shadow */
-            border-radius: 50%; 
-            filter: blur(4px);
-            z-index: 3;
-        }
-        
-        .jerry-sprite {
-            width: 160px;
-            height: 160px;
-            margin: 40px auto 40px;
-            position: relative;
-            z-index: 4;
-        }
-        
-        .pixel {
-            width: 10px;
-            height: 10px;
-            position: absolute;
-            z-index: 4;
-        }
-
-        /* Ensure Jerry sprite pixels are full like the preview */
-        .jerry-sprite .pixel {
-            width: 10px;        /* same as sprite pixel size */
-            height: 10px;
-            position: absolute;
-            border-radius: 0;   /* remove subtle rounding */
-            margin: 0;
-            padding: 0;
-            z-index: 4;
-        }
-        
-        .jerry-stats {
-            width: 100%;
-            max-width: 300px;
-            margin-bottom: 20px;
-            z-index: 3;
-        }
-        
-        .stat-bar {
-            margin-bottom: 12px;
-            z-index: 3;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid; /* border color will depend on theme */
-            background-color: var(--stat-bg); /* dynamic based on theme */
-            color: var(--stat-text);
-            z-index: 3;
-        }
-
-        /* Light theme */
-        body.light-theme {
-            --stat-bg: #e3b88d;
-            --stat-text: #000000;
-        }
-
-        /* Dark theme */
-        body.dark-theme {
-            --stat-bg: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
-            --stat-text: #ffffff;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #2d3748;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        .clarity-bar { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
-        .insight-bar { background: linear-gradient(90deg, #8b5cf6, #5b21b6); }
-        .calm-bar { background: linear-gradient(90deg, #10b981, #047857); }
-        
-        /* Chat Interface */
-        .chat-container {
-            background: #2d3748;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            z-index: 4;
-        }
-        
-        .chat-log {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 12px;
-            padding: 8px;
-            background: #1a202c;
-            border-radius: 8px;
-            z-index: 5;
-        }
-        
-        .message {
-            margin-bottom: 12px;
-            line-height: 1.4;
-            font-size: 14px;
-        }
-        
-        .message.user {
-            color: #63b3ed;
-        }
-        
-        .message.jerry {
-            color: #68d391;
-        }
-        
-        .chat-input-container {
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
-            z-index: 10;
-        }
-        
-        .chat-input {
-            flex: 1;
-            padding: 8px 12px;
-            background: #1a202c;
-            border: 1px solid #4a5568;
-            border-radius: 20px;
-            color: #e2e8f0;
-            outline: none;
-            font-size: 16px;
-
-            resize: none;               /* prevent manual resizing */
-            overflow-y: auto;           /* scroll when text exceeds box height */
-            min-height: 36px;           /* same as original input height */
-            max-height: 100px;          /* maximum height before scroll */
-            white-space: pre-wrap;
-        }
-        
-        .send-button {
-            background: #3355d4;
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease;
-        }
-        
-        .send-button:hover {
-            background: #2d4aa7;
-        }
-
-        /* Light mode chat box */
-        body.light-theme .chat-container {
-            background: #A0522D;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        body.light-theme .chat-log {
-            background: #e3b88d; /* darker brown for messages area */
-            border-radius: 8px;
-        }
-
-        body.light-theme .message.user {
-            color: #ffffff; /* user messages white */
-        }
-
-        body.light-theme .message.jerry {
-            color: #3e3e3e; /* Jerry messages dark for contrast */
-        }
-
-        body.light-theme .chat-input {
-            background: #ffffff; /* input box light */
-            color: #3e3e3e;      /* text dark */
-            border: 1px solid #d8cfc4;
-
-            resize: none;               /* prevent manual resizing */
-            overflow-y: auto;           /* scroll when text exceeds box height */
-            min-height: 36px;           /* same as original input height */
-            max-height: 100px;          /* maximum height before scroll */
-            white-space: pre-wrap;
-        }
-
-        body.light-theme .chat-input::placeholder {
-            color: #a0aec0; /* placeholder text lighter */
-        }
-
-        body.light-theme .send-button {
-            background: #e3b88d; /* button brown */
-            color: #3e3e3e;      /* button text dark */
-        }
-
-        body.light-theme .send-button:hover {
-            background: #cfa273; /* slightly darker on hover */
-        }
-        
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #cbd5e0;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            background: #2d3748;
-            border: 1px solid #4a5568;
-            border-radius: 8px;
-            color: #e2e8f0;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-        
-        .form-input:focus {
-            border-color: #3355d4;
-        }
-        
-        .form-textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        .btn {
-            padding: 12px 24px;
-            background: #3355d4;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            margin: 8px auto;
-        }
-        
-        .btn:hover {
-            background: #2d4aa7;
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background: #4a5568;
-        }
-        
-        .btn-secondary:hover {
-            background: #2d3748;
-        }
-        
-        /* Rating buttons */
-        .rating-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        
-        .rating-btn {
-            flex: 1;
-            padding: 8px;
-            background: #2d3748;
-            border: 1px solid #4a5568;
-            color: #a0aec0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .rating-btn.active,
-        .rating-btn:hover {
-            background: #3355d4;
-            color: white;
-            border-color: #3355d4;
-        }
-        
-        /* Timer Styles */
-        .timer-container {
-            text-align: center;
-            padding: 40px 20px;
-        }
-        
-        .timer-display {
-            font-size: 48px;
-            font-weight: bold;
-            color: #3355d4;
-            margin-bottom: 30px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .timer-btn {
-            font-size: 18px;
-            padding: 16px 32px;
-            border-radius: 50px;
-        }
-        
-        /* Progress Tracking */
-        .progress-section {
-            background: #2d3748;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-        
-        .progress-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #e2e8f0;
-        }
-        
-        /* Entries and History */
-        .entry-item {
-            background: #2d3748;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            border-left: 4px solid #3355d4;
-        }
-        
-        .entry-date {
-            font-size: 12px;
-            color: #a0aec0;
-            margin-bottom: 8px;
-        }
-        
-        .entry-content {
-            line-height: 1.5;
-        }
-        
-        .loading {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #48bb78;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 6px;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .notification.show {
-            opacity: 1;
-        }
-        
-        .checkbox-container {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            padding: 8px;
-            background: #2d3748;
-            border-radius: 6px;
-        }
-        
-        .checkbox {
-            margin-right: 12px;
-            margin-top: 2px;
-        }
-        
-        .checkbox-label {
-            flex: 1;
-            line-height: 1.4;
-            font-size: 14px;
-        }
-
-        /* Ensure sprite preview is visually on top but untouchable */
-        #spritePreview {
-            position: relative;               /* keep it relative for centering */
-            z-index: 1;                       /* behind inputs */
-            pointer-events: none;             /* allow taps to pass through */
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 8px;
-            box-sizing: border-box;
-        }
-        
-        /* Pixel children also untouchable */
-        #spritePreview .pixel {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            pointer-events: none;             /* explicitly for iOS */
-        }
-        
-        /* Journal container */
-        #journal {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;         /* give it height but let body scroll */
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        /* Journal input */
-        #journalInput {
-            flex: 1;
-            min-height: 200px;
-            width: 100%;
-            padding: 16px;
-            font-size: 1rem;
-            border: 1px solid #4a5568;
-            border-radius: 8px;
-            background: #2d3748;
-            color: #e2e8f0;
-            resize: none;
-            box-sizing: border-box;
-            margin-bottom: 80px;
-        }
-
-        #saveJournalEntry {
-            position: relative;       /* fixed at bottom of viewport */
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            padding: 12px 30px;
-            width: 100%;           /* inherits button style */
-            border-radius: 8px;
-            background: #3355d4;
-            color: white;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            margin-top: 12px;
-        }
-
-        #saveJournalEntry:hover {
-            background: #2d4aa7;
-            transform: translateX(-50%);
-        }
-
-        /* --- Journal Entries & Delete Buttons --- */
-
-        /* Entry container */
-        .journalEntry,
-        .entry-item {
-            background: #2d3748;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid #3355d4;
-            color: #e2e8f0;
-            line-height: 1.5;
-            transition: background 0.3s ease;
-            cursor: default;
-        }
-
-        /* Entry date */
-        .entry-date {
-            font-size: 12px;
-            color: #a0aec0;
-            margin-bottom: 8px;
-        }
-
-        /* Delete button */
-        .delete-entry {
-            margin-top: 8px;
-            padding: 8px 16px;
-            background: #c53030;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .delete-entry:hover {
-            background: #9b2c2c;
-            transform: translateY(-1px);
-        }
-
-        /* --- Filter Dropdown --- */
-        #entryFilter {
-            width: 100%;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 8px;
-            border: 1px solid #4a5568;
-            background: #2d3748;
-            color: #e2e8f0;
-            margin-bottom: 12px;
-            outline: none;
-        }
-
-        #entryFilter:focus {
-            border-color: #3355d4;
-        }
-
-        /* --- Light Theme Overrides --- */
-        body.light-theme .journalEntry,
-        body.light-theme .entry-item {
-            background: #ffffff;
-            color: #3e3e3e;
-            border-left-color: #e3b88d;
-        }
-
-        body.light-theme .journalEntry.expanded {
-            background: #f0e8e0;
-        }
-
-        body.light-theme .delete-entry {
-            background: #e53e3e;
-            color: white;
-        }
-
-        body.light-theme .delete-entry:hover {
-            background: #c53030;
-        }
-
-        body.light-theme #entryFilter {
-            background: #ffffff;
-            color: #3e3e3e;
-            border: 1px solid #d8cfc4;
-        }
-
-        /* Ensure hover, focus, and expanded states look good */
-        body.light-theme #entryFilter:focus {
-            border-color: #e3b88d;
-        }
-
-        /* Splash Screen */
-        #splashScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;              
-            transition: opacity 0.5s ease; 
-            overflow: hidden; /* needed for pseudo-element */
-            pointer-events: none;
-        }
-
-        /* Blurred background */
-        #splashScreen::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('./jerrySplash2.PNG') no-repeat center center;
-            background-size: cover;
-            filter: blur(10px); /* adjust blur intensity */
-            z-index: 0; /* behind everything */
-            pointer-events: none;
-        }
-
-        /* Splash image stays above the blurred background */
-        #splashScreen img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-            border-radius: 12px;           
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
-            position: relative; /* make sure it’s above the pseudo-element */
-            z-index: 1;
-        }
-
-        /* Light theme version */
-        body.light-theme #splashScreen::before {
-            background: url('./jerrySplash.png.png') no-repeat center center;
-            background-size: cover;
-        }
-
-        /* Header always visible */
-        .journalEntry .entryHeader {
-            font-weight: bold;
-            margin-bottom: 0.25em;
-        }
-
-        /* Preview state: clamp to 1 line */
-        .journalEntry .entryContent {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;     /* number of lines to show in preview */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-height: 1.5em;         /* ~1 line of text */
-            transition: max-height 0.3s ease;
-        }
-
-        /* Expanded: show full text */
-        .journalEntry.expanded .entryContent {
-            -webkit-line-clamp: unset;
-            max-height: 100vh;         /* large enough to fit */
-        }
-
-        /* Light mode API option text */
-        body.light-theme .api-toggle {
-            background: #8B4513 !important; /* dark brown background for contrast */
-        }
-
-        body.light-theme .api-toggle .api-option label {
-            color: #ffffff; /* main label text */
-        }
-
-        body.light-theme .api-toggle .api-option label div {
-            color: #f0e6d2; /* description text, slightly lighter */
-        }
-
-        body.light-theme .api-toggle input[type="radio"] {
-            accent-color: #f0c9a2; /* makes the radio dot match the theme */
-        }
-
-        /* Dark theme (default) */
-        .def-button {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 12px 24px;
-            border-radius: 8px;
-            background: #3355d4;
-            transition: background 0.3s ease;
-            border: none;
-            text-align: center;
-            font-weight: 500;
-            margin: 8px auto 16px auto;
-        }
-
-        .def-button:hover {
-            background: #2d4aa7;
-        }
-
-        /* Light theme */
-        body.light-theme .def-button {
-            background: #e3b88d;
-            color: #3e3e3e;
-        }
-
-        body.light-theme .def-button:hover {
-            background: #8b421f; /* slightly darker on hover */
-        }
-
-        #menuTrigger {
-            position: relative;
-            top: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: transparent;
-            color: #e2e8f0;
-            font-size: 28px;
-            text-align: center;
-            cursor: pointer;
-            z-index: 1000;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #menuTrigger:hover {
-            color: #ffffff;
-        }
-
-        /* Radial Menu */
-        #radialMenuApp {
-            position: fixed;
-            top: 50px;
-            left: 50px;
-            width: 320px;
-            height: 320px;
-            pointer-events: none; /* disables clicks when closed */
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 999;
-        }
-
-        #radialMenuApp.open {
-            pointer-events: auto;
-            opacity: 1;
-        }
-
-        /* Radial buttons styling (same as before) */
-        .radial-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 36px;
-            cursor: default;
-            color: inherit;
-        }
-
-        .radial-item {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: #2d3748;
-            text-align: center;
-            line-height: 70px;
-            cursor: pointer;
-            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
-            font-size: 14px;
-            font-weight: 600;
-            color: inherit;
-            white-space: nowrap;
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-
-        .radial-item:hover,
-        .radial-item.active {
-            transform: scale(1.2);
-            background: #4a5568;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
-        }
-
-        /* LIGHT THEME OVERRIDES */
-        body.light-theme #menuTrigger {
-            color: #A0522D;
-        }
-
-        body.light-theme #menuTrigger:hover {
-            background: #A0522D;
-            color: #ffffff;
-        }
-
-        body.light-theme .radial-item {
-            background: #A0522D;
-            border: 2px solid rgba(0, 0, 0, 0.1);
-            color: #3e3e3e;
-        }
-
-        body.light-theme .radial-item:hover,
-        body.light-theme .radial-item.active {
-            background: #e2dcd5;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
-        }
-
-        /* LIGHT THEME OVERRIDES FOR RADIAL CENTER ICON */
-        body.light-theme .radial-center {
-            color: #3e3e3e; /* matches light theme text */
-        }
-
-        /* Background blur overlay */
-        #radialMenuOverlay {
-            position: fixed;
-            top: 0; 
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(6px);   /* applies blur */
-            background: rgba(0, 0, 0, 0.2); /* optional dark tint */
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 998; /* just below the menu */
-        }
-
-        #radialMenuOverlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ===== Light Theme Overrides ===== */
-        body.light-theme #radialMenuOverlay {
-            background: rgba(255, 255, 255, 0.3); /* subtle light tint */
-            backdrop-filter: blur(6px);
-        }
-
-        /* Settings scroll container */
-        .background-scroll {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 10px 0;
-        }
-
-        .background-option {
-            min-width: 100px;
-            height: 60px;
-            background-color: #2d3748; /* placeholder color */
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .background-option:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-
-        .background-option.selected {
-            border: 2px solid #f59e0b;
-        }
-
-        /* Preview image inside the scroll */
-        .bg-preview {
-            width: 60px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 5px;
-        }
-
-        /* Default just follows light/dark theme */
-        .jerry-container.bg-default {
-            background: none;
-        }
-
-        /* Neon Lights — electric blues and magentas */
-        .jerry-container.bg-neonLights {
-            background: linear-gradient(to top, #00f260, #0575e6);
-        }
-
-        /* Background swatches inside the scroll menu */
-        .bg-swatch {
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            margin-bottom: 6px;
-        }
-
-        /* Noir — monochrome black & white gradient */
-        .jerry-container.bg-noir {
-            background: linear-gradient(to top, #000000, #444444, #888888, #ffffff);
-        }
-
-        /* Swatch for Noir */
-        .swatch-noir {
-            background: linear-gradient(to top, #000000, #444444, #888888, #ffffff);
-        }
-
-        /* Match each gradient theme */
-        .swatch-default {
-            background: linear-gradient(to bottom, #f9fafb, #e5e7eb); /* light theme */
-        }
-        body.dark-theme .swatch-default {
-            background: linear-gradient(to bottom, #1f2937, #111827); /* dark theme */
-        }
-
-        .swatch-neonLights {
-            background: linear-gradient(to top, #00f260, #0575e6);
-        }
-
-        /* 🌸 Petal — soft lavenders, peaches, and mint greens */
-        .jerry-container.bg-petal {
-            background: linear-gradient(to top, #E6E6FA, #FFE5B4, #98FB98);
-        }
-
-        .swatch-petal {
-            background: linear-gradient(to top, #E6E6FA, #FFE5B4, #98FB98);
-        }
-
-        /* 🌙 Eclipse — silvers, muted blues, and soft purples */
-        .jerry-container.bg-eclipse {
-            background: linear-gradient(to top, #2F4F4F, #708090, #B0C4DE, #C0C0C0);
-        }
-
-        .swatch-eclipse {
-            background: linear-gradient(to top, #2F4F4F, #708090, #B0C4DE, #C0C0C0);
-        }
-
-        /* Aurora — northern lights inspired */
-        .jerry-container.bg-aurora {
-            background: linear-gradient(to top, #0f2027, #2c5364, #6a11cb, #2575fc, #00c9a7);
-        }
-
-        .swatch-aurora {
-            background: linear-gradient(to top, #0f2027, #6a11cb, #00c9a7);
-        }
-
-        /* Ember — fiery glow of coals and flame */
-        .jerry-container.bg-ember {
-            background: linear-gradient(to top, #3c0a00, #8b0000, #ff4500, #ff8c00, #ffd700);
-        }
-
-        .swatch-ember {
-            background: linear-gradient(to top, #8b0000, #ff4500, #ffd700);
-        }
-
-        /* Woods — forest/photo background */
-        .jerry-container.bg-woods {
-            background: url('./woodsBG.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-woods {
-            background: url('./woodsBG.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-galactic {
-            background: url('./galactic.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-galactic {
-            background: url('./galactic.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-spooky {
-            background: url('./Spooky.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-spooky {
-            background: url('./Spooky.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-dreamland {
-            background: url('./dreamLand.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-dreamland {
-            background: url('./dreamLand.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-beach {
-            background: url('./beachDay.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-beach {
-            background: url('./beachDay.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-arcane {
-            background: url('./Arcane.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-arcane {
-            background: url('./Arcane.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-matrix {
-            background: url('./Matrix.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-matrix {
-            background: url('./Matrix.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .jerry-container.bg-flare {
-            background: url('./Flare.jpg') no-repeat center center;
-            background-size: cover;
-            /* optional subtle overlay so text stays readable */
-            background-blend-mode: overlay;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-
-        /* Swatch for Woods */
-        .swatch-flare {
-            background: url('./Flare.jpg') no-repeat center center;
-            background-size: cover;
-        }
-        
-        .swatch-all {
-            background: repeating-linear-gradient(
-                45deg,
-                #2d6a4f,
-                #2d6a4f 5px,
-                #0f172a 5px,
-                #0f172a 10px,
-                #3a7bd5 10px,
-                #3a7bd5 15px,
-                #ff7e5f 15px,
-                #ff7e5f 20px
-            );
-            border-radius: 4px;
-        }
-
-        .form-input,
-        .form-textarea,
-        #journalInput,
-        .chat-input,
-        textarea,
-        input {
-            pointer-events: auto;
-            position: relative;
-            z-index: 500; /* safely above any sprites/backgrounds */
-        }
-
-        #petContainer {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            z-index: 50;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            pointer-events: auto;
-        }
-
-        .pet-sprite {
-            width: 100%;
-            height: 100%;
-            display: grid;         /* JS sets grid anyway */
-            animation: petIdle 2s infinite alternate;
-            pointer-events: auto;
-        }
-
-        .pet-sprite.pulse {
-            animation: petIdle 2s infinite alternate, pulse 1s infinite;
-        }
-
-        @keyframes petIdle {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-3px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        #petPreview .pet-sprite {
-            background: transparent;
-            border: none;
-            display: grid;
-            grid-gap: 0;                  /* no gaps between pixels */
-            width: 100%;
-            height: 100%;
-            image-rendering: pixelated;   /* optional for crisp scaling */
-        }
-
-        #petPreview {
-            position: relative;
-            display: flex;
-            justify-content: center;  /* horizontally center */
-            align-items: center;      /* vertically center */
-            width: 60px;              /* fixed preview box */
-            height: 60px;
-            background: transparent;
-            border: none;
-            padding: 4px;             /* optional padding around sprite */
-            box-sizing: border-box;
-        }
-
-
-        .upload-zone {
-            border: 2px dashed #aaa;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            margin: 10px 0;
-            background: rgba(0,0,0,0.05);
-            transition: background 0.2s, border-color 0.2s;
-        }
-
-        .upload-zone.dragover {
-            background: rgba(0, 150, 255, 0.1);
-            border-color: #0096ff;
-        }
-
-        #uploadedSpritesList {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-        }
-
-        #uploadedSpritesList li {
-            padding: 5px 10px;
-            margin: 3px 0;
-            background: rgba(0,0,0,0.05);
-            border-radius: 4px;
-        }
-
-        /* Make the sprite containers non-blocking for pointer events */
-        .jerry-sprite,
-        #spritePreview {
-            pointer-events: none;
-        }
-
-        /* Keep your individual pixel styling intact */
-        .jerry-sprite .pixel,
-        #spritePreview .pixel {
-            pointer-events: none; /* already set, fine to leave */
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.75);
-            z-index: 2000;
-            overflow-y: auto;
-          }
-        
-          /* Overlay content */
-          .overlay-content {
-            background: #1e293b; /* dark slate default */
-            color: #f1f5f9;
-            max-width: 700px;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 12px;
-            position: relative;
-          }
-        
-          /* Open button */
-          .overlay-open-btn {
-            margin: 10px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            background: #2563eb;
-            color: white;
-            font-weight: bold;
-            font-size: 1em;
-          }
-        
-          /* Close button */
-          .overlay-close-btn {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            cursor: pointer;
-            border: none;
-            background: #334155;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.9em;
-          }
-        
-          /* Headings */
-          .overlay h2 {
-            margin-top: 1.5em;
-            border-bottom: 1px solid #475569;
-            padding-bottom: 0.25em;
-          }
-        
-          /* Lists */
-          .overlay ul {
-            margin: 0.5em 0 1.5em;
-            padding-left: 1.2em;
-          }
-
-        /* Light Mode Overrides */
-        body.light-theme .overlay {
-            background: rgba(240, 240, 240, 0.95); /* lighter overlay background */
-        }
-        
-        body.light-theme .overlay-content {
-            background: #ffffff;   /* white card */
-            color: #1f2937;        /* dark text */
-            border: 1px solid #d1d5db; /* subtle border */
-        }
-        
-        body.light-theme .overlay-open-btn {
-            background: #2563eb;   /* keep blue */
-            color: white;
-        }
-        
-        body.light-theme .overlay-close-btn {
-            background: #e3b88d;   /* warm tan for close */
-            color: #3e3e3e;        /* dark text */
-        }
-        
-        body.light-theme .overlay h2 {
-            border-bottom: 1px solid #d1d5db; /* lighter underline for headings */
-        }
-        
-        body.light-theme .overlay ul {
-            color: #1f2937; /* dark text for lists */
-        }
-
-
-        @media (max-width: 480px) {
-            .app-container {
-                max-width: 100%;
-            }
-            
-            .jerry-sprite {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .pixel {
-                width: 10px;
-                height: 10px;
-            }
-            
-            .timer-display {
-                font-size: 36px;
-            }
-        }
-    </style>
+/* ============================= */
+/* GLOBAL RESET & BOX-SIZING */
+/* ============================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================= */
+/* BODY & THEMES */
+/* ============================= */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e1e2e 0%, #2d3748 100%);
+    color: #e2e8f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Light Theme */
+body.light-theme {
+    background: linear-gradient(135deg, #fdf6f0 0%, #f7ede5 100%);
+    color: #3e3e3e;
+}
+
+/* ============================= */
+/* APP CONTAINER */
+/* ============================= */
+.app-container {
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: #1a202c;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+body.light-theme .app-container {
+    background: #f7ede5;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* ============================= */
+/* AFFIRMATION BANNER */
+/* ============================= */
+.affirmation-banner {
+    background: linear-gradient(90deg, #3355d4, #4f46e5);
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.light-theme .affirmation-banner {
+    background: linear-gradient(90deg, #e3b88d, #f0c9a2);
+    color: #3e3e3e;
+}
+
+/* ============================= */
+/* TABS */
+/* ============================= */
+.tab-container {
+    display: flex;
+    background: #2d3748;
+    border-bottom: 1px solid #4a5568;
+}
+
+body.light-theme .tab-container {
+    background: #eae3de;
+    border-bottom: 1px solid #d8cfc4;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.tab.active {
+    color: #3355d4;
+    background: #1a202c;
+    border-bottom: 2px solid #3355d4;
+}
+
+.tab:hover {
+    background: rgba(51, 85, 212, 0.1);
+    color: #63b3ed;
+}
+
+body.light-theme .tab {
+    color: #6b7280;
+}
+
+body.light-theme .tab.active {
+    color: #e3b88d;
+    background: #f7ede5;
+    border-bottom: 2px solid #e3b88d;
+}
+
+body.light-theme .tab:hover {
+    background: rgba(227,184,141,0.1);
+    color: #c27c48;
+}
+
+/* ============================= */
+/* SCREENS */
+/* ============================= */
+.screen {
+    display: none;
+    padding: 20px;
+    min-height: 100vh;
+    position: relative;
+}
+
+.screen.active {
+    display: block;
+}
+
+body.light-theme .screen {
+    background-color: #f7ede5;
+}
+
+/* ============================= */
+/* FORM STYLES */
+/* ============================= */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #cbd5e0;
+}
+
+body.light-theme .form-label {
+    color: #4b4b4b;
+}
+
+.form-input,
+.form-textarea,
+#journalInput,
+.chat-input,
+textarea,
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    position: relative;
+    z-index: 500;
+}
+
+.form-input,
+.form-textarea {
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    color: #e2e8f0;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    border-color: #3355d4;
+}
+
+body.light-theme .form-input,
+body.light-theme .form-textarea,
+body.light-theme #journalInput,
+body.light-theme .chat-input {
+    background: #ffffff;
+    color: #3e3e3e;
+    border: 1px solid #d8cfc4;
+}
+
+body.light-theme .form-input:focus,
+body.light-theme .form-textarea:focus,
+body.light-theme #journalInput:focus,
+body.light-theme .chat-input:focus {
+    border-color: #e3b88d;
+}
+
+.form-textarea,
+#journalInput {
+    resize: vertical;
+}
+
+#journalInput {
+    flex: 1;
+    min-height: 200px;
+    margin-bottom: 80px;
+    box-sizing: border-box;
+}
+
+#saveJournalEntry {
+    position: relative;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding: 12px 30px;
+    width: 100%;
+    border-radius: 8px;
+    background: #3355d4;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    margin-top: 12px;
+}
+
+#saveJournalEntry:hover {
+    background: #2d4aa7;
+    transform: translateX(-50%);
+}
+
+body.light-theme #saveJournalEntry {
+    background: #e3b88d;
+    color: #3e3e3e;
+}
+
+body.light-theme #saveJournalEntry:hover {
+    background: #cfa273;
+}
+
+/* ============================= */
+/* BUTTONS */
+/* ============================= */
+.btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    margin: 8px auto;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn {
+    background: #3355d4;
+    color: white;
+}
+
+.btn:hover {
+    background: #2d4aa7;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #4a5568;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #2d3748;
+}
+
+.rating-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.rating-btn {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    background: #2d3748;
+    border: 1px solid #4a5568;
+    color: #a0aec0;
+}
+
+.rating-btn.active,
+.rating-btn:hover {
+    background: #3355d4;
+    color: white;
+    border-color: #3355d4;
+}
+
+body.light-theme .btn {
+    background: #e3b88d;
+    color: #3e3e3e;
+}
+
+body.light-theme .btn:hover {
+    background: #cfa273;
+}
+
+body.light-theme .btn-secondary {
+    background: #d8cfc4;
+    color: #3e3e3e;
+}
+
+body.light-theme .btn-secondary:hover {
+    background: #cbb7a2;
+}
+
+body.light-theme .rating-btn {
+    background: #ffffff;
+    border: 1px solid #d8cfc4;
+    color: #6b7280;
+}
+
+body.light-theme .rating-btn.active,
+body.light-theme .rating-btn:hover {
+    background: #e3b88d;
+    color: #3e3e3e;
+    border-color: #e3b88d;
+}
+
+/* ============================= */
+/* TIMER DISPLAY */
+/* ============================= */
+.timer-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.timer-display {
+    font-size: 48px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #3355d4;
+    margin-bottom: 30px;
+}
+
+body.light-theme .timer-display {
+    color: #e3b88d;
+}
+
+/* ============================= */
+/* PROGRESS & STATS */
+/* ============================= */
+.progress-section,
+.entry-item,
+.checkbox-container {
+    background: #2d3748;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+body.light-theme .progress-section,
+body.light-theme .entry-item,
+body.light-theme .checkbox-container {
+    background: #f7ede5;
+    color: #3e3e3e;
+}
+
+.entry-item label {
+    flex: 1;
+    cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 12px;
+    accent-color: #3355d4;
+}
+
+body.light-theme .checkbox-container input[type="checkbox"] {
+    accent-color: #e3b88d;
+}
+
+/* ============================= */
+/* NOTIFICATIONS */
+/* ============================= */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #3355d4;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.notification.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.notification.success {
+    background: #38a169;
+}
+
+.notification.error {
+    background: #e53e3e;
+}
+
+body.light-theme .notification {
+    background: #e3b88d;
+    color: #3e3e3e;
+}
+
+body.light-theme .notification.success {
+    background: #81c784;
+}
+
+body.light-theme .notification.error {
+    background: #f56565;
+}
+
+/* ============================= */
+/* RADIAL MENU */
+/* ============================= */
+.radial-menu {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #3355d4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.radial-menu:hover {
+    transform: scale(1.05);
+}
+
+body.light-theme .radial-menu {
+    background: #e3b88d;
+}
+
+.radial-menu-item {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+}
+
+body.light-theme .radial-menu-item {
+    background: #d8cfc4;
+    color: #3e3e3e;
+}
+
+/* ============================= */
+/* PET SPRITE PREVIEW */
+/* ============================= */
+#petPreview {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Prevent blocking clicks */
+    z-index: 50;
+}
+
+body.light-theme #petPreview {
+    background: rgba(0,0,0,0.05);
+}
+
+#petPreview canvas {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+/* ============================= */
+/* CHAT AREA */
+/* ============================= */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 12px;
+    background: #1a202c;
+    overflow-y: auto;
+}
+
+body.light-theme .chat-container {
+    background: #f7ede5;
+}
+
+.chat-message {
+    margin-bottom: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.chat-message.user {
+    background: #3355d4;
+    color: white;
+    align-self: flex-end;
+}
+
+.chat-message.bot {
+    background: #4a5568;
+    color: white;
+    align-self: flex-start;
+}
+
+body.light-theme .chat-message.user {
+    background: #e3b88d;
+    color: #3e3e3e;
+}
+
+body.light-theme .chat-message.bot {
+    background: #d8cfc4;
+    color: #3e3e3e;
+}
+
+.chat-input-container {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    background: #2d3748;
+}
+
+body.light-theme .chat-input-container {
+    background: #ffffff;
+}
+
+/* ============================= */
+/* JOURNAL ENTRIES LIST */
+/* ============================= */
+.journal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.journal-list-item {
+    padding: 12px;
+    border-radius: 8px;
+    background: #2d3748;
+    color: #e2e8f0;
+}
+
+body.light-theme .journal-list-item {
+    background: #f7ede5;
+    color: #3e3e3e;
+}
+
+/* ============================= */
+/* MISC UI ELEMENTS */
+/* ============================= */
+.scrollable {
+    overflow-y: auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+</style>
 </head>
 <body>
     <div id="splashScreen">
