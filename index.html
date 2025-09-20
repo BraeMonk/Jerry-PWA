@@ -2051,8 +2051,12 @@
             </div>
 
             <div id="spriteUploadZone" class="upload-zone">
-                <p>Drag & drop your sprite JSON here or click to upload</p>
-                <input type="file" id="spriteFileInput" accept=".json" hidden>
+                <p>Drag & drop your sprite JSON here or tap the button below to upload</p>
+                <!-- Label triggers the hidden file input -->
+                <label for="spriteFileInput" class="upload-button" style="cursor: pointer; display: inline-block; padding: 6px 12px; background-color: #3355d4; color: #fff; border-radius: 4px; margin-top: 5px;">
+                    Select Sprite JSON
+                </label>
+                <input type="file" id="spriteFileInput" accept=".json" style="display:none;">
             </div>
 
             <!-- Inline inputs for naming and category -->
