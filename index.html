@@ -4007,7 +4007,7 @@
                     const theme = spriteThemeSelect.value;
                     appState.sprite.theme = theme;
                     localStorage.setItem('spriteSettings', JSON.stringify({ 
-                        style: appState.sprite.currentSprite || 'default', 
+                        style: appState.sprite.currentSprite,
                         theme 
                     }));
                     refreshSpriteRender();
@@ -4030,7 +4030,7 @@
                     const theme = petThemeSelect.value;
                     appState.pet.theme = theme;
                     localStorage.setItem('petSettings', JSON.stringify({ 
-                        style: appState.pet.currentSprite || 'none', 
+                        style: appState.pet.currentSprite,
                         theme 
                     }));
                     refreshPetRender();
