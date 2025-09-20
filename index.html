@@ -3796,11 +3796,11 @@
             // -----------------------------
             if (!appState.sprite) appState.sprite = {};
             if (!appState.pet) appState.pet = {};
-            
+
             // Main sprite settings
             if (!appState.sprite.currentSprite) appState.sprite.currentSprite = 'default';
             if (!appState.sprite.theme) appState.sprite.theme = 'default';
-            
+
             // Pet settings  
             if (!appState.pet.currentSprite) appState.pet.currentSprite = 'none';
             if (!appState.pet.theme) appState.pet.theme = 'default';
@@ -3812,7 +3812,7 @@
             if (!customSprites.jerry) customSprites.jerry = {};
             if (!customSprites.pet) customSprites.pet = {};
 
-            // Merge sprites into existing objects without overwriting
+            // Merge sprites into runtime objects without overwritin
             for (const [id, sprite] of Object.entries(customSprites.jerry)) {
                 if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
                     jerrySprites[id] = sprite.data;
@@ -3830,24 +3830,23 @@
             }
 
             saveToLocalStorage('customSprites', customSprites);
-
             // -----------------------------
-            // Available themes
+            // Available theme
             // -----------------------------
             const availableThemes = ['default', 'candy', 'ocean', 'ember', 'meadow', 'neon', 'pastel', 'gothic', 'aurora', 'retroPixel', 'fantasySprite'];
 
             // -----------------------------
-            // DOM elements - CORRECT IDs
+            // DOM elements
             // -----------------------------
             const spriteStyleSelect = document.getElementById('spriteStyle');
             const spriteThemeSelect = document.getElementById('spriteTheme');
             const spritePreview = document.getElementById('spritePreview');
-            
+
             const petStyleSelect = document.getElementById('petStyle');
             const petThemeSelect = document.getElementById('petTheme');
             const petPreview = document.getElementById('petPreview');
             const petContainer = document.getElementById('petContainer');
-            
+
             const uploadedSpritesList = document.getElementById('uploadedSpritesList');
             const spriteFileInput = document.getElementById('spriteFileInput');
             const spriteUploadZone = document.getElementById('spriteUploadZone');
@@ -3864,105 +3863,98 @@
             let pendingUpload = null;
 
             // -----------------------------
-            // Populate sprite dropdown (jerry category)
+            // Populate sprite dropdown
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
-            
-                // Store existing built-in options
+
                 const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
                 }));
-            
+
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
-            
+
                 // Re-add built-in options
                 builtInOptions.forEach(option => {
                     spriteStyleSelect.appendChild(new Option(option.text, option.value));
                 });
-            
-                // Add custom Jerry sprites first (before validating saved style)
+
+                // Add custom Jerry sprites
                 Object.keys(customSprites.jerry).forEach(key => {
                     const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
                     spriteStyleSelect.appendChild(option);
                 });
-            
-                // Populate themes
+
+                // Populate theme
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
-                                        theme === 'retroPixel' ? 'Retro' :
-                                        theme.charAt(0).toUpperCase() + theme.slice(1);
+                        theme === 'retroPixel' ? 'Retro' :
+                        theme.charAt(0).toUpperCase() + theme.slice(1);
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
-            
+
                 // ---- TIMING FIX ----
-                // Now read saved settings, after all options exist
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
                 const savedStyle = savedSpriteSettings.style || 'default';
                 const savedTheme = savedSpriteSettings.theme || 'default';
-            
-                // Validate against ALL available options (built-in + custom)
                 const allOptionValues = Array.from(spriteStyleSelect.options).map(opt => opt.value);
                 const styleExists = allOptionValues.includes(savedStyle);
-            
+
                 appState.sprite.currentSprite = styleExists ? savedStyle : 'default';
                 appState.sprite.theme = savedTheme;
-            
+
                 spriteStyleSelect.value = appState.sprite.currentSprite;
                 spriteThemeSelect.value = appState.sprite.theme;
             }
 
-
             // -----------------------------
-            // Populate pet dropdown (pet category)
+            // Populate pet dropdown
             // -----------------------------
             function populatePetDropdown() {
                 if (!petStyleSelect || !petThemeSelect) return;
-            
+
                 const builtInOptions = Array.from(petStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
                 }));
-            
+
                 petStyleSelect.innerHTML = '';
                 petThemeSelect.innerHTML = '';
-            
+
                 // Re-add built-in options
                 builtInOptions.forEach(option => {
                     petStyleSelect.appendChild(new Option(option.text, option.value));
                 });
-            
-                // Add custom Pet sprites first
+
+                // Add custom Pet sprites
                 Object.keys(customSprites.pet).forEach(key => {
                     const option = new Option(`${customSprites.pet[key].name} (Custom)`, key);
                     petStyleSelect.appendChild(option);
                 });
-            
+
                 // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
-                                        theme === 'retroPixel' ? 'Retro' :
-                                        theme.charAt(0).toUpperCase() + theme.slice(1);
+                        theme === 'retroPixel' ? 'Retro' :
+                        theme.charAt(0).toUpperCase() + theme.slice(1);
                     petThemeSelect.appendChild(new Option(displayName, theme));
                 });
-            
+
                 // ---- TIMING FIX ----
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
                 const savedStyle = savedPetSettings.style || 'none';
                 const savedTheme = savedPetSettings.theme || 'default';
-            
                 const allOptionValues = Array.from(petStyleSelect.options).map(opt => opt.value);
                 const styleExists = allOptionValues.includes(savedStyle);
-            
+
                 appState.pet.currentSprite = styleExists ? savedStyle : 'none';
                 appState.pet.theme = savedTheme;
-            
+
                 petStyleSelect.value = appState.pet.currentSprite;
                 petThemeSelect.value = appState.pet.theme;
             }
-
 
             populateSpriteDropdown();
             populatePetDropdown();
@@ -3974,14 +3966,14 @@
                 if (typeof renderSpritePreview === 'function') renderSpritePreview();
                 if (typeof updateMainSprite === 'function') updateMainSprite();
             }
-            
+
             function refreshPetRender() {
                 if (typeof renderPetPreview === 'function') renderPetPreview();
                 if (typeof updateStickyPet === 'function') updateStickyPet();
             }
 
             // -----------------------------
-            // Sprite dropdown listeners
+            // Dropdown listeners
             // -----------------------------
             if (spriteStyleSelect) {
                 spriteStyleSelect.addEventListener('change', () => {
@@ -3994,7 +3986,6 @@
                     refreshSpriteRender();
                 });
             }
-
             if (spriteThemeSelect) {
                 spriteThemeSelect.addEventListener('change', () => {
                     const theme = spriteThemeSelect.value;
@@ -4006,10 +3997,6 @@
                     refreshSpriteRender();
                 });
             }
-
-            // -----------------------------
-            // Pet dropdown listeners  
-            // -----------------------------
             if (petStyleSelect) {
                 petStyleSelect.addEventListener('change', () => {
                     const style = petStyleSelect.value;
@@ -4018,10 +4005,10 @@
                         style, 
                         theme: appState.pet.theme || 'default' 
                     }));
+                    
                     refreshPetRender();
                 });
             }
-
             if (petThemeSelect) {
                 petThemeSelect.addEventListener('change', () => {
                     const theme = petThemeSelect.value;
@@ -4033,7 +4020,7 @@
                     refreshPetRender();
                 });
             }
-
+           
             // -----------------------------
             // Uploaded sprites list
             // -----------------------------
@@ -4049,29 +4036,35 @@
             function updateUploadList() {
                 if (!uploadedSpritesList) return;
                 uploadedSpritesList.innerHTML = '';
-
-                for (const [id, sprite] of Object.entries(customSprites.jerry)) {
-                    appendSpriteToList('jerry', id, sprite);
-                }
-                for (const [id, sprite] of Object.entries(customSprites.pet)) {
-                    appendSpriteToList('pet', id, sprite);
-                }
+                for (const [id, sprite] of Object.entries(customSprites.jerry)) appendSpriteToList('jerry', id, sprite);
+                for (const [id, sprite] of Object.entries(customSprites.pet)) appendSpriteToList('pet', id, sprite);
             }
 
+            // -----------------------------
+            // Delete sprite
+            // -----------------------------
             window.deleteSprite = function(category, id, name) {
                 if (!confirm(`Delete sprite "${name}"?`)) return;
+
                 delete customSprites[category][id];
                 if (category === 'jerry') delete jerrySprites[id];
                 else delete petSprites[id];
-                saveToLocalStorage('customSprites', customSprites);
 
-                // Reset to default if deleted sprite was selected
+                saveToLocalStorage('customSprites', customSprites);
                 if (category === 'jerry' && appState.sprite.currentSprite === id) {
                     appState.sprite.currentSprite = 'default';
+                    localStorage.setItem('spriteSettings', JSON.stringify({
+                        style: appState.sprite.currentSprite,
+                        theme: appState.sprite.theme || 'default'
+                    }));
                     refreshSpriteRender();
                 }
                 if (category === 'pet' && appState.pet.currentSprite === id) {
                     appState.pet.currentSprite = 'none';
+                    localStorage.setItem('petSettings', JSON.stringify({
+                        style: appState.pet.currentSprite,
+                        theme: appState.pet.theme || 'default'
+                    }));
                     refreshPetRender();
                 }
 
@@ -4088,23 +4081,14 @@
                 try {
                     const text = await file.text();
                     let data = JSON.parse(text);
-
                     let spriteData = null;
 
-                    if (data.sprite) {
-                        spriteData = data.sprite;
-                    } else if (Array.isArray(data.sprites) && data.sprites.length > 0) {
-                        spriteData = data.sprites[0];
-                    } else if (Array.isArray(data) && Array.isArray(data[0])) {
-                        spriteData = { name: "Unnamed Sprite", data: data };
-                    }
+                    if (data.sprite) spriteData = data.sprite;
+                    else if (Array.isArray(data.sprites) && data.sprites.length > 0) spriteData = data.sprites[0];
+                    else if (Array.isArray(data) && Array.isArray(data[0])) spriteData = { name: "Unnamed Sprite", data: data };
 
                     if (spriteData && Array.isArray(spriteData.data)) {
-                        pendingUpload = {
-                            type: "sprite",
-                            data: spriteData.data,
-                            name: spriteData.name || "Unnamed Sprite"
-                        };
+                        pendingUpload = { type: "sprite", data: spriteData.data, name: spriteData.name || "Unnamed Sprite" };
                         nameInput.value = pendingUpload.name;
                         categorySelect.style.display = "block";
                         uploadInputs.style.display = "block";
@@ -4121,41 +4105,50 @@
             }
 
             if (!uploadSubmit.dataset.bound) {
-                uploadSubmit.dataset.bound = "true"; // prevent double-binding
-            
+                uploadSubmit.dataset.bound = "true";
+
                 uploadSubmit.addEventListener('click', () => {
                     if (!pendingUpload) {
                         alert("No sprite selected to upload.");
                         return;
                     }
-            
-                    // Read the input value immediately
+
                     const name = nameInput.value.trim();
                     if (!name) {
                         alert("Please enter a name.");
                         nameInput.focus();
                         return;
                     }
-            
+
                     const category = categorySelect.value;
-                    const id = `${category}_${Date.now()}_${Math.random().toString(36).substr(2,9)}`;
-            
+
+                    // Prevent duplicate names
+                    const existingNames = Object.values(customSprites[category]).map(s => s.name.toLowerCase());
+                    if (existingNames.includes(name.toLowerCase())) {
+                        alert("A sprite with that name already exists in this category.");
+                        nameInput.focus();
+                        return;
+                    }
+
+                    // Use the name as the ID for persistence
+                    const id = `${category}_${name.replace(/\s+/g, '_')}`;
+
                     // Add to custom sprites storage
                     customSprites[category][id] = { name, data: pendingUpload.data };
-            
+
                     // Add to runtime sprite objects
                     if (category === 'jerry') jerrySprites[id] = pendingUpload.data;
                     else petSprites[id] = pendingUpload.data;
-            
+
                     // Save to localStorage
                     saveToLocalStorage('customSprites', customSprites);
-            
+
                     // Clear pending upload and reset UI
                     pendingUpload = null;
                     nameInput.value = '';
                     categorySelect.style.display = "none";
                     uploadInputs.style.display = "none";
-            
+
                     // Update dropdowns and re-render
                     if (category === 'jerry') {
                         populateSpriteDropdown();
@@ -4164,9 +4157,9 @@
                         populatePetDropdown();
                         refreshPetRender();
                     }
-            
+
                     updateUploadList();
-            
+
                     const categoryLabel = category === 'jerry' ? 'Main Character' : 'Pet/Companion';
                     console.log(`Successfully uploaded sprite "${name}" to ${categoryLabel} category`);
                 });
