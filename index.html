@@ -264,11 +264,11 @@
         .screen {
             display: none;
             padding: 20px;
-            min-height: 100%;
-            -webkit-overflow-scrolling: touch;
-            overflow-y: auto;
+            min-height: 100vh;         /* allow full viewport */
+            position: relative;        /* prevent z-index traps */
         }
-        
+
+        /* only show active screen */
         .screen.active {
             display: block;
         }
@@ -731,13 +731,12 @@
         #journal {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;         /* give it height but let body scroll */
             padding: 20px;
             box-sizing: border-box;
             position: relative;
-            z-index: 0;                       /* base layer */
         }
-        
+
         /* Journal input */
         #journalInput {
             flex: 1;
@@ -750,11 +749,8 @@
             background: #2d3748;
             color: #e2e8f0;
             resize: none;
-            overflow-y: auto;
             box-sizing: border-box;
             margin-bottom: 80px;
-            position: relative;
-            z-index: 2;                       /* above sprite preview */
         }
 
         #saveJournalEntry {
