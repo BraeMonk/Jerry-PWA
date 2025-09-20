@@ -3941,27 +3941,6 @@
                 petStyleSelect.value = appState.pet.currentSprite;
                 petThemeSelect.value = appState.pet.theme;
             }
-            
-            // 2. Load and merge custom sprites
-            let customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
-            if (!customSprites.jerry) customSprites.jerry = {};
-            if (!customSprites.pet) customSprites.pet = {};
-
-            for (const [id, sprite] of Object.entries(customSprites.jerry)) {
-                if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
-                    jerrySprites[id] = sprite.data;
-                } else {
-                    delete customSprites.jerry[id];
-                }
-            }
-
-            for (const [id, sprite] of Object.entries(customSprites.pet)) {
-                if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
-                    petSprites[id] = sprite.data;
-                } else {
-                    delete customSprites.pet[id];
-                }
-            }
 
             populateSpriteDropdown();
             populatePetDropdown();
@@ -3971,7 +3950,7 @@
             // -----------------------------
             function refreshSpriteRender() {
                 if (typeof renderSpritePreview === 'function') renderSpritePreview();
-                if (typeof updateMainSprite === 'function') updateMainSprite();
+                if (typeof updateJerrySprite === 'function') updateJerrySprite();
             }
 
             function refreshPetRender() {
