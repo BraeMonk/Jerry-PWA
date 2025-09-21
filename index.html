@@ -3969,7 +3969,7 @@
             // -----------------------------
             function refreshSpriteRender() {
                 if (typeof renderSpritePreview === 'function') renderSpritePreview();
-                if (typeof updateMainSprite === 'function') updateMainSprite();
+                if (typeof updateJerrySprite === 'function') updateJerrySprite();
             }
             
             function refreshPetRender() {
@@ -3988,7 +3988,7 @@
                         style, 
                         theme: appState.sprite.theme || 'default' 
                     }));
-                    refreshSpriteRender();
+                    updateJerrySprite();
                 });
             }
 
@@ -4000,7 +4000,7 @@
                         style: appState.sprite.currentSprite || 'default', 
                         theme 
                     }));
-                    refreshSpriteRender();
+                    updateJerrySprite();
                 });
             }
 
@@ -4161,7 +4161,7 @@
                     // Update appropriate dropdown based on category
                     if (category === 'jerry') {
                         populateSpriteDropdown();
-                        refreshSpriteRender();
+                        updateJerrySprite();
                     } else {
                         populatePetDropdown();
                         refreshPetRender();
@@ -4210,7 +4210,7 @@
             // -----------------------------
             // Final render
             // -----------------------------
-            refreshSpriteRender();
+            updateJerrySprite();
             refreshPetRender();
             updateUploadList();
         }
