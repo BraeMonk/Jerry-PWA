@@ -2889,8 +2889,8 @@
             const firstTheme = Object.keys(colorSets)[0];
             const colors = colorSets[firstTheme];
 
-            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
-            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
+            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, firstTheme);
+            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, firstTheme);
 
             appState.jerry.currentSprite = firstSprite;
             appState.spriteTheme = firstTheme;
@@ -2900,7 +2900,7 @@
 
             // Sync dropdowns
             const spriteSelect = document.getElementById('spriteStyle');
-            if (spriteSelect) spriteSelect.value = firstSprite
+            if (spriteSelect) spriteSelect.value = firstSprite;
                 const themeSelect = document.getElementById('spriteTheme');
             if (themeSelect) themeSelect.value = firstTheme;
         }
