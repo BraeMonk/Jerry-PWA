@@ -3941,7 +3941,7 @@
             // -----------------------------
             // Available themes
             // -----------------------------
-            const availableThemes = ['default', 'candy', 'ocean', 'ember', 'meadow', 'neon', 'pastel', 'gothic', 'aurora', 'retroPixel', 'fantasySprite'];
+            const availableThemes = Object.keys(palettes);
 
             // -----------------------------
             // DOM elements - CORRECT IDs
@@ -4008,10 +4008,10 @@
                 // Populate themes
                 // -----------------------------
                 availableThemes.forEach(theme => {
-                    const displayName = theme === 'fantasySprite' ? 'Fantasy' :
-                                        theme === 'retroPixel' ? 'Retro' :
-                                        theme.charAt(0).toUpperCase() + theme.slice(1);
-                    spriteThemeSelect.appendChild(new Option(displayName, theme));
+                    const htmlOption = spriteThemeSelect.querySelector(`option[value="${theme}"]`);
+                    if (htmlOption) {
+                        spriteThemeSelect.appendChild(new Option(htmlOption.text, theme));
+                    }
                 });
             
                 // -----------------------------
