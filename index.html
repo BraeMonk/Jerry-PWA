@@ -988,23 +988,22 @@
         /* Bottom overlay drawer, expands downward */
         .overlay {
             display: none; /* hidden by default */
-            position: relative; /* relative so it doesn't cover everything */
             width: 100%;
-            background-color: transparent; /* let content area handle color */
+            background-color: transparent; /* doesn’t block content */
             padding: 0;
-            z-index: 1; /* below floating elements */
         }
 
         /* Overlay content box */
         .overlay-content {
-            margin: 0 auto;
-            background-color: #fff; /* default light */
+            margin: 10px auto; /* centers it horizontally */
+            background-color: #fff; /* light theme default */
             color: #000;
-            padding: 20px 30px;
-            border-radius: 12px; /* fully rounded corners */
+            padding: 20px;
+            border-radius: 12px;
             max-width: 600px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* subtle shadow */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             text-align: left;
+            position: relative; /* makes it stay in flow */
         }
 
         /* Light theme */
@@ -1019,14 +1018,13 @@
             color: #eee;
         }
 
-        /* Close button centered in overlay */
         .overlay-close-btn {
             display: block;
             margin: 0 auto 15px;
             font-size: 1em;
             padding: 10px 20px;
             cursor: pointer;
-            background-color: #007acc; /* match app style */
+            background-color: #007acc;
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -1035,6 +1033,16 @@
 
         .overlay-close-btn:hover {
             background-color: #005fa3;
+        }
+
+        .overlay.show {
+            display: block;
+            animation: slideDown 0.3s ease forwards;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
 
         /* Open button (Cheat Sheet) */
@@ -2147,7 +2155,7 @@
                 Draw your own Jerry! <a href="https://braemonk.github.io/QuikEdit/" target="_blank" style="color: #3355d4;">Jerry Editor</a>
             </div>
             <!-- Rest of your existing settings content -->
-            <div style="margin-top: 30px;">
+            <div style="margin-top: 30px; text-align: center;">
                 <button class="overlay-open-btn" id="openDBTOverlay">Cheat Sheet</button>
             </div>
     
