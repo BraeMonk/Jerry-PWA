@@ -3987,33 +3987,36 @@
             // -----------------------------
             if (spriteStyleSelect) {
                 spriteStyleSelect.addEventListener('change', () => {
-                    const style = spriteStyleSelect.value;
-                    const theme = spriteThemeSelect.value || 'default';
-            
+                    const selectedSprite = spriteStyleSelect.value;
+                    const currentTheme = appState.sprite.theme || 'default';
+
                     // Update appState
-                    appState.sprite.currentSprite = style;
-                    appState.sprite.theme = theme;
-            
-                    // Save both style + theme together
-                    localStorage.setItem('spriteSettings', JSON.stringify({ style, theme }));
-            
+                    appState.sprite.currentSprite = selectedSprite;
+
+                    // Persist both sprite + theme together
+                    localStorage.setItem('spriteSettings', JSON.stringify({
+                        style: appState.sprite.currentSprite,
+                        theme: currentTheme
+                    }));
+
                     // Refresh render
                     refreshSpriteRender();
                 });
             }
-            
+
             if (spriteThemeSelect) {
                 spriteThemeSelect.addEventListener('change', () => {
-                    const style = spriteStyleSelect.value || 'default';
-                    const theme = spriteThemeSelect.value;
-            
-                    // Update appState
-                    appState.sprite.currentSprite = style;
-                    appState.sprite.theme = theme;
-            
-                    // Save both style + theme together
-                    localStorage.setItem('spriteSettings', JSON.stringify({ style, theme }));
-            
+                    const selectedTheme = spriteThemeSelect.value;
+
+                    // Only update theme in appState
+                    appState.sprite.theme = selectedTheme;
+
+                    // Persist both sprite + theme together using appState.sprite.currentSprite
+                    localStorage.setItem('spriteSettings', JSON.stringify({
+                        style: appState.sprite.currentSprite,
+                        theme: appState.sprite.theme
+                    }));
+
                     // Refresh render
                     refreshSpriteRender();
                 });
