@@ -3943,20 +3943,29 @@
                 // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' : 
-                                    theme === 'retroPixel' ? 'Retro' :
-                                    theme.charAt(0).toUpperCase() + theme.slice(1);
+                                        theme === 'retroPixel' ? 'Retro' :
+                                        theme.charAt(0).toUpperCase() + theme.slice(1);
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
                 
-                // Load saved settings
-                const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                // Load saved settings - SIMPLIFIED
-                const savedStyle = localStorage.getItem('jerryCurrentSprite') || 'default';
-                const savedTheme = localStorage.getItem('spriteTheme') || 'default';
+                // ✅ Load saved Jerry settings (new system)
+                const saved = JSON.parse(localStorage.getItem('jerrySettings') || '{}');
+                const savedStyle = saved.style || 'default';
+                const savedTheme = saved.theme || 'default';
                 
-                // Validate saved style exists in either built-in or custom sprites
+                // Validate saved style exists
                 const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
+                
+                // Apply saved or fallback
+                spriteStyleSelect.value = styleExists ? savedStyle : 'default';
+                spriteThemeSelect.value = savedTheme;
+                
+                // Update appState
+                if (!appState.jerry) appState.jerry = {};
+                appState.jerry.currentSprite = spriteStyleSelect.value;
+                appState.spriteTheme = spriteThemeSelect.value;
             }
+
 
             // -----------------------------
             // Populate pet dropdown (pet category)
@@ -4028,21 +4037,31 @@
             // -----------------------------
             spriteStyleSelect.addEventListener('change', () => {
                 const style = spriteStyleSelect.value;
-                appState.sprite.currentSprite = style;
-                
-                // Save to ONLY the primary key
-                localStorage.setItem('jerryCurrentSprite', style);
-                
+                const theme = spriteThemeSelect.value || 'default';
+            
+                // Update appState
+                if (!appState.jerry) appState.jerry = {};
+                appState.jerry.currentSprite = style;
+                appState.spriteTheme = theme;
+            
+                // Save both style + theme together
+                localStorage.setItem('jerrySettings', JSON.stringify({ style, theme }));
+            
                 updateJerrySprite();
             });
             
             spriteThemeSelect.addEventListener('change', () => {
+                const style = spriteStyleSelect.value || 'default';
                 const theme = spriteThemeSelect.value;
-                appState.sprite.theme = theme;
-                
-                // Save to ONLY the primary key  
-                localStorage.setItem('spriteTheme', theme);
-                
+            
+                // Update appState
+                if (!appState.jerry) appState.jerry = {};
+                appState.jerry.currentSprite = style;
+                appState.spriteTheme = theme;
+            
+                // Save both style + theme together
+                localStorage.setItem('jerrySettings', JSON.stringify({ style, theme }));
+            
                 updateJerrySprite();
             });
 
@@ -5153,45 +5172,60 @@
             // Basic settings
             document.getElementById('apiKey').value = appState.apiKey || '';
             document.getElementById('botName').value = appState.botName || 'Jerry';
-
-            // Theme
-            const storedTheme = localStorage.getItem('spriteTheme') || 'default';
-            appState.spriteTheme = storedTheme;
-            document.getElementById('spriteTheme').value = appState.spriteTheme;
-
+        
             // API option
             const apiOption = localStorage.getItem('jerry_api_option') || 'own';
             document.querySelector(`input[name="apiOption"][value="${apiOption}"]`).checked = true;
-
+        
+            // Load Jerry settings (style + theme together)
+            const savedJerry = JSON.parse(localStorage.getItem('jerrySettings') || '{}');
+            const savedStyle = savedJerry.style || 'default';
+            const savedTheme = savedJerry.theme || 'default';
+        
             const spriteStyleSelect = document.getElementById('spriteStyle');
-            if (spriteStyleSelect) {
-                spriteStyleSelect.value = appState.jerry.currentSprite || 'default';
-            }
-   
-
-        // Wire up event handlers
-        setupApiOptionHandlers();
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+        
+            if (spriteStyleSelect) spriteStyleSelect.value = savedStyle;
+            if (spriteThemeSelect) spriteThemeSelect.value = savedTheme;
+        
+            // Update appState
+            if (!appState.jerry) appState.jerry = {};
+            appState.jerry.currentSprite = savedStyle;
+            appState.spriteTheme = savedTheme;
+        
+            // Wire up event handlers
+            setupApiOptionHandlers();
         }
-
+        
         function saveSettings() {
-        const apiKey = document.getElementById('apiKey').value.trim();
-        appState.apiKey = apiKey;
-        localStorage.setItem('hush_api_key', apiKey);
-
-        const botName = document.getElementById('botName').value.trim() || 'Jerry';
-        appState.botName = botName;
-        localStorage.setItem('botName', botName);
-
-        const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
-        localStorage.setItem('jerry_api_option', selectedApiOption);
-
-        appState.spriteTheme = document.getElementById('spriteTheme').value;
-        localStorage.setItem('spriteTheme', appState.spriteTheme);
-
-        showNotification('Settings saved successfully!');
-        updateChatInterface();
-        updateJerrySprite();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            appState.apiKey = apiKey;
+            localStorage.setItem('hush_api_key', apiKey);
+        
+            const botName = document.getElementById('botName').value.trim() || 'Jerry';
+            appState.botName = botName;
+            localStorage.setItem('botName', botName);
+        
+            const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
+            localStorage.setItem('jerry_api_option', selectedApiOption);
+        
+            // Save Jerry settings (style + theme together)
+            const spriteStyleSelect = document.getElementById('spriteStyle');
+            const spriteThemeSelect = document.getElementById('spriteTheme');
+            const style = spriteStyleSelect?.value || 'default';
+            const theme = spriteThemeSelect?.value || 'default';
+        
+            const jerrySettings = { style, theme };
+            localStorage.setItem('jerrySettings', JSON.stringify(jerrySettings));
+        
+            appState.jerry.currentSprite = style;
+            appState.spriteTheme = theme;
+        
+            showNotification('Settings saved successfully!');
+            updateChatInterface();
+            updateJerrySprite();
         }
+
 
         function updateThemeColor() {
             let metaTheme = document.querySelector('meta[name="theme-color"]');
