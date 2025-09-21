@@ -3937,7 +3937,7 @@
         
                 // Update appState
                 appState.jerry.currentSprite = spriteStyleSelect.value;
-                appState.spriteTheme = spriteThemeSelect.value;
+                appState.jerry.theme = spriteThemeSelect.value;
             }
         
             // -----------------------------
@@ -3981,26 +3981,33 @@
             // Dropdown listeners
             // -----------------------------
             spriteStyleSelect.addEventListener('change', () => {
-                const style = spriteStyleSelect.value;
-                const theme = spriteThemeSelect.value || 'default';
-        
-                appState.jerry.currentSprite = style;
-                appState.spriteTheme = theme;
-        
-                localStorage.setItem('jerrySettings', JSON.stringify({ style, theme }));
+                if (!appState.jerry) appState.jerry = {};
+            
+                appState.jerry.currentSprite = spriteStyleSelect.value;
+                appState.jerry.theme = spriteThemeSelect.value || 'default';
+            
+                localStorage.setItem('jerrySettings', JSON.stringify({
+                    style: appState.jerry.currentSprite,
+                    theme: appState.jerry.theme
+                }));
+            
                 updateJerrySprite();
             });
-        
+            
             spriteThemeSelect.addEventListener('change', () => {
-                const style = spriteStyleSelect.value || 'default';
-                const theme = spriteThemeSelect.value;
-        
-                appState.jerry.currentSprite = style;
-                appState.spriteTheme = theme;
-        
-                localStorage.setItem('jerrySettings', JSON.stringify({ style, theme }));
+                if (!appState.jerry) appState.jerry = {};
+            
+                appState.jerry.currentSprite = spriteStyleSelect.value || 'default';
+                appState.jerry.theme = spriteThemeSelect.value;
+            
+                localStorage.setItem('jerrySettings', JSON.stringify({
+                    style: appState.jerry.currentSprite,
+                    theme: appState.jerry.theme
+                }));
+            
                 updateJerrySprite();
             });
+
         
             petStyleSelect.addEventListener('change', () => {
                 const style = petStyleSelect.value;
