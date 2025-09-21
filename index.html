@@ -3898,7 +3898,8 @@
                 });
                 
                 // Load saved settings
-                const savedStyle = localStorage.getItem('jerryCurrentSprite') || 'default';
+                const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+                const savedStyle = localStorage.getItem('jerryCurrentSprite') || savedSpriteSettings.style || 'default';
                 const savedTheme = savedSpriteSettings.theme || 'default';
                 
                 // Validate saved style exists in either built-in or custom sprites
