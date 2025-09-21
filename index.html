@@ -4089,24 +4089,12 @@
 
             if (uploadSubmit) {
                 uploadSubmit.addEventListener('click', () => {
-                    console.log('Upload submit clicked');
-                    console.log('pendingUpload:', pendingUpload);
-                    console.log('nameInput element:', nameInput);
-                    console.log('nameInput value:', nameInput?.value);
-        
                     if (!pendingUpload) {
                         alert("No sprite selected to upload.");
                         return;
                     }
-        
-                    if (!nameInput) {
-                        alert('Name input element not found.');
-                        return;
-                    }
-        
-                    const name = nameInput.value ? nameInput.value.trim() : '';
-                    console.log('Trimmed name:', name);
-        
+
+                    const name = nameInput?.value.trim();
                     if (!name) {
                         alert('Please enter a name.');
                         return;
@@ -4117,58 +4105,41 @@
 
                     // Add to custom sprites storage
                     customSprites[category][id] = { name, data: pendingUpload.data };
-       
-                    // Add to runtime sprite objects based on category
+
+                    // Add to runtime sprite objects
                     if (category === 'jerry') {
                         jerrySprites[id] = pendingUpload.data;
-
-                        // Set the new sprite as selected and persist i
-                        appState.sprite.currentSprite = id;
+                        appState.sprite.currentSprite = id; // select new sprite
                         localStorage.setItem('spriteSettings', JSON.stringify({ 
-                            style: appState.sprite.currentSprite, 
+                            style: id, 
                             theme: appState.sprite.theme || 'default' 
                         }));
-
-                        populateSpriteDropdown();  // repopulate dropdown now that the sprite exists
-                        spriteStyleSelect.value = id;  // explicitly select it
+                        populateSpriteDropdown();
+                        spriteStyleSelect.value = id;
                         refreshSpriteRender();
                     } else {
                         petSprites[id] = pendingUpload.data;
-
-                        // Set the new pet sprite as selected and persist it
-                        appState.pet.currentSprite = id;
+                        appState.pet.currentSprite = id; // select new pet
                         localStorage.setItem('petSettings', JSON.stringify({ 
-                            style: appState.pet.currentSprite, 
+                            style: id, 
                             theme: appState.pet.theme || 'default' 
                         }));
-                        
-                        populatePetDropdown();  // repopulate dropdown
-                        petStyleSelect.value = id;  // explicitly select it
+                        populatePetDropdown();
+                        petStyleSelect.value = id;
                         refreshPetRender();
                     }
 
                     // Save to localStorage
                     saveToLocalStorage('customSprites', customSprites);
 
-                    // Clear pending upload and UI
+                    // Clear pending upload UI
                     pendingUpload = null;
                     nameInput.value = '';
                     categorySelect.style.display = "none";
                     uploadInputs.style.display = "none";
 
-                    // Update appropriate dropdown based on category
-                    if (category === 'jerry') {
-                        populateSpriteDropdown();
-                        refreshSpriteRender();
-                    } else {
-                        populatePetDropdown();
-                        refreshPetRender();
-                    }
-        
+                    // Update uploaded sprite list
                     updateUploadList();
-        
-                    const categoryLabel = category === 'jerry' ? 'Main Character' : 'Pet/Companion';
-                    console.log(`Successfully uploaded sprite "${name}" to ${categoryLabel} category`);
                 });
             }
 
