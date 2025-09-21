@@ -2738,120 +2738,67 @@
         }
 
         // =====================
-        // Update Jerry Sprite (refactored)
+        // Update Jerry Sprite (refactored, no fallback)
         // =====================
         function updateJerrySprite() {
-            try {
-                // Load saved settings
-                const savedSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedSpriteStyle = savedSettings.style;
-                const savedTheme = savedSettings.theme;
-        
-                // Load custom sprites
-                const customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
-                if (customSprites.jerry) {
-                    for (const [id, sprite] of Object.entries(customSprites.jerry)) {
-                        if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
-                            jerrySprites[id] = sprite.data;
-                        }
+            // Load saved settings
+            const savedSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+            const savedSpriteStyle = savedSettings.style;
+            const savedTheme = savedSettings.theme;
+
+            // Load custom sprites
+            const customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
+            if (customSprites.jerry) {
+                for (const [id, sprite] of Object.entries(customSprites.jerry)) {
+                    if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
+                        jerrySprites[id] = sprite.data;
                     }
                 }
-        
-                // Determine current sprite
+            }
+
+            // Determine current sprite
                 let currentSpriteStyle = savedSpriteStyle && jerrySprites[savedSpriteStyle]
                     ? savedSpriteStyle
                     : Object.keys(jerrySprites)[0] || 'default';
-        
-                // Determine theme
-                const isLightMode = document.body.classList.contains('light-theme');
-                const colorSets = getColorSets(isLightMode);
-                let spriteTheme = savedTheme && colorSets[savedTheme]
-                    ? savedTheme
-                    : Object.keys(colorSets)[0] || 'default';
-        
-                // Get sprite data safely
-                let spriteData = jerrySprites[currentSpriteStyle];
-                if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
-                    console.warn('Invalid Jerry sprite data, using fallback');
-                    const fallbackKey = Object.keys(jerrySprites)[0] || 'default';
-                    spriteData = jerrySprites[fallbackKey];
-                    currentSpriteStyle = fallbackKey;
-                }
-        
-                // Clone to avoid mutation
-                baseSprite = JSON.parse(JSON.stringify(spriteData));
-        
-                // Render
-                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
-                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
-        
-                // Persist current settings
-                localStorage.setItem('spriteSettings', JSON.stringify({ style: currentSpriteStyle, theme: spriteTheme }));
-        
-                // Update app state
-                if (!appState.sprite) appState.sprite = {};
-                appState.sprite.currentSprite = currentSpriteStyle;
-                appState.sprite.theme = spriteTheme;
-        
-                // Update theme dropdown if exists
-                const themeSelect = document.getElementById('spriteTheme');
-                if (themeSelect && Array.from(themeSelect.options).some(opt => opt.value === spriteTheme)) {
-                    themeSelect.value = spriteTheme;
-                }
-        
-                console.log(`Jerry sprite updated: ${currentSpriteStyle} (theme: ${spriteTheme})`);
-        
-            } catch (err) {
-                console.error('Failed to update Jerry sprite:', err);
-        
-                // Fallback logic
-                try {
-                    if (typeof fallbackJerry === 'function') {
-                        fallbackJerry();
-                    } else if (jerrySprites.default) {
-                        const isLightMode = document.body.classList.contains('light-theme');
-                        const colorSets = getColorSets(isLightMode);
-                        baseSprite = JSON.parse(JSON.stringify(jerrySprites.default));
-                        if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, 'default');
-                        console.log('Manual fallback to default sprite successful');
-                    }
-                } catch (fallbackErr) {
-                    console.error('Fallback also failed:', fallbackErr);
-                }
-            }
-        }
 
-        function fallbackJerry() {
-            const firstSprite = Object.keys(jerrySprites)[0] || 'default';
-            baseSprite = JSON.parse(JSON.stringify(jerrySprites[firstSprite]));
-        
+            // Determine theme
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
-            const firstTheme = Object.keys(colorSets)[0] || 'default';
-        
-            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, firstTheme);
-            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, firstTheme);
-        
+            let spriteTheme = savedTheme && colorSets[savedTheme]
+                ? savedTheme
+                : Object.keys(colorSets)[0] || 'default';
+
+            // Get sprite data safely
+            let spriteData = jerrySprites[currentSpriteStyle];
+            if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
+                console.warn('Invalid Jerry sprite data, using first available sprite');
+                const fallbackKey = Object.keys(jerrySprites)[0] || 'default';
+                spriteData = jerrySprites[fallbackKey];
+                currentSpriteStyle = fallbackKey;
+            }
+
+            // Clone to avoid mutation
+            baseSprite = JSON.parse(JSON.stringify(spriteData));
+
+            // Render
+            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
+            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
+
+            // Persist current settings
+            localStorage.setItem('spriteSettings', JSON.stringify({ style: currentSpriteStyle, theme: spriteTheme }));
+    
             // Update app state
             if (!appState.sprite) appState.sprite = {};
-            appState.sprite.currentSprite = firstSprite;
-            appState.sprite.theme = firstTheme;
-        
-            // Persist to unified storage
-            localStorage.setItem('spriteSettings', JSON.stringify({ style: firstSprite, theme: firstTheme }));
-        
-            // Sync dropdowns safely
-            const spriteSelect = document.getElementById('spriteStyle');
-            if (spriteSelect && Array.from(spriteSelect.options).some(opt => opt.value === firstSprite)) {
-                spriteSelect.value = firstSprite;
-            }
-        
+            appState.sprite.currentSprite = currentSpriteStyle;
+            appState.sprite.theme = spriteTheme;
+
+            // Update theme dropdown if exists
             const themeSelect = document.getElementById('spriteTheme');
-            if (themeSelect && Array.from(themeSelect.options).some(opt => opt.value === firstTheme)) {
-                themeSelect.value = firstTheme;
+            if (themeSelect && Array.from(themeSelect.options).some(opt => opt.value === spriteTheme)) {
+                themeSelect.value = spriteTheme;
             }
-        
-            console.log(`Fallback applied: ${firstSprite} (theme: ${firstTheme})`);
+
+            console.log(`Jerry sprite updated: ${currentSpriteStyle} (theme: ${spriteTheme})`);
         }
 
 
