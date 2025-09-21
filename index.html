@@ -4143,12 +4143,13 @@
             // -----------------------------
             async function handleFile(file) {
                 if (!file || !nameInput || !categorySelect || !uploadInputs) return;
+            
                 try {
                     const text = await file.text();
                     let data = JSON.parse(text);
-
+            
                     let spriteData = null;
-
+            
                     if (data.sprite) {
                         spriteData = data.sprite;
                     } else if (Array.isArray(data.sprites) && data.sprites.length > 0) {
@@ -4156,16 +4157,33 @@
                     } else if (Array.isArray(data) && Array.isArray(data[0])) {
                         spriteData = { name: "Unnamed Sprite", data: data };
                     }
-
+            
                     if (spriteData && Array.isArray(spriteData.data)) {
-                        pendingUpload = {
-                            type: "sprite",
+                        // Build final sprite object
+                        const newSprite = {
+                            name: spriteData.name || "Unnamed Sprite",
                             data: spriteData.data,
-                            name: spriteData.name || "Unnamed Sprite"
+                            themes: spriteData.themes || {}
                         };
-                        nameInput.value = pendingUpload.name;
-                        categorySelect.style.display = "block";
-                        uploadInputs.style.display = "block";
+            
+                        // Decide if this is Jerry or Pet (based on categorySelect)
+                        const category = categorySelect.value; // e.g., "jerry" or "pet"
+                        if (!customSprites[category]) customSprites[category] = {};
+            
+                        const spriteKey = `custom_${Date.now()}`;
+                        customSprites[category][spriteKey] = newSprite;
+            
+                        // Save customSprites to localStorage so it persists
+                        localStorage.setItem("customSprites", JSON.stringify(customSprites));
+            
+                        // Repopulate dropdowns so the new sprite shows up
+                        if (category === "jerry") {
+                            populateSpriteDropdown();
+                        } else {
+                            populatePetDropdown();
+                        }
+            
+                        showNotification(`${newSprite.name} sprite added!`);
                     } else {
                         console.error("Invalid sprite format:", data);
                         alert("No valid sprite found in file.");
@@ -4177,6 +4195,7 @@
                     if (spriteFileInput) spriteFileInput.value = "";
                 }
             }
+
 
             if (uploadSubmit) {
                 uploadSubmit.addEventListener('click', () => {
