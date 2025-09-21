@@ -277,16 +277,39 @@
         .jerry-container {
             display: flex;
             flex-direction: column;
-            align-items: center; /* ensures horizontal centering */
-            justify-content: center;
-            margin: 20px 0;
-            position: relative;
-            z-index: 1;
-            top: -20px; /* move slightly up */
-            /* remove 'left' property entirely */
-            transition: background 0.5s ease;
+            align-items: center;        /* center horizontally */
+            justify-content: center;    /* center vertically in container */
+            position: relative;         /* stays in page flow */
+            width: 100%;                /* full width of screen */
+            height: 300px;              /* adjust to your current container height */
+            margin: 0;                  /* no extra spacing */
+            z-index: 10;                /* above chat container */
+            top: -20px;                 /* slight nudge up if needed */
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            transition: background 0.5s ease;
+        }
+
+        .jerry-sprite {
+            width: 160px;
+            height: 160px;
+            position: relative;
+            z-index: 3;
+            margin: 0 auto;             /* perfect horizontal centering */
+        }
+
+        .jerry-shadow {
+            position: absolute;
+            bottom: 20px;               /* slightly above bottom of container */
+            width: 120px;               
+            height: 18px;               
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+            filter: blur(6px);
+            z-index: 2;                 /* behind sprite */
+            left: 50%;                  /* center horizontally */
+            transform: translateX(-50%) scaleX(1.2);
+            opacity: 0.6;
         }
 
         /* Background inside container, above stats */
@@ -299,29 +322,6 @@
             z-index: 0;
             pointer-events: none; /* don’t block Jerry clicks */
             background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc);
-        }
-
-        /* Pedestal / shadow above stats */
-        .jerry-shadow {
-            position: absolute;
-            bottom: 25px;        /* right under the sprite */
-            width: 120px;        /* slightly wider than sprite */
-            height: 18px;        /* subtle thickness */
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 50%;
-            filter: blur(6px);
-            z-index: 2;          /* behind sprite */
-            left: 50%;           /* center in container */
-            transform: translateX(-50%) scaleX(1.2); /* horizontal stretch, centered */
-            opacity: 0.6;        /* soft shadow */
-        }
-
-        .jerry-sprite {
-            width: 160px;
-            height: 160px;
-            margin: 20px auto; /* centers horizontally */
-            position: relative;
-            z-index: 3; /* above shadow */
         }
 
         /* Ensure Jerry sprite pixels are full like the preview */
