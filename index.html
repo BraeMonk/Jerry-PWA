@@ -281,7 +281,8 @@
             margin: 20px 0;
             position: relative;
             z-index: 1;
-            top: -15px;
+            top: -20px; /* moved a little more up */
+            left: -10px; /* nudged slightly left */
             justify-content: center;
             transition: background 0.5s ease;
             border-radius: 12px;
@@ -297,45 +298,40 @@
             height: 100%; /* leave room for stats at bottom */
             z-index: 0;
             pointer-events: none; /* don’t block Jerry clicks */
-            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc); /* initial gradient */
+            background: linear-gradient(to top, #2d6a4f, #95d5b2, #d8f3dc);
         }
-        
+
         /* Pedestal / shadow above stats */
         .jerry-shadow {
             position: absolute;
-            bottom: 100px;   /* adjust so it sits just above stats */
-            width: 120px;    /* slightly smaller than sprite */
-            height: 20px;    /* shadow thickness */
-            background: rgba(0, 0, 0, 0.25); /* subtle shadow */
-            border-radius: 50%; 
-            filter: blur(4px);
-            z-index: 3;
+            bottom: 30px;   /* closer to sprite base */
+            width: 100px;   /* match sprite footprint */
+            height: 15px;   /* thinner shadow */
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+            filter: blur(6px);
+            z-index: 2;     /* behind sprite */
+            left: 50%;      /* center under sprite */
+            transform: translateX(-50%);
         }
-        
+
         .jerry-sprite {
             width: 160px;
             height: 160px;
-            margin: 40px auto 40px;
+            margin: 20px auto; /* reduced top/bottom margin for slight upward shift */
             position: relative;
-            z-index: 4;
-        }
-        
-        .pixel {
-            width: 10px;
-            height: 10px;
-            position: absolute;
-            z-index: 4;
+            z-index: 3; /* above shadow */
         }
 
         /* Ensure Jerry sprite pixels are full like the preview */
         .jerry-sprite .pixel {
-            width: 10px;        /* same as sprite pixel size */
+            width: 10px;        
             height: 10px;
             position: absolute;
-            border-radius: 0;   /* remove subtle rounding */
+            border-radius: 0;   
             margin: 0;
             padding: 0;
-            z-index: 4;
+            z-index: 3;
             pointer-events: none;
         }
         
