@@ -1913,8 +1913,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label" for="spriteTheme">Sprite Theme:</label>
-                <select class="form-input" id="spriteTheme">
+                <label class="form-label" for="theme">Sprite Theme:</label>
+                <select class="form-input" id="theme">
                     <option value="default">Default</option>
                     <option value="candy">Candy</option>
                     <option value="ocean">Ocean</option>
@@ -2129,34 +2129,33 @@
     <script>
         // Application State
         const appState = {
-        jerry: {},
-        apiKey: localStorage.getItem('hush_api_key') || '',
-        currentTab: 'jerry',
-        checkinData: {},
-        cbtData: {},
-        dbtData: {},
-        chatHistory: [],
-        entries: JSON.parse(localStorage.getItem('hush_entries') || '[]'),
-        conversationHistory: JSON.parse(localStorage.getItem('hush_conversations') || '[]'),
-        botName: localStorage.getItem('botName') || 'Jerry', // default
-        timer: {
-                active: false,
-                remaining: 180,
-                interval: null
-        },
-        spriteTheme: localStorage.getItem('spriteTheme') || 'default',
+            jerry: {},
+            currentSprite: localStorage.getItem('jerrySpriteStyle') || 'default',
+            theme: localStorage.getItem('theme') || 'default',
+            apiKey: localStorage.getItem('hush_api_key') || '',
+            currentTab: 'jerry',
+            checkinData: {},
+            cbtData: {},
+            dbtData: {},
+            chatHistory: [],
+            entries: JSON.parse(localStorage.getItem('hush_entries') || '[]'),
+            conversationHistory: JSON.parse(localStorage.getItem('hush_conversations') || '[]'),
+            botName: localStorage.getItem('botName') || 'Jerry', // default
+            timer: {
+                    active: false,
+                    remaining: 180,
+                    interval: null
+            },
         };
         const subscriptionState = {
-        isSubscribed: localStorage.getItem('jerry_subscription_active') === 'true',
-        subscriptionId: localStorage.getItem('jerry_subscription_id') || null,
-        messageCount: parseInt(localStorage.getItem('jerry_message_count') || '0'),
-        billingCycle: localStorage.getItem('jerry_billing_cycle') || null,
-        apiOption: localStorage.getItem('jerry_api_option') || 'own'
+            isSubscribed: localStorage.getItem('jerry_subscription_active') === 'true',
+            subscriptionId: localStorage.getItem('jerry_subscription_id') || null,
+            messageCount: parseInt(localStorage.getItem('jerry_message_count') || '0'),
+            billingCycle: localStorage.getItem('jerry_billing_cycle') || null,
+            apiOption: localStorage.getItem('jerry_api_option') || 'own'
         };
 
         const PREMIUM_API_KEY = 'GITHUB_SECRET_PREMIUM_API_KEY';
-
-        let currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
 
         const jerrySprites = {
             default: [
@@ -2744,24 +2743,24 @@
             try {
                 // Fetch saved values from localStorage
                 const savedSpriteStyle = localStorage.getItem('jerryCurrentSprite');
-                const savedTheme = localStorage.getItem('spriteTheme');
+                const savedTheme = localStorage.getItem('theme');
 
                 // Detect light/dark mode
                 const isLightMode = document.body.classList.contains('light-theme');
                 const colorSets = getColorSets(isLightMode);
 
                 // Resolve sprite style safely
-                const currentSpriteStyle = jerrySprites[savedSpriteStyle]
+                const currentSprite = jerrySprites[savedSpriteStyle]
                     ? savedSpriteStyle
                     : Object.keys(jerrySprites)[0]; // first sprite if saved one missing
 
                 // Resolve theme safely
-                const spriteTheme = colorSets[savedTheme]
+                const theme = colorSets[savedTheme]
                     ? savedTheme
                     : Object.keys(colorSets)[0]; // first available theme
 
                 // Get sprite data
-                let spriteData = jerrySprites[currentSpriteStyle];
+                let spriteData = jerrySprites[currentSprite];
                 if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
                     console.warn('Invalid Jerry sprite data, falling back to first sprite');
                     spriteData = jerrySprites[Object.keys(jerrySprites)[0]];
@@ -2771,25 +2770,25 @@
                 baseSprite = JSON.parse(JSON.stringify(spriteData));
                 
                 // Get colors for the theme
-                const colors = colorSets[spriteTheme];
+                const colors = colorSets[theme];
 
                 // Render sprite and preview
-                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
-                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
+                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, theme);
+                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, theme);
 
                 // Persist selections
-                localStorage.setItem('jerryCurrentSprite', currentSpriteStyle);
-                localStorage.setItem('spriteTheme', spriteTheme);
+                localStorage.setItem('jerryCurrentSprite', currentSprite);
+                localStorage.setItem('theme', theme);
 
                 // Sync app state
-                appState.sprite.currentSprite = currentSpriteStyle;
-                appState.spriteTheme = spriteTheme;
+                appState.sprite.currentSprite = currentSprite;
+                appState.theme = theme;
 
                 // Sync dropdown (if exists)
                 const spriteSelect = document.getElementById('spriteStyle');
-                if (spriteSelect) spriteSelect.value = currentSpriteStyle;
-                const themeSelect = document.getElementById('spriteTheme');
-                if (themeSelect) themeSelect.value = spriteTheme;
+                if (spriteSelect) spriteSelect.value = currentSprite;
+                const themeSelect = document.getElementById('theme');
+                if (themeSelect) themeSelect.value = theme;
 
             } catch (err) {
                 console.error('Failed to update Jerry sprite:', err);
@@ -2809,19 +2808,19 @@
             const firstTheme = Object.keys(colorSets)[0];
             const colors = colorSets[firstTheme];
 
-            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
-            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
+            if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, theme);
+            if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, theme);
 
             appState.sprite.currentSprite = firstSprite;
-            appState.spriteTheme = firstTheme;
+            appState.theme = firstTheme;
 
             localStorage.setItem('jerryCurrentSprite', firstSprite);
-            localStorage.setItem('spriteTheme', firstTheme);
+            localStorage.setItem('theme', firstTheme);
 
             // Sync dropdowns
             const spriteSelect = document.getElementById('spriteStyle');
             if (spriteSelect) spriteSelect.value = firstSprite
-                const themeSelect = document.getElementById('spriteTheme');
+                const themeSelect = document.getElementById('theme');
             if (themeSelect) themeSelect.value = firstTheme;
         }
 
@@ -2837,11 +2836,11 @@
             });
         }
 
-        const themeSelect = document.getElementById('spriteTheme');
+        const themeSelect = document.getElementById('theme');
         if (themeSelect) {
             themeSelect.addEventListener('change', e => {
                 const selected = e.target.value;
-                localStorage.setItem('spriteTheme', selected);
+                localStorage.setItem('theme', selected);
                 updateJerrySprite();
             });
         }
@@ -2905,14 +2904,14 @@
         }
 
         // Fixed rendering functions to accept and use parameters
-        function renderJerrySprite(spriteData, spriteTheme) {
+        function renderJerrySprite(spriteData, theme) {
             if (!spriteData) return;
             const container = document.getElementById('jerrySprite');
             container.innerHTML = '';
 
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
-            const colors = colorSets[spriteTheme] || colorSets['default'];
+            const colors = colorSets[theme] || colorSets['default'];
 
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
@@ -2932,14 +2931,14 @@
             });
         }
 
-        function renderSpritePreview(spriteData, spriteTheme) {
+        function renderSpritePreview(spriteData, theme) {
             if (!spriteData) return;
             const previewContainer = document.getElementById('spritePreview');
             previewContainer.innerHTML = '';
         
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
-            const colors = colorSets[spriteTheme] || colorSets['default'];
+            const colors = colorSets[theme] || colorSets['default'];
         
             const rows = spriteData.length;
             const cols = spriteData[0].length;
@@ -3002,14 +3001,14 @@
         }
 
         // Redraw Jerry sprite
-        function drawJerry(spriteData = baseSprite, spriteTheme = appState.spriteTheme || 'default') {
+        function drawJerry(spriteData = baseSprite, theme = appState.theme || 'default') {
             if (!spriteData) return;
             const container = document.getElementById('jerrySprite');
             container.innerHTML = '';
 
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
-            const colors = colorSets[spriteTheme] || colorSets['default'];
+            const colors = colorSets[theme] || colorSets['default'];
 
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
@@ -3086,11 +3085,11 @@
         // Mood switching
         function setMood(mood) {
             // Always use the currently selected sprite style, ignore mood variations
-            const currentSpriteStyle = localStorage.getItem('jerrySpriteStyle') || 'default';
+            const currentSprite = localStorage.getItem('jerrySpriteStyle') || 'default';
     
-            if (jerrySprites[currentSpriteStyle]) {
+            if (jerrySprites[currentSprite]) {
                 currentMood = mood; // track mood but don't change sprite
-                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSpriteStyle]));
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSprite]));
                 drawJerry(getCurrentSprite());
             }
         }
@@ -3845,7 +3844,7 @@
             // DOM elements
             // -----------------------------
             const spriteStyleSelect = document.getElementById('spriteStyle');
-            const spriteThemeSelect = document.getElementById('spriteTheme');
+            const themeSelect = document.getElementById('theme');
             const petStyleSelect = document.getElementById('petStyle');
             const petThemeSelect = document.getElementById('petTheme');
             const uploadedSpritesList = document.getElementById('uploadedSpritesList');
@@ -3862,9 +3861,9 @@
             // Populate dropdowns
             // -----------------------------
             function populateSpriteDropdown() {
-                if (!spriteStyleSelect || !spriteThemeSelect) return;
+                if (!spriteStyleSelect || !themeSelect) return;
                 spriteStyleSelect.innerHTML = '';
-                spriteThemeSelect.innerHTML = '';
+                themeSelect.innerHTML = '';
         
                 Object.entries(jerrySprites).forEach(([id, sprite]) => {
                     const name = sprite.name || builtInJerryNames[id] || id;
@@ -3875,7 +3874,7 @@
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' : 
                                         theme === 'retroPixel' ? 'Retro' :
                                         theme.charAt(0).toUpperCase() + theme.slice(1);
-                    spriteThemeSelect.appendChild(new Option(displayName, theme));
+                    themeSelect.appendChild(new Option(displayName, theme));
                 });
             }
         
@@ -3907,7 +3906,7 @@
                 appState.sprite.currentSprite = jerrySprites[savedSpriteStyle] ? savedSpriteStyle : 'default';
                 appState.sprite.theme = savedSpriteTheme;
                 if (spriteStyleSelect) spriteStyleSelect.value = appState.sprite.currentSprite;
-                if (spriteThemeSelect) spriteThemeSelect.value = appState.sprite.theme;
+                if (themeSelect) themeSelect.value = appState.sprite.theme;
         
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
                 const savedPetStyle = savedPetSettings.style || 'none';
@@ -3948,8 +3947,8 @@
                 localStorage.setItem('spriteSettings', JSON.stringify({ style, theme: appState.sprite.theme }));
                 refreshSpriteRender();
             });
-            spriteThemeSelect?.addEventListener('change', () => {
-                const theme = spriteThemeSelect.value;
+            themeSelect?.addEventListener('change', () => {
+                const theme = themeSelect.value;
                 appState.sprite.theme = theme;
                 localStorage.setItem('spriteSettings', JSON.stringify({ style: appState.sprite.currentSprite, theme }));
                 refreshSpriteRender();
@@ -4990,9 +4989,9 @@
             document.getElementById('botName').value = appState.botName || 'Jerry';
 
             // Theme
-            const storedTheme = localStorage.getItem('spriteTheme') || 'default';
-            appState.spriteTheme = storedTheme;
-            document.getElementById('spriteTheme').value = appState.spriteTheme;
+            const storedTheme = localStorage.getItem('theme') || 'default';
+            appState.theme = storedTheme;
+            document.getElementById('theme').value = appState.theme;
 
             // API option
             const apiOption = localStorage.getItem('jerry_api_option') || 'own';
@@ -5020,8 +5019,8 @@
         const selectedApiOption = document.querySelector('input[name="apiOption"]:checked')?.value || 'own';
         localStorage.setItem('jerry_api_option', selectedApiOption);
 
-        appState.spriteTheme = document.getElementById('spriteTheme').value;
-        localStorage.setItem('spriteTheme', appState.spriteTheme);
+        appState.theme = document.getElementById('theme').value;
+        localStorage.setItem('theme', appState.theme);
 
         showNotification('Settings saved successfully!');
         updateChatInterface();
