@@ -2738,15 +2738,20 @@
         }
 
         // =====================
-        // Update Jerry Sprite (refactored, no fallback)
+        // Update Jerry Sprite (drop-in, synced with dropdowns)
         // =====================
         function updateJerrySprite() {
+            // Always rebuild dropdowns first so they stay in sync
+            if (typeof populateSpriteDropdown === 'function') {
+                populateSpriteDropdown(false); // pass false so it doesn’t overwrite appState
+            }
+        
             // Load saved settings
             const savedSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
             const savedSpriteStyle = savedSettings.style;
             const savedTheme = savedSettings.theme;
-
-            // Load custom sprites
+        
+            // Load custom sprites into jerrySprites
             const customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
             if (customSprites.jerry) {
                 for (const [id, sprite] of Object.entries(customSprites.jerry)) {
@@ -2755,19 +2760,19 @@
                     }
                 }
             }
-
+        
             // Determine current sprite
-                let currentSpriteStyle = savedSpriteStyle && jerrySprites[savedSpriteStyle]
-                    ? savedSpriteStyle
-                    : Object.keys(jerrySprites)[0] || 'default';
-
+            let currentSpriteStyle = savedSpriteStyle && jerrySprites[savedSpriteStyle]
+                ? savedSpriteStyle
+                : Object.keys(jerrySprites)[0] || 'default';
+        
             // Determine theme
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
             let spriteTheme = savedTheme && colorSets[savedTheme]
                 ? savedTheme
                 : Object.keys(colorSets)[0] || 'default';
-
+        
             // Get sprite data safely
             let spriteData = jerrySprites[currentSpriteStyle];
             if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
@@ -2776,30 +2781,36 @@
                 spriteData = jerrySprites[fallbackKey];
                 currentSpriteStyle = fallbackKey;
             }
-
+        
             // Clone to avoid mutation
             baseSprite = JSON.parse(JSON.stringify(spriteData));
-
+        
             // Render
             if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
             if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
-
+        
             // Persist current settings
             localStorage.setItem('spriteSettings', JSON.stringify({ style: currentSpriteStyle, theme: spriteTheme }));
-    
+        
             // Update app state
             if (!appState.sprite) appState.sprite = {};
             appState.sprite.currentSprite = currentSpriteStyle;
             appState.sprite.theme = spriteTheme;
-
-            // Update theme dropdown if exists
+        
+            // Sync dropdowns with current state
+            const spriteSelect = document.getElementById('spriteStyle');
+            if (spriteSelect && Array.from(spriteSelect.options).some(opt => opt.value === currentSpriteStyle)) {
+                spriteSelect.value = currentSpriteStyle;
+            }
+        
             const themeSelect = document.getElementById('spriteTheme');
             if (themeSelect && Array.from(themeSelect.options).some(opt => opt.value === spriteTheme)) {
                 themeSelect.value = spriteTheme;
             }
-
+        
             console.log(`Jerry sprite updated: ${currentSpriteStyle} (theme: ${spriteTheme})`);
         }
+
 
 
         function getColorSets(isLightMode) {
@@ -3815,59 +3826,59 @@
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
-
-                // ----------------------------
-                // Capture existing built-in options
+            
+                // -----------------------------
+                // Capture existing built-in options (to preserve original labels)
                 // -----------------------------
                 const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
                 }));
-
+            
                 // -----------------------------
                 // Clear current options
                 // -----------------------------
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
-
+            
                 // -----------------------------
                 // Re-add built-in options exactly as in HTML
                 // -----------------------------
                 builtInOptions.forEach(opt => {
                     spriteStyleSelect.appendChild(new Option(opt.text, opt.value));
                 });
-
+            
                 // -----------------------------
                 // Add custom Jerry sprites
                 // -----------------------------
                 Object.entries(customSprites.jerry).forEach(([id, sprite]) => {
                     spriteStyleSelect.appendChild(new Option(`${sprite.name} (Custom)`, id));
                 });
-
+            
                 // -----------------------------
                 // Populate themes
                 // -----------------------------
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
-                        theme === 'retroPixel' ? 'Retro' :
-                        theme.charAt(0).toUpperCase() + theme.slice(1);
+                                        theme === 'retroPixel' ? 'Retro' :
+                                        theme.charAt(0).toUpperCase() + theme.slice(1);
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
-
+            
                 // -----------------------------
                 // Load saved settings
                 // -----------------------------
                 const savedSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
                 const savedStyle = savedSettings.style;
                 const savedTheme = savedSettings.theme || 'default';
-
+            
                 // -----------------------------
                 // Determine the actual sprite to display
                 // -----------------------------
                 const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
                 appState.sprite.currentSprite = styleExists ? savedStyle : spriteStyleSelect.options[0]?.value || 'default';
                 appState.sprite.theme = savedTheme;
-
+            
                 // -----------------------------
                 // Set dropdowns to reflect actual current sprite + theme
                 // -----------------------------
