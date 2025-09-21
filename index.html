@@ -3956,12 +3956,6 @@
                 
                 // Validate saved style exists in either built-in or custom sprites
                 const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
-                
-                appState.sprite.currentSprite = styleExists ? savedStyle : 'default';
-                appState.sprite.theme = savedTheme;
-                
-                spriteStyleSelect.value = appState.sprite.currentSprite;
-                spriteThemeSelect.value = appState.sprite.theme;
             }
 
             // -----------------------------
@@ -5488,10 +5482,10 @@
 
             // --- Initialize UI ---
             // --- Initialize base sprite and render both main + preview ---
+            initializePetSystem();
             updateJerrySprite();
             updateJerryUI();
             initializeJerryDecay();
-            initializePetSystem();
             scheduleBlink();
             updateAffirmationBanner('jerry');
             updateThemeColor();
