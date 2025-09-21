@@ -2130,7 +2130,7 @@
         // Application State
         const appState = {
             jerry: {},
-            currentSprite: localStorage.getItem('jerrySpriteStyle') || 'default',
+            appState.currentSprite: localStorage.getItem('jerrySpriteStyle') || 'default',
             theme: localStorage.getItem('theme') || 'default',
             apiKey: localStorage.getItem('hush_api_key') || '',
             currentTab: 'jerry',
@@ -2742,7 +2742,7 @@
         function updateJerrySprite() {
             try {
                 // Fetch saved values from localStorage
-                const savedSpriteStyle = localStorage.getItem('jerryCurrentSprite');
+                const savedSpriteStyle = localStorage.getItem('jerryappState.currentSprite');
                 const savedTheme = localStorage.getItem('theme');
 
                 // Detect light/dark mode
@@ -2750,7 +2750,7 @@
                 const colorSets = getColorSets(isLightMode);
 
                 // Resolve sprite style safely
-                const currentSprite = jerrySprites[savedSpriteStyle]
+                const appState.currentSprite = jerrySprites[savedSpriteStyle]
                     ? savedSpriteStyle
                     : Object.keys(jerrySprites)[0]; // first sprite if saved one missing
 
@@ -2760,7 +2760,7 @@
                     : Object.keys(colorSets)[0]; // first available theme
 
                 // Get sprite data
-                let spriteData = jerrySprites[currentSprite];
+                let spriteData = jerrySprites[appState.currentSprite];
                 if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
                     console.warn('Invalid Jerry sprite data, falling back to first sprite');
                     spriteData = jerrySprites[Object.keys(jerrySprites)[0]];
@@ -2777,16 +2777,16 @@
                 if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, theme);
 
                 // Persist selections
-                localStorage.setItem('jerryCurrentSprite', currentSprite);
+                localStorage.setItem('jerryappState.currentSprite', appState.currentSprite);
                 localStorage.setItem('theme', theme);
 
                 // Sync app state
-                appState.sprite.currentSprite = currentSprite;
+                appState.sprite.appState.currentSprite = appState.currentSprite;
                 appState.theme = theme;
 
                 // Sync dropdown (if exists)
                 const spriteSelect = document.getElementById('spriteStyle');
-                if (spriteSelect) spriteSelect.value = currentSprite;
+                if (spriteSelect) spriteSelect.value = appState.currentSprite;
                 const themeSelect = document.getElementById('theme');
                 if (themeSelect) themeSelect.value = theme;
 
@@ -2811,10 +2811,10 @@
             if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, theme);
             if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, theme);
 
-            appState.sprite.currentSprite = firstSprite;
+            appState.sprite.appState.currentSprite = firstSprite;
             appState.theme = firstTheme;
 
-            localStorage.setItem('jerryCurrentSprite', firstSprite);
+            localStorage.setItem('jerryappState.currentSprite', firstSprite);
             localStorage.setItem('theme', firstTheme);
 
             // Sync dropdowns
@@ -2831,7 +2831,7 @@
         if (spriteSelect) {
             spriteSelect.addEventListener('change', e => {
                 const selected = e.target.value;
-                localStorage.setItem('jerryCurrentSprite', selected);
+                localStorage.setItem('jerryappState.currentSprite', selected);
                 updateJerrySprite();
             });
         }
@@ -2996,7 +2996,7 @@
 
 
         // === Helper Functions ===
-        function getCurrentSprite() {
+        function getappState.currentSprite() {
         return baseSprite;
         }
 
@@ -3053,8 +3053,8 @@
         const BLINK_DURATION = 150; // 1/2 second
 
         function blinkJerry() {
-            const currentSprite = getCurrentSprite();
-            const spriteCopy = JSON.parse(JSON.stringify(currentSprite));
+            const appState.currentSprite = getappState.currentSprite();
+            const spriteCopy = JSON.parse(JSON.stringify(appState.currentSprite));
 
             const blinkPixels = blinkTargets[4]; // Use the full eye block
             blinkPixels.forEach(([r, c]) => {
@@ -3068,7 +3068,7 @@
             drawJerry(spriteCopy);
 
             setTimeout(() => {
-                drawJerry(currentSprite);
+                drawJerry(appState.currentSprite);
             }, BLINK_DURATION);
         }
 
@@ -3085,12 +3085,12 @@
         // Mood switching
         function setMood(mood) {
             // Always use the currently selected sprite style, ignore mood variations
-            const currentSprite = localStorage.getItem('jerrySpriteStyle') || 'default';
+            const appState.currentSprite = localStorage.getItem('jerrySpriteStyle') || 'default';
     
-            if (jerrySprites[currentSprite]) {
+            if (jerrySprites[appState.currentSprite]) {
                 currentMood = mood; // track mood but don't change sprite
-                baseSprite = JSON.parse(JSON.stringify(jerrySprites[currentSprite]));
-                drawJerry(getCurrentSprite());
+                baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.currentSprite]));
+                drawJerry(getappState.currentSprite());
             }
         }
 
@@ -3100,7 +3100,7 @@
         let frame = 0;
         const talkInterval = setInterval(() => {
                 frame = 1 - frame;
-                const sprite = JSON.parse(JSON.stringify(getCurrentSprite()));
+                const sprite = JSON.parse(JSON.stringify(getappState.currentSprite()));
                 let mouth;
                 switch (currentMood) {
                 case 'content': mouth = [[6, 7], [6, 8]]; break;
@@ -3114,7 +3114,7 @@
         await renderText(text); // your existing text rendering
         clearInterval(talkInterval);
         jerryTalking = false;
-        drawJerry(getCurrentSprite());
+        drawJerry(getappState.currentSprite());
         }
 
         //function evolveJerry(level) {
@@ -3139,7 +3139,7 @@
             //}
 
             // Redraw Jerry sprite (sprite will be below the halo due to z-index)
-            //drawJerry(getCurrentSprite());
+            //drawJerry(getappState.currentSprite());
         //}
 
         function triggerShake() {
@@ -3226,7 +3226,7 @@
                 level: 1,
                 xp: 0,
                 xpToNext: 100,
-                currentSprite: 'default'
+                appState.currentSprite: 'default'
             };
 
             const saved = getFromLocalStorage('hush_jerry_state');
@@ -3793,9 +3793,9 @@
             if (!appState.sprite) appState.sprite = {};
             if (!appState.pet) appState.pet = {};
         
-            appState.sprite.currentSprite = appState.sprite.currentSprite || 'default';
+            appState.sprite.appState.currentSprite = appState.sprite.appState.currentSprite || 'default';
             appState.sprite.theme = appState.sprite.theme || 'default';
-            appState.pet.currentSprite = appState.pet.currentSprite || 'none';
+            appState.pet.appState.currentSprite = appState.pet.appState.currentSprite || 'none';
             appState.pet.theme = appState.pet.theme || 'default';
         
             // -----------------------------
@@ -3903,17 +3903,17 @@
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
                 const savedSpriteStyle = savedSpriteSettings.style || 'default';
                 const savedSpriteTheme = availableThemes.includes(savedSpriteSettings.theme) ? savedSpriteSettings.theme : 'default';
-                appState.sprite.currentSprite = jerrySprites[savedSpriteStyle] ? savedSpriteStyle : 'default';
+                appState.sprite.appState.currentSprite = jerrySprites[savedSpriteStyle] ? savedSpriteStyle : 'default';
                 appState.sprite.theme = savedSpriteTheme;
-                if (spriteStyleSelect) spriteStyleSelect.value = appState.sprite.currentSprite;
+                if (spriteStyleSelect) spriteStyleSelect.value = appState.sprite.appState.currentSprite;
                 if (themeSelect) themeSelect.value = appState.sprite.theme;
         
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
                 const savedPetStyle = savedPetSettings.style || 'none';
                 const savedPetTheme = availableThemes.includes(savedPetSettings.theme) ? savedPetSettings.theme : 'default';
-                appState.pet.currentSprite = petSprites[savedPetStyle] ? savedPetStyle : 'none';
+                appState.pet.appState.currentSprite = petSprites[savedPetStyle] ? savedPetStyle : 'none';
                 appState.pet.theme = savedPetTheme;
-                if (petStyleSelect) petStyleSelect.value = appState.pet.currentSprite;
+                if (petStyleSelect) petStyleSelect.value = appState.pet.appState.currentSprite;
                 if (petThemeSelect) petThemeSelect.value = appState.pet.theme;
             }
         
@@ -3925,7 +3925,7 @@
             // Render functions (fixed)
             // -----------------------------
             function refreshSpriteRender() {
-                const style = appState.sprite.currentSprite;
+                const style = appState.sprite.appState.currentSprite;
                 const theme = appState.sprite.theme || 'default';
                 const spriteData = jerrySprites[style] || jerrySprites['default'];
                 renderJerrySprite(spriteData, theme);
@@ -3943,26 +3943,26 @@
             // -----------------------------
             spriteStyleSelect?.addEventListener('change', () => {
                 const style = spriteStyleSelect.value;
-                appState.sprite.currentSprite = style;
+                appState.sprite.appState.currentSprite = style;
                 localStorage.setItem('spriteSettings', JSON.stringify({ style, theme: appState.sprite.theme }));
                 refreshSpriteRender();
             });
             themeSelect?.addEventListener('change', () => {
                 const theme = themeSelect.value;
                 appState.sprite.theme = theme;
-                localStorage.setItem('spriteSettings', JSON.stringify({ style: appState.sprite.currentSprite, theme }));
+                localStorage.setItem('spriteSettings', JSON.stringify({ style: appState.sprite.appState.currentSprite, theme }));
                 refreshSpriteRender();
             });
             petStyleSelect?.addEventListener('change', () => {
                 const style = petStyleSelect.value;
-                appState.pet.currentSprite = style;
+                appState.pet.appState.currentSprite = style;
                 localStorage.setItem('petSettings', JSON.stringify({ style, theme: appState.pet.theme }));
                 refreshPetRender();
             });
             petThemeSelect?.addEventListener('change', () => {
                 const theme = petThemeSelect.value;
                 appState.pet.theme = theme;
-                localStorage.setItem('petSettings', JSON.stringify({ style: appState.pet.currentSprite, theme }));
+                localStorage.setItem('petSettings', JSON.stringify({ style: appState.pet.appState.currentSprite, theme }));
                 refreshPetRender();
             });
         
@@ -3991,12 +3991,12 @@
                 else delete petSprites[id];
                 saveToLocalStorage('customSprites', customSprites);
         
-                if (category === 'jerry' && appState.sprite.currentSprite === id) {
-                    appState.sprite.currentSprite = 'default';
+                if (category === 'jerry' && appState.sprite.appState.currentSprite === id) {
+                    appState.sprite.appState.currentSprite = 'default';
                     refreshSpriteRender();
                 }
-                if (category === 'pet' && appState.pet.currentSprite === id) {
-                    appState.pet.currentSprite = 'none';
+                if (category === 'pet' && appState.pet.appState.currentSprite === id) {
+                    appState.pet.appState.currentSprite = 'none';
                     refreshPetRender();
                 }
         
@@ -4043,19 +4043,19 @@
                 customSprites[category][id] = { name, data: pendingUpload.data };
                 if (category === 'jerry') {
                     jerrySprites[id] = { data: pendingUpload.data, name };
-                    appState.sprite.currentSprite = id;
+                    appState.sprite.appState.currentSprite = id;
                     localStorage.setItem('spriteSettings', JSON.stringify({ style: id, theme: appState.sprite.theme }));
                 } else {
                     petSprites[id] = { data: pendingUpload.data, name };
-                    appState.pet.currentSprite = id;
+                    appState.pet.appState.currentSprite = id;
                     localStorage.setItem('petSettings', JSON.stringify({ style: id, theme: appState.pet.theme }));
                 }
         
                 saveToLocalStorage('customSprites', customSprites);
                 populateSpriteDropdown();
                 populatePetDropdown();
-                spriteStyleSelect.value = appState.sprite.currentSprite;
-                petStyleSelect.value = appState.pet.currentSprite;
+                spriteStyleSelect.value = appState.sprite.appState.currentSprite;
+                petStyleSelect.value = appState.pet.appState.currentSprite;
                 refreshSpriteRender();
                 refreshPetRender();
                 pendingUpload = null;
@@ -4999,7 +4999,7 @@
 
             const spriteStyleSelect = document.getElementById('spriteStyle');
             if (spriteStyleSelect) {
-                spriteStyleSelect.value = appState.sprite.currentSprite || 'default';
+                spriteStyleSelect.value = appState.sprite.appState.currentSprite || 'default';
             }
    
 
@@ -5287,7 +5287,7 @@
                 loadJerryState();
             } // use async version if available
             // === Initialize base sprite after Jerry state is ready ===
-            baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.sprite?.currentSprite || 'default']));
+            baseSprite = JSON.parse(JSON.stringify(jerrySprites[appState.sprite?.appState.currentSprite || 'default']));
 
             // Ensure lastFed exists
             ['clarity', 'insight', 'calm'].forEach(need => {
