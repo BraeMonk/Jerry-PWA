@@ -3941,7 +3941,7 @@
             // -----------------------------
             // Available themes
             // -----------------------------
-            const availableThemes = Object.keys(palettes);
+            const availableThemes = ['default', 'retro8bit', 'gameboyClassic', 'synthwave', 'earthTones', 'crystalIce', 'moltenCore', 'enchantedForest', 'nesClassic', 'cyberpunk', 'desertSands', 'deepOcean', 'cosmicVoid', 'inkWash', 'autumnLeaves', 'sakuraBloom'];
 
             // -----------------------------
             // DOM elements - CORRECT IDs
@@ -4008,10 +4008,10 @@
                 // Populate themes
                 // -----------------------------
                 availableThemes.forEach(theme => {
-                    const htmlOption = spriteThemeSelect.querySelector(`option[value="${theme}"]`);
-                    if (htmlOption) {
-                        spriteThemeSelect.appendChild(new Option(htmlOption.text, theme));
-                    }
+                    const displayName = theme === 'autumnLeaves' ? 'Autumn Leaves' :
+                                        theme === 'sakuraBloom' ? 'Sakura Bloom' :
+                                        theme.charAt(0).toUpperCase() + theme.slice(1);
+                    spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
             
                 // -----------------------------
