@@ -3809,7 +3809,7 @@
             if (!customSprites.jerry) customSprites.jerry = {};
             if (!customSprites.pet) customSprites.pet = {};
 
-            // Merge sprites into existing objects without overwriting
+            // Merge sprites into runtime objects
             for (const [id, sprite] of Object.entries(customSprites.jerry)) {
                 if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
                     jerrySprites[id] = sprite.data;
@@ -3855,32 +3855,19 @@
 
             let pendingUpload = null;
 
-            // -----------------------------
-            // Populate sprite dropdown (jerry category)
-            // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
-    
-                // Store existing built-in options
-                const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
-                    value: opt.value,
-                    text: opt.textContent
-                }));
-    
+
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
-    
-                // Re-add built-in options
-                builtInOptions.forEach(option => {
-                    spriteStyleSelect.appendChild(new Option(option.text, option.value));
+
+                // Add built-in + custom Jerry sprites
+                Object.keys(jerrySprites).forEach(key => {
+                    const isCustom = customSprites.jerry[key] ? ' (Custom)' : '';
+                    const name = customSprites.jerry[key]?.name || key;
+                    spriteStyleSelect.appendChild(new Option(name + isCustom, key));
                 });
-    
-                // Add custom Jerry sprites
-                Object.keys(customSprites.jerry).forEach(key => {
-                    const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
-                    spriteStyleSelect.appendChild(option);
-                });
-    
+
                 // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' : 
@@ -3890,33 +3877,20 @@
                 });
             }
 
-            // -----------------------------
-            // Populate pet dropdown (pet category)
-            // -----------------------------
             function populatePetDropdown() {
                 if (!petStyleSelect || !petThemeSelect) return;
-    
-                // Store existing built-in options
-                const builtInOptions = Array.from(petStyleSelect.options).map(opt => ({
-                    value: opt.value,
-                    text: opt.textContent
-                }));
-    
+
                 petStyleSelect.innerHTML = '';
                 petThemeSelect.innerHTML = '';
-    
-                // Re-add built-in options  
-                builtInOptions.forEach(option => {
-                    petStyleSelect.appendChild(new Option(option.text, option.value));
+
+                // Add built-in + custom Pet sprites
+                Object.keys(petSprites).forEach(key => {
+                    const isCustom = customSprites.pet[key] ? ' (Custom)' : '';
+                    const name = customSprites.pet[key]?.name || key;
+                    petStyleSelect.appendChild(new Option(name + isCustom, key));
                 });
-    
-                // Add custom Pet sprites
-                Object.keys(customSprites.pet).forEach(key => {
-                    const option = new Option(`${customSprites.pet[key].name} (Custom)`, key);
-                    petStyleSelect.appendChild(option);
-                });
-    
-                // Populate theme
+
+                // Populate themes
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' : 
                         theme === 'retroPixel' ? 'Retro' :
@@ -3925,53 +3899,32 @@
                 });
             }
 
-            // -----------------------------
-            // Load and apply saved settings
-            // -----------------------------
             function loadSavedSettings() {
-                // Load sprite settings
+                // -----------------------------
+                // Jerry
+                // -----------------------------
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
                 const savedSpriteStyle = savedSpriteSettings.style || 'default';
                 const savedSpriteTheme = savedSpriteSettings.theme || 'default';
-    
-                console.log('Loading sprite settings:', savedSpriteSettings);
-                console.log('Available sprite options:', Array.from(spriteStyleSelect.options).map(opt => opt.value));
-    
-                // If saved style exists (built-in or custom), use it.
-                // If not, fall back to default.
-                if (Array.from(spriteStyleSelect.options).some(opt => opt.value === savedSpriteStyle)) {
-                    appState.sprite.currentSprite = savedSpriteStyle;
-                } else {
-                    appState.sprite.currentSprite = 'default';
-                }
-                
+
+                appState.sprite.currentSprite = jerrySprites[savedSpriteStyle] ? savedSpriteStyle : 'default';
                 appState.sprite.theme = savedSpriteTheme;
-    
-                spriteStyleSelect.value = appState.sprite.currentSprite;
-                spriteThemeSelect.value = appState.sprite.theme;
-    
-                console.log('Set sprite dropdown to:', spriteStyleSelect.value);
-    
-                // Load pet settings
+
+                if (spriteStyleSelect) spriteStyleSelect.value = appState.sprite.currentSprite;
+                if (spriteThemeSelect) spriteThemeSelect.value = appState.sprite.theme;
+
+                // -----------------------------
+                // Pet
+                // -----------------------------
                 const savedPetSettings = JSON.parse(localStorage.getItem('petSettings') || '{}');
                 const savedPetStyle = savedPetSettings.style || 'none';
                 const savedPetTheme = savedPetSettings.theme || 'default';
-    
-                console.log('Loading pet settings:', savedPetSettings);
-                console.log('Available pet options:', Array.from(petStyleSelect.options).map(opt => opt.value));
-    
-                if (Array.from(petStyleSelect.options).some(opt => opt.value === savedPetStyle)) {
-                    appState.pet.currentSprite = savedPetStyle;
-                } else {
-                    appState.pet.currentSprite = 'none';
-                }
-                
+
+                appState.pet.currentSprite = petSprites[savedPetStyle] ? savedPetStyle : 'none';
                 appState.pet.theme = savedPetTheme;
-    
-                petStyleSelect.value = appState.pet.currentSprite;
-                petThemeSelect.value = appState.pet.theme;
-    
-                console.log('Set pet dropdown to:', petStyleSelect.value);
+
+                if (petStyleSelect) petStyleSelect.value = appState.pet.currentSprite;
+                if (petThemeSelect) petThemeSelect.value = appState.pet.theme;
             }
 
             populateSpriteDropdown();
