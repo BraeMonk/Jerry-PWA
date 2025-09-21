@@ -3874,35 +3874,25 @@
                 spriteThemeSelect.innerHTML = '';
 
 
-                // Add built-in Jerry sprites first
+                // Populate Jerry sprite options with proper labels
                 Object.keys(jerrySprites).forEach(key => {
-                    const isCustom = customSprites.jerry[key] ? " (Custom)" : "";
-                    const name = customSprites.jerry[key]?.name || key;
-                    spriteStyleSelect.appendChild(new Option(name + isCustom, key));
+                    const custom = customSprites.jerry[key];
+                    const label = custom ? custom.name + " (Custom)" : (jerrySprites[key].displayName || key);
+                    spriteStyleSelect.appendChild(new Option(label, key));
                 });
 
-                // Populate themes
-                availableThemes.forEach(theme => {
-                    const displayName = theme === 'fantasySprite' ? 'Fantasy' :
-                        theme === 'retroPixel' ? 'Retro' :
-                        theme.charAt(0).toUpperCase() + theme.slice(1);
-                    spriteThemeSelect.appendChild(new Option(displayName, theme));
-                });
+                // Determine which sprite to actually select
+                let current = appState.sprite.currentSprite;
+                // If current sprite is missing or invalid, fallback to localStorage or first built-in
+                if (!current || !jerrySprites[current]) {
+                    const saved = JSON.parse(localStorage.getItem('spriteSettings') || '{}').style;
+                    current = saved && jerrySprites[saved] ? saved : Object.keys(jerrySprites)[0];
+                }
+                appState.sprite.currentSprite = current;
 
-                // Load saved settings from localStorage
-                const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedStyle = savedSpriteSettings.style;
-                const savedTheme = savedSpriteSettings.theme || 'default';
-
-                // Ensure saved style exists in the dropdown
-                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
-                appState.sprite.currentSprite = styleExists ? savedStyle : Object.keys(jerrySprites)[0];
-                appState.sprite.theme = savedTheme;
-
-                // Set the dropdown to reflect actual current sprite
+                // Set dropdown value to reflect the actual current sprite
                 spriteStyleSelect.value = appState.sprite.currentSprite;
-                spriteThemeSelect.value = appState.sprite.theme;
-}
+            }
 
             // -----------------------------
             // Populate pet dropdown (pet category)
