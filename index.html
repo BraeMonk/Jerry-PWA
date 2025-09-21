@@ -277,13 +277,13 @@
         .jerry-container {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; /* ensures horizontal centering */
+            justify-content: center;
             margin: 20px 0;
             position: relative;
             z-index: 1;
-            top: -20px; /* moved a little more up */
-            left: -10px; /* nudged slightly left */
-            justify-content: center;
+            top: -20px; /* move slightly up */
+            /* remove 'left' property entirely */
             transition: background 0.5s ease;
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
@@ -304,22 +304,22 @@
         /* Pedestal / shadow above stats */
         .jerry-shadow {
             position: absolute;
-            bottom: 25px;        /* a bit closer to sprite base */
-            width: 120px;        /* slightly wider to simulate perspective */
+            bottom: 25px;        /* right under the sprite */
+            width: 120px;        /* slightly wider than sprite */
             height: 18px;        /* subtle thickness */
             background: rgba(0, 0, 0, 0.25);
             border-radius: 50%;
             filter: blur(6px);
             z-index: 2;          /* behind sprite */
-            left: 52%;           /* slightly offset to match light angle */
-            transform: translateX(-50%) scaleX(1.2); /* stretch shadow horizontally */
-            opacity: 0.6;        /* subtle shadow effect */
+            left: 50%;           /* center in container */
+            transform: translateX(-50%) scaleX(1.2); /* horizontal stretch, centered */
+            opacity: 0.6;        /* soft shadow */
         }
 
         .jerry-sprite {
             width: 160px;
             height: 160px;
-            margin: 20px auto; /* reduced top/bottom margin for slight upward shift */
+            margin: 20px auto; /* centers horizontally */
             position: relative;
             z-index: 3; /* above shadow */
         }
