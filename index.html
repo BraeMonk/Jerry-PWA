@@ -4121,8 +4121,30 @@
                     // Add to runtime sprite objects based on category
                     if (category === 'jerry') {
                         jerrySprites[id] = pendingUpload.data;
+
+                        // Set the new sprite as selected and persist i
+                        appState.sprite.currentSprite = id;
+                        localStorage.setItem('spriteSettings', JSON.stringify({ 
+                            style: appState.sprite.currentSprite, 
+                            theme: appState.sprite.theme || 'default' 
+                        }));
+
+                        populateSpriteDropdown();  // repopulate dropdown now that the sprite exists
+                        spriteStyleSelect.value = id;  // explicitly select it
+                        refreshSpriteRender();
                     } else {
                         petSprites[id] = pendingUpload.data;
+
+                        // Set the new pet sprite as selected and persist it
+                        appState.pet.currentSprite = id;
+                        localStorage.setItem('petSettings', JSON.stringify({ 
+                            style: appState.pet.currentSprite, 
+                            theme: appState.pet.theme || 'default' 
+                        }));
+                        
+                        populatePetDropdown();  // repopulate dropdown
+                        petStyleSelect.value = id;  // explicitly select it
+                        refreshPetRender();
                     }
 
                     // Save to localStorage
@@ -4137,11 +4159,9 @@
                     // Update appropriate dropdown based on category
                     if (category === 'jerry') {
                         populateSpriteDropdown();
-                        loadSavedSettings(); // Reload settings after repopulating
                         refreshSpriteRender();
                     } else {
                         populatePetDropdown();
-                        loadSavedSettings(); // Reload settings after repopulating
                         refreshPetRender();
                     }
         
