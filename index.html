@@ -3816,33 +3816,37 @@
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
 
-                // -----------------------------
-                // Add built-in + custom Jerry sprites
-                // -----------------------------
+                // ----------------------------
                 // Capture existing built-in options
-                const existingOptions = Array.from(spriteStyleSelect.options).map(opt => ({
+                // -----------------------------
+                const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
                     value: opt.value,
                     text: opt.textContent
                 }));
 
+                // -----------------------------
                 // Clear current options
+                // -----------------------------
                 spriteStyleSelect.innerHTML = '';
+                spriteThemeSelect.innerHTML = '';
 
+                // -----------------------------
                 // Re-add built-in options exactly as in HTML
-                existingOptions.forEach(opt => {
+                // -----------------------------
+                builtInOptions.forEach(opt => {
                     spriteStyleSelect.appendChild(new Option(opt.text, opt.value));
                 });
 
+                // -----------------------------
                 // Add custom Jerry sprites
-                Object.keys(customSprites.jerry).forEach(key => {
-                    const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
-                    spriteStyleSelect.appendChild(option);
+                // -----------------------------
+                Object.entries(customSprites.jerry).forEach(([id, sprite]) => {
+                    spriteStyleSelect.appendChild(new Option(`${sprite.name} (Custom)`, id));
                 });
 
                 // -----------------------------
                 // Populate themes
                 // -----------------------------
-                spriteThemeSelect.innerHTML = '';
                 availableThemes.forEach(theme => {
                     const displayName = theme === 'fantasySprite' ? 'Fantasy' :
                         theme === 'retroPixel' ? 'Retro' :
@@ -3853,20 +3857,20 @@
                 // -----------------------------
                 // Load saved settings
                 // -----------------------------
-                const saved = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                
-                // Only update appState if saved style exists in dropdown
-                if (saved.style && Array.from(spriteStyleSelect.options).some(opt => opt.value === saved.style)) {
-                    appState.sprite.currentSprite = saved.style;
-                } else {
-                    // fallback to first dropdown option
-                    appState.sprite.currentSprite = spriteStyleSelect.options[0]?.value || 'default';
-                }
+                const savedSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+                const savedStyle = savedSettings.style;
+                const savedTheme = savedSettings.theme || 'default';
 
-                // Update theme
-                appState.sprite.theme = saved.theme || 'default';
+                // -----------------------------
+                // Determine the actual sprite to display
+                // -----------------------------
+                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
+                appState.sprite.currentSprite = styleExists ? savedStyle : spriteStyleSelect.options[0]?.value || 'default';
+                appState.sprite.theme = savedTheme;
 
-                // Set dropdown to reflect actual current sprite
+                // -----------------------------
+                // Set dropdowns to reflect actual current sprite + theme
+                // -----------------------------
                 spriteStyleSelect.value = appState.sprite.currentSprite;
                 spriteThemeSelect.value = appState.sprite.theme;
             }
