@@ -3868,56 +3868,41 @@
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
-                
-                // Store existing built-in options
-                const builtInOptions = Array.from(spriteStyleSelect.options).map(opt => ({
-                    value: opt.value,
-                    text: opt.textContent
-                }));
-                
+
+                // Clear existing options
                 spriteStyleSelect.innerHTML = '';
                 spriteThemeSelect.innerHTML = '';
-                
-                // Re-add built-in options
-                builtInOptions.forEach(option => {
-                    spriteStyleSelect.appendChild(new Option(option.text, option.value));
+
+
+                // Add built-in Jerry sprites first
+                Object.keys(jerrySprites).forEach(key => {
+                    const isCustom = customSprites.jerry[key] ? " (Custom)" : "";
+                    const name = customSprites.jerry[key]?.name || key;
+                    spriteStyleSelect.appendChild(new Option(name + isCustom, key));
                 });
-                
-                // Add custom Jerry sprites
-                Object.keys(customSprites.jerry).forEach(key => {
-                    const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
-                    spriteStyleSelect.appendChild(option);
-                });
-                
+
                 // Populate themes
                 availableThemes.forEach(theme => {
-                    const displayName = theme === 'fantasySprite' ? 'Fantasy' : 
-                                    theme === 'retroPixel' ? 'Retro' :
-                                    theme.charAt(0).toUpperCase() + theme.slice(1);
+                    const displayName = theme === 'fantasySprite' ? 'Fantasy' :
+                        theme === 'retroPixel' ? 'Retro' :
+                        theme.charAt(0).toUpperCase() + theme.slice(1);
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
-                
-                // -----------------------------
-                // Determine actual current sprite and theme
-                // -----------------------------
+
+                // Load saved settings from localStorage
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedStyle = savedSpriteSettings.style || 'default';
+                const savedStyle = savedSpriteSettings.style;
                 const savedTheme = savedSpriteSettings.theme || 'default';
 
-                // Prefer appState sprite if it exists, fallback to saved settings
-                const currentSprite = appState.sprite.currentSprite || savedStyle;
-                const currentTheme = appState.sprite.theme || savedTheme;
+                // Ensure saved style exists in the dropdown
+                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
+                appState.sprite.currentSprite = styleExists ? savedStyle : Object.keys(jerrySprites)[0];
+                appState.sprite.theme = savedTheme;
 
-                // Validate current sprite exists in dropdown
-                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === currentSprite);
-
-                // Assign final values
-                appState.sprite.currentSprite = styleExists ? currentSprite : 'default';
-                appState.sprite.theme = currentTheme;
-
+                // Set the dropdown to reflect actual current sprite
                 spriteStyleSelect.value = appState.sprite.currentSprite;
                 spriteThemeSelect.value = appState.sprite.theme;
-            }
+}
 
             // -----------------------------
             // Populate pet dropdown (pet category)
