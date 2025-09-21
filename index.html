@@ -279,12 +279,12 @@
             flex-direction: column;
             align-items: center;        /* horizontal centering */
             justify-content: flex-start; /* stack items top to bottom */
-            position: relative;         /* stays in page flow */
-            width: 100%;                /* full screen width */
-            height: 400px;              /* adjust to keep sprite above stats */
+            position: relative;         
+            width: 100%;                
+            height: 420px;              /* slightly taller for spacing */
             margin: 0;
-            z-index: 10;                /* above chat container */
-            padding-top: 20px;          /* spacing from top */
+            z-index: 10;                
+            padding-top: 20px;          
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
             transition: background 0.5s ease;
@@ -295,19 +295,20 @@
             height: 160px;
             position: relative;
             z-index: 3;
-            margin-bottom: 20px;        /* space between sprite and stats */
+            margin-bottom: 20px;        
+            left: -10px;                /* nudge sprite slightly left */
         }
 
         .jerry-shadow {
             position: absolute;
-            bottom: 80px;               /* shadow just beneath sprite */
+            bottom: 85px;               /* stays just beneath sprite */
             width: 120px;
             height: 18px;
             background: rgba(0, 0, 0, 0.25);
             border-radius: 50%;
             filter: blur(6px);
-            z-index: 2;                 /* behind sprite */
-            left: 50%;                  /* center horizontally */
+            z-index: 2;                 
+            left: 50%;                  
             transform: translateX(-50%) scaleX(1.2);
             opacity: 0.6;
         }
@@ -339,7 +340,7 @@
         .jerry-stats {
             width: 100%;
             max-width: 300px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             margin-top: auto;
             z-index: 4;
         }
