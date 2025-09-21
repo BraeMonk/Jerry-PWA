@@ -4032,8 +4032,8 @@
             // -----------------------------
             if (petStyleSelect) {
                 petStyleSelect.addEventListener('change', () => {
-                    const style = petStyleSelect.value
-                        appState.pet.currentSprite = style;
+                    const style = petStyleSelect.value;
+                    appState.pet.currentSprite = style;
                     localStorage.setItem('petSettings', JSON.stringify({ 
                         style,
                         theme: appState.pet.theme || 'default' 
@@ -4085,7 +4085,7 @@
                 else delete petSprites[id];
                 saveToLocalStorage('customSprites', customSprites);
 
-                // Reset to default if deleted sprite was selecte
+                // Reset to default if deleted sprite was selected
                 if (category === 'jerry' && appState.sprite.currentSprite === id) {
                     appState.sprite.currentSprite = 'default';
                     refreshSpriteRender();
@@ -4174,7 +4174,7 @@
        
                     // Add to runtime sprite objects based on category
                     if (category === 'jerry') {
-                        jerrySprites[id] = pendingUpload.data
+                        jerrySprites[id] = pendingUpload.data;
                     } else {
                         petSprites[id] = pendingUpload.data;
                     }
@@ -4202,7 +4202,7 @@
                     updateUploadList();
         
                     const categoryLabel = category === 'jerry' ? 'Main Character' : 'Pet/Companion';
-                    console.log(`Successfully uploaded sprite "${name}" to ${categoryLabel} category`)
+                    console.log(`Successfully uploaded sprite "${name}" to ${categoryLabel} category`);
                 });
             }
 
