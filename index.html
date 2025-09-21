@@ -2738,18 +2738,17 @@
         }
 
         // =====================
-        // Update Jerry Sprite
+        // Update Jerry Sprite (refactored)
         // =====================
         function updateJerrySprite() {
             try {
-                // Fetch saved values from localStorage
-                const savedSpriteStyle = localStorage.getItem('jerryCurrentSprite');
-                const savedTheme = localStorage.getItem('spriteTheme');
-                
-                // Load custom sprites first if they exist in localStorage
+                // Load saved settings
+                const savedSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+                const savedSpriteStyle = savedSettings.style;
+                const savedTheme = savedSettings.theme;
+        
+                // Load custom sprites
                 const customSprites = getFromLocalStorage('customSprites', { jerry: {}, pet: {} });
-                
-                // Ensure custom Jerry sprites are loaded into jerrySprites
                 if (customSprites.jerry) {
                     for (const [id, sprite] of Object.entries(customSprites.jerry)) {
                         if (sprite?.data && Array.isArray(sprite.data) && Array.isArray(sprite.data[0])) {
@@ -2757,152 +2756,102 @@
                         }
                     }
                 }
-                
-                // Detect light/dark mode
+        
+                // Determine current sprite
+                let currentSpriteStyle = savedSpriteStyle && jerrySprites[savedSpriteStyle]
+                    ? savedSpriteStyle
+                    : Object.keys(jerrySprites)[0] || 'default';
+        
+                // Determine theme
                 const isLightMode = document.body.classList.contains('light-theme');
                 const colorSets = getColorSets(isLightMode);
-                
-                // Now try to use the saved sprite (should be available whether built-in or custom)
-                let currentSpriteStyle;
-                if (savedSpriteStyle && jerrySprites[savedSpriteStyle]) {
-                    currentSpriteStyle = savedSpriteStyle;
-                } else {
-                    // Only fall back if saved sprite truly doesn't exist
-                    const availableSprites = Object.keys(jerrySprites);
-                    currentSpriteStyle = availableSprites.length > 0 ? availableSprites[0] : 'default';
-                    
-                    if (savedSpriteStyle && !jerrySprites[savedSpriteStyle]) {
-                        console.warn(`Saved Jerry sprite "${savedSpriteStyle}" not found even after loading customs, using fallback: ${currentSpriteStyle}`);
-                    }
-                }
-                
-                // Resolve theme safely
-                let spriteTheme;
-                if (savedTheme && colorSets[savedTheme]) {
-                    spriteTheme = savedTheme;
-                } else {
-                    const availableThemes = Object.keys(colorSets);
-                    spriteTheme = availableThemes.length > 0 ? availableThemes[0] : 'default';
-                    
-                    if (savedTheme && !colorSets[savedTheme]) {
-                        console.warn(`Saved sprite theme "${savedTheme}" not found, using fallback: ${spriteTheme}`);
-                    }
-                }
-                
-                // Get sprite data
+                let spriteTheme = savedTheme && colorSets[savedTheme]
+                    ? savedTheme
+                    : Object.keys(colorSets)[0] || 'default';
+        
+                // Get sprite data safely
                 let spriteData = jerrySprites[currentSpriteStyle];
                 if (!Array.isArray(spriteData) || !Array.isArray(spriteData[0])) {
-                    console.warn('Invalid Jerry sprite data, falling back to first sprite');
-                    const fallbackKey = Object.keys(jerrySprites)[0];
+                    console.warn('Invalid Jerry sprite data, using fallback');
+                    const fallbackKey = Object.keys(jerrySprites)[0] || 'default';
                     spriteData = jerrySprites[fallbackKey];
                     currentSpriteStyle = fallbackKey;
                 }
-                
-                // Clone sprite data to avoid mutations
+        
+                // Clone to avoid mutation
                 baseSprite = JSON.parse(JSON.stringify(spriteData));
-                
-                // Render sprite and preview
-                if (typeof renderJerrySprite === 'function') {
-                    renderJerrySprite(baseSprite, spriteTheme);
-                }
-                if (typeof renderSpritePreview === 'function') {
-                    renderSpritePreview(baseSprite, spriteTheme);
-                }
-                
-                // Always persist the current selection (whether it was saved or fallback)
-                localStorage.setItem('jerryCurrentSprite', currentSpriteStyle);
-                localStorage.setItem('spriteTheme', spriteTheme);
-                
+        
+                // Render
+                if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, spriteTheme);
+                if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, spriteTheme);
+        
+                // Persist current settings
+                localStorage.setItem('spriteSettings', JSON.stringify({ style: currentSpriteStyle, theme: spriteTheme }));
+        
                 // Update app state
                 if (!appState.sprite) appState.sprite = {};
-                if (!appState.jerry) appState.jerry = {};
-                
                 appState.sprite.currentSprite = currentSpriteStyle;
-                appState.jerry.currentSprite = currentSpriteStyle;
                 appState.sprite.theme = spriteTheme;
-                appState.spriteTheme = spriteTheme;
-                
-                // Sync dropdown selections (if dropdowns exist)
-                const spriteSelect = document.getElementById('spriteStyle');
-                if (spriteSelect) {
-                    const optionExists = Array.from(spriteSelect.options).some(opt => opt.value === currentSpriteStyle);
-                    if (optionExists) {
-                        spriteSelect.value = currentSpriteStyle;
-                    } else {
-                        // If custom sprite not in dropdown yet, trigger dropdown repopulation
-                        if (typeof populateSpriteDropdown === 'function') {
-                            populateSpriteDropdown();
-                        }
-                    }
-                }
-                
+        
+                // Update theme dropdown if exists
                 const themeSelect = document.getElementById('spriteTheme');
-                if (themeSelect) {
-                    const optionExists = Array.from(themeSelect.options).some(opt => opt.value === spriteTheme);
-                    if (optionExists) {
-                        themeSelect.value = spriteTheme;
-                    }
+                if (themeSelect && Array.from(themeSelect.options).some(opt => opt.value === spriteTheme)) {
+                    themeSelect.value = spriteTheme;
                 }
-                
-                // Success logging
+        
                 console.log(`Jerry sprite updated: ${currentSpriteStyle} (theme: ${spriteTheme})`);
-                
+        
             } catch (err) {
                 console.error('Failed to update Jerry sprite:', err);
-                
-                // Enhanced fallback handling
+        
+                // Fallback logic
                 try {
                     if (typeof fallbackJerry === 'function') {
                         fallbackJerry();
-                    } else {
-                        // Manual fallback if fallbackJerry doesn't exist
-                        console.warn('fallbackJerry function not found, attempting manual fallback');
-                        
-                        // Try to use default sprite
-                        if (jerrySprites.default) {
-                            baseSprite = JSON.parse(JSON.stringify(jerrySprites.default));
-                            const isLightMode = document.body.classList.contains('light-theme');
-                            const colorSets = getColorSets(isLightMode);
-                            const defaultTheme = colorSets.default ? 'default' : Object.keys(colorSets)[0];
-                            
-                            if (typeof renderJerrySprite === 'function') {
-                                renderJerrySprite(baseSprite, defaultTheme);
-                            }
-                            
-                            console.log('Manual fallback to default sprite successful');
-                        }
+                    } else if (jerrySprites.default) {
+                        const isLightMode = document.body.classList.contains('light-theme');
+                        const colorSets = getColorSets(isLightMode);
+                        baseSprite = JSON.parse(JSON.stringify(jerrySprites.default));
+                        if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, 'default');
+                        console.log('Manual fallback to default sprite successful');
                     }
                 } catch (fallbackErr) {
                     console.error('Fallback also failed:', fallbackErr);
                 }
             }
         }
-        // =====================
-        // Fallback
-        // =====================
-        function fallbackJerry() {
-            const firstSprite = Object.keys(jerrySprites)[0];
-            baseSprite = JSON.parse(JSON.stringify(jerrySprites[firstSprite]));
 
+        function fallbackJerry() {
+            const firstSprite = Object.keys(jerrySprites)[0] || 'default';
+            baseSprite = JSON.parse(JSON.stringify(jerrySprites[firstSprite]));
+        
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
-            const firstTheme = Object.keys(colorSets)[0];
-            const colors = colorSets[firstTheme];
-
+            const firstTheme = Object.keys(colorSets)[0] || 'default';
+        
             if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, firstTheme);
             if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, firstTheme);
-
-            appState.jerry.currentSprite = firstSprite;
-            appState.spriteTheme = firstTheme;
-
-            localStorage.setItem('jerryCurrentSprite', firstSprite);
-            localStorage.setItem('spriteTheme', firstTheme);
-
-            // Sync dropdowns
+        
+            // Update app state
+            if (!appState.sprite) appState.sprite = {};
+            appState.sprite.currentSprite = firstSprite;
+            appState.sprite.theme = firstTheme;
+        
+            // Persist to unified storage
+            localStorage.setItem('spriteSettings', JSON.stringify({ style: firstSprite, theme: firstTheme }));
+        
+            // Sync dropdowns safely
             const spriteSelect = document.getElementById('spriteStyle');
-            if (spriteSelect) spriteSelect.value = firstSprite;
-                const themeSelect = document.getElementById('spriteTheme');
-            if (themeSelect) themeSelect.value = firstTheme;
+            if (spriteSelect && Array.from(spriteSelect.options).some(opt => opt.value === firstSprite)) {
+                spriteSelect.value = firstSprite;
+            }
+        
+            const themeSelect = document.getElementById('spriteTheme');
+            if (themeSelect && Array.from(themeSelect.options).some(opt => opt.value === firstTheme)) {
+                themeSelect.value = firstTheme;
+            }
+        
+            console.log(`Fallback applied: ${firstSprite} (theme: ${firstTheme})`);
         }
 
 
