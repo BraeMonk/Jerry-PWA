@@ -1992,6 +1992,7 @@
             <div class="form-group">
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
                 <select class="form-input" id="spriteTheme">
+                    <option value="default">Default</option>
                     <option value="retro8bit">8-Bit</option>
                     <option value="gameboyClassic">Gameboy</option>
                     <option value="synthwave">Synthwave</option>
@@ -2117,6 +2118,7 @@
                 <select class="form-input" id="petTheme">
         
                     <!-- same themes as sprite -->
+                    <option value="default">Default</option>
                     <option value="retro8bit">8-Bit</option>
                     <option value="gameboyClassic">Gameboy</option>
                     <option value="synthwave">Synthwave</option>
@@ -2900,6 +2902,10 @@
 
         function getColorSets(isLightMode) {
             return {
+                default: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#C0C0C0', 3: '#808080', 4: '#404040', 5: '#000000', 6: '#FF0000', 7: '#00FF00', 8: '#0000FF', 9: '#FFFF00', 10: '#FF00FF'}
+                    : {0: 'transparent', 1: '#F8F8F8', 2: '#D0D0D0', 3: '#808080', 4: '#404040', 5: '#000000', 6: '#FF4444', 7: '#44FF44', 8: '#4444FF', 9: '#FFFF44', 10: '#FF44FF'},
+                
                 retro8bit: isLightMode
                     ? {0: 'transparent', 1: '#F4F4F4', 2: '#E8E8E8', 3: '#BCBCBC', 4: '#7C7C7C', 5: '#A00000', 6: '#FF6A00', 7: '#FFD500', 8: '#00A844', 9: '#0047AB', 10: '#000000'}
                     : {0: 'transparent', 1: '#FFFFFF', 2: '#E0E0E0', 3: '#A8A8A8', 4: '#606060', 5: '#C00000', 6: '#FF8533', 7: '#FFE033', 8: '#33B855', 9: '#3366CC', 10: '#000000'},
@@ -3602,6 +3608,10 @@
         function getPetThemeColors(themeName) {
             const isLightMode = isLightModeActive();
             const petThemes = {
+                default: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#C0C0C0', 3: '#808080', 4: '#404040', 5: '#000000', 6: '#FF0000', 7: '#00FF00', 8: '#0000FF', 9: '#FFFF00', 10: '#FF00FF'}
+                    : {0: 'transparent', 1: '#F8F8F8', 2: '#D0D0D0', 3: '#808080', 4: '#404040', 5: '#000000', 6: '#FF4444', 7: '#44FF44', 8: '#4444FF', 9: '#FFFF44', 10: '#FF44FF'},
+                
                 retro8bit: isLightMode
                     ? {0: 'transparent', 1: '#F4F4F4', 2: '#E8E8E8', 3: '#BCBCBC', 4: '#7C7C7C', 5: '#A00000', 6: '#FF6A00', 7: '#FFD500', 8: '#00A844', 9: '#0047AB', 10: '#000000'}
                     : {0: 'transparent', 1: '#FFFFFF', 2: '#E0E0E0', 3: '#A8A8A8', 4: '#606060', 5: '#C00000', 6: '#FF8533', 7: '#FFE033', 8: '#33B855', 9: '#3366CC', 10: '#000000'},
