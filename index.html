@@ -3950,8 +3950,9 @@
                 
                 // Load saved settings
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedStyle = localStorage.getItem('jerryCurrentSprite') || savedSpriteSettings.style || 'default';
-                const savedTheme = savedSpriteSettings.theme || 'default';
+                // Load saved settings - SIMPLIFIED
+                const savedStyle = localStorage.getItem('jerryCurrentSprite') || 'default';
+                const savedTheme = localStorage.getItem('spriteTheme') || 'default';
                 
                 // Validate saved style exists in either built-in or custom sprites
                 const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
@@ -4029,19 +4030,14 @@
             }
 
             // -----------------------------
-            // Sprite dropdown listeners
+            // Sprite dropdown listeners - SIMPLIFIED
             // -----------------------------
             spriteStyleSelect.addEventListener('change', () => {
                 const style = spriteStyleSelect.value;
                 appState.sprite.currentSprite = style;
                 
-                // Save to both locations for compatibility
+                // Save to ONLY the primary key
                 localStorage.setItem('jerryCurrentSprite', style);
-                
-                // Also save to spriteSettings for consistency with populateSpriteDropdown
-                const currentSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                currentSettings.style = style;
-                localStorage.setItem('spriteSettings', JSON.stringify(currentSettings));
                 
                 updateJerrySprite();
             });
@@ -4050,12 +4046,8 @@
                 const theme = spriteThemeSelect.value;
                 appState.sprite.theme = theme;
                 
-                // Save to both locations
+                // Save to ONLY the primary key  
                 localStorage.setItem('spriteTheme', theme);
-                
-                const currentSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                currentSettings.theme = theme;
-                localStorage.setItem('spriteSettings', JSON.stringify(currentSettings));
                 
                 updateJerrySprite();
             });
