@@ -2905,35 +2905,6 @@
             if (themeSelect) themeSelect.value = firstTheme;
         }
 
-        // =====================
-        // Dropdown Event Listeners
-        // =====================
-        const spriteSelect = document.getElementById('spriteStyle');
-        if (spriteSelect) {
-            spriteSelect.addEventListener('change', e => {
-                const selected = e.target.value;
-                localStorage.setItem('jerryCurrentSprite', selected);
-                updateJerrySprite();
-            });
-        }
-
-        const themeSelect = document.getElementById('spriteTheme');
-        if (themeSelect) {
-            themeSelect.addEventListener('change', e => {
-                const selected = e.target.value;
-                localStorage.setItem('spriteTheme', selected);
-                updateJerrySprite();
-            });
-        }
-
-        // =====================
-        // Initialize on page load
-        // =====================
-        document.addEventListener('DOMContentLoaded', () => {
-            updateJerrySprite();
-        });
-
-
 
         function getColorSets(isLightMode) {
             return {
@@ -4064,14 +4035,26 @@
                 const style = spriteStyleSelect.value;
                 appState.sprite.currentSprite = style;
                 localStorage.setItem('jerryCurrentSprite', style);
-                updateJerrySprite();
+                
+                // Direct rendering instead of calling updateJerrySprite()
+                const savedTheme = localStorage.getItem('spriteTheme') || 'default';
+                if (jerrySprites[style]) {
+                    baseSprite = JSON.parse(JSON.stringify(jerrySprites[style]));
+                    if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, savedTheme);
+                    if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, savedTheme);
+                }
             });
-
+            
             spriteThemeSelect.addEventListener('change', () => {
                 const theme = spriteThemeSelect.value;
                 appState.sprite.theme = theme;
                 localStorage.setItem('spriteTheme', theme);
-                updateJerrySprite();
+                
+                // Direct rendering with current sprite
+                if (baseSprite) {
+                    if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, theme);
+                    if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, theme);
+                }
             });
 
             // -----------------------------
