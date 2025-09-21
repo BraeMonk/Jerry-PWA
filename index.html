@@ -3864,34 +3864,60 @@
             let pendingUpload = null;
 
             // -----------------------------
-            // Populate sprite dropdown (jerry category)
+            // Populate sprite dropdown (Jerry category)
             // -----------------------------
             function populateSpriteDropdown() {
                 if (!spriteStyleSelect || !spriteThemeSelect) return;
 
-                // Clear existing options
+                // -----------------------------
+                // Add built-in + custom Jerry sprites
+                // -----------------------------
+                // Capture existing built-in options
+                const existingOptions = Array.from(spriteStyleSelect.options).map(opt => ({
+                    value: opt.value,
+                    text: opt.textContent
+                }));
+
+                // Clear current options
                 spriteStyleSelect.innerHTML = '';
-                spriteThemeSelect.innerHTML = '';
 
-
-                // Populate Jerry sprite options with proper labels
-                Object.keys(jerrySprites).forEach(key => {
-                    const custom = customSprites.jerry[key];
-                    const label = custom ? custom.name + " (Custom)" : (jerrySprites[key].displayName || key);
-                    spriteStyleSelect.appendChild(new Option(label, key));
+                // Re-add built-in options exactly as in HTML
+                existingOptions.forEach(opt => {
+                    spriteStyleSelect.appendChild(new Option(opt.text, opt.value));
                 });
 
-                // Determine which sprite to actually select
-                let current = appState.sprite.currentSprite;
-                // If current sprite is missing or invalid, fallback to localStorage or first built-in
-                if (!current || !jerrySprites[current]) {
-                    const saved = JSON.parse(localStorage.getItem('spriteSettings') || '{}').style;
-                    current = saved && jerrySprites[saved] ? saved : Object.keys(jerrySprites)[0];
-                }
-                appState.sprite.currentSprite = current;
+                // Add custom Jerry sprites
+                Object.keys(customSprites.jerry).forEach(key => {
+                    const option = new Option(`${customSprites.jerry[key].name} (Custom)`, key);
+                    spriteStyleSelect.appendChild(option);
+                });
 
-                // Set dropdown value to reflect the actual current sprite
+                // -----------------------------
+                // Populate themes
+                // -----------------------------
+                spriteThemeSelect.innerHTML = '';
+                availableThemes.forEach(theme => {
+                    const displayName = theme === 'fantasySprite' ? 'Fantasy' :
+                        theme === 'retroPixel' ? 'Retro' :
+                        theme.charAt(0).toUpperCase() + theme.slice(1);
+                    spriteThemeSelect.appendChild(new Option(displayName, theme));
+                });
+
+                // -----------------------------
+                // Load saved settings
+                // -----------------------------
+                const saved = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+                const savedStyle = saved.style;
+                const savedTheme = saved.theme || 'default';
+
+                // Ensure saved style exists in dropdown
+                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
+                appState.sprite.currentSprite = styleExists ? savedStyle : spriteStyleSelect.options[0]?.value || 'default';
+                appState.sprite.theme = savedTheme;
+
+                // Set dropdown to reflect actual current sprite
                 spriteStyleSelect.value = appState.sprite.currentSprite;
+                spriteThemeSelect.value = appState.sprite.theme;
             }
 
             // -----------------------------
