@@ -3898,8 +3898,7 @@
                 });
                 
                 // Load saved settings
-                const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedStyle = savedSpriteSettings.style || 'default';
+                const savedStyle = localStorage.getItem('jerryCurrentSprite') || 'default';
                 const savedTheme = savedSpriteSettings.theme || 'default';
                 
                 // Validate saved style exists in either built-in or custom sprites
@@ -3980,29 +3979,19 @@
             // -----------------------------
             // Sprite dropdown listeners
             // -----------------------------
-            if (spriteStyleSelect) {
-                spriteStyleSelect.addEventListener('change', () => {
-                    const style = spriteStyleSelect.value;
-                    appState.sprite.currentSprite = style;
-                    localStorage.setItem('spriteSettings', JSON.stringify({ 
-                        style, 
-                        theme: appState.sprite.theme || 'default' 
-                    }));
-                    updateJerrySprite();
-                });
-            }
+            spriteStyleSelect.addEventListener('change', () => {
+                const style = spriteStyleSelect.value;
+                appState.sprite.currentSprite = style;
+                localStorage.setItem('jerryCurrentSprite', style);
+                updateJerrySprite();
+            });
 
-            if (spriteThemeSelect) {
-                spriteThemeSelect.addEventListener('change', () => {
-                    const theme = spriteThemeSelect.value;
-                    appState.sprite.theme = theme;
-                    localStorage.setItem('spriteSettings', JSON.stringify({ 
-                        style: appState.sprite.currentSprite || 'default', 
-                        theme 
-                    }));
-                    updateJerrySprite();
-                });
-            }
+            spriteThemeSelect.addEventListener('change', () => {
+                const theme = spriteThemeSelect.value;
+                appState.sprite.theme = theme;
+                localStorage.setItem('spriteTheme', theme);
+                updateJerrySprite();
+            });
 
             // -----------------------------
             // Pet dropdown listeners  
@@ -4145,12 +4134,16 @@
                     // Add to runtime sprite objects based on category
                     if (category === 'jerry') {
                         jerrySprites[id] = pendingUpload.data;
+
+                        // Persist selection and update rende
+                        localStorage.setItem('jerryCurrentSprite', id);
+                        updateJerrySprite();
                     } else {
                         petSprites[id] = pendingUpload.data;
-                    }
 
-                    // Save to localStorage
-                    saveToLocalStorage('customSprites', customSprites);
+                        // For pets, keep existing logic
+                        saveToLocalStorage('customSprites', customSprites);
+                    }
 
                     // Clear pending upload and UI
                     pendingUpload = null;
