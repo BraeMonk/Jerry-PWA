@@ -3937,11 +3937,14 @@
                 console.log('Loading sprite settings:', savedSpriteSettings);
                 console.log('Available sprite options:', Array.from(spriteStyleSelect.options).map(opt => opt.value));
     
-                // Validate saved sprite style exists in dropdown options
-                const spriteStyleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedSpriteStyle);
-                console.log('Sprite style exists:', spriteStyleExists, 'for style:', savedSpriteStyle);
-    
-                appState.sprite.currentSprite = spriteStyleExists ? savedSpriteStyle : 'default';
+                // If saved style exists (built-in or custom), use it.
+                // If not, fall back to default.
+                if (Array.from(spriteStyleSelect.options).some(opt => opt.value === savedSpriteStyle)) {
+                    appState.sprite.currentSprite = savedSpriteStyle;
+                } else {
+                    appState.sprite.currentSprite = 'default';
+                }
+                
                 appState.sprite.theme = savedSpriteTheme;
     
                 spriteStyleSelect.value = appState.sprite.currentSprite;
@@ -3957,11 +3960,12 @@
                 console.log('Loading pet settings:', savedPetSettings);
                 console.log('Available pet options:', Array.from(petStyleSelect.options).map(opt => opt.value));
     
-                // Validate saved pet style exists in dropdown options
-                const petStyleExists = Array.from(petStyleSelect.options).some(opt => opt.value === savedPetStyle);
-                console.log('Pet style exists:', petStyleExists, 'for style:', savedPetStyle);
-    
-                appState.pet.currentSprite = petStyleExists ? savedPetStyle : 'none';
+                if (Array.from(petStyleSelect.options).some(opt => opt.value === savedPetStyle)) {
+                    appState.pet.currentSprite = savedPetStyle;
+                } else {
+                    appState.pet.currentSprite = 'none';
+                }
+                
                 appState.pet.theme = savedPetTheme;
     
                 petStyleSelect.value = appState.pet.currentSprite;
