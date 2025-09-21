@@ -277,14 +277,14 @@
         .jerry-container {
             display: flex;
             flex-direction: column;
-            align-items: center;        /* center horizontally */
-            justify-content: center;    /* center vertically in container */
+            align-items: center;        /* horizontal centering */
+            justify-content: flex-start; /* stack items top to bottom */
             position: relative;         /* stays in page flow */
-            width: 100%;                /* full width of screen */
-            height: 300px;              /* adjust to your current container height */
-            margin: 0;                  /* no extra spacing */
+            width: 100%;                /* full screen width */
+            height: 400px;              /* adjust to keep sprite above stats */
+            margin: 0;
             z-index: 10;                /* above chat container */
-            top: -20px;                 /* slight nudge up if needed */
+            padding-top: 20px;          /* spacing from top */
             border-radius: 12px;
             box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
             transition: background 0.5s ease;
@@ -295,14 +295,14 @@
             height: 160px;
             position: relative;
             z-index: 3;
-            margin: 0 auto;             /* perfect horizontal centering */
+            margin-bottom: 20px;        /* space between sprite and stats */
         }
 
         .jerry-shadow {
             position: absolute;
-            bottom: 20px;               /* slightly above bottom of container */
-            width: 120px;               
-            height: 18px;               
+            bottom: 80px;               /* shadow just beneath sprite */
+            width: 120px;
+            height: 18px;
             background: rgba(0, 0, 0, 0.25);
             border-radius: 50%;
             filter: blur(6px);
@@ -340,6 +340,7 @@
             width: 100%;
             max-width: 300px;
             margin-bottom: 20px;
+            margin-top: auto;
             z-index: 4;
         }
         
