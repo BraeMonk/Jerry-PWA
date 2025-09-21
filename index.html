@@ -1992,17 +1992,21 @@
             <div class="form-group">
                 <label class="form-label" for="spriteTheme">Sprite Theme:</label>
                 <select class="form-input" id="spriteTheme">
-                    <option value="default">Default</option>
-                    <option value="candy">Candy</option>
-                    <option value="ocean">Ocean</option>
-                    <option value="ember">Ember</option>
-                    <option value="meadow">Meadow</option>
-                    <option value="neon">Neon</option>
-                    <option value="pastel">Pastel</option>
-                    <option value="gothic">Gothic</option>
-                    <option value="aurora">Aurora</option>
-                    <option value="fantasySprite">Fantasy</option>
-                    <option value="retroPixel">Retro</option>
+                    <option value="retro8bit">8-Bit</option>
+                    <option value="gameboyClassic">Gameboy</option>
+                    <option value="synthwave">Synthwave</option>
+                    <option value="earthTones">Earth Tones</option>
+                    <option value="crystalIce">Crystal Ice</option>
+                    <option value="moltenCore">Molten Core</option>
+                    <option value="enchantedForest">Enchanted Forest</option>
+                    <option value="nesClassic">Game Time</option>
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="desertSands">Desert Sands</option>
+                    <option value="deepOcean">Deep Ocean</option>
+                    <option value="cosmicVoid">Cosmic Void</option>
+                    <option value="inkWash">Ink Wash</option>
+                    <option value="autumnLeaves">Autumn Leaves</option>
+                    <option value="sakuraBloom">Sakura Bloom</option>
                 </select>
             </div>
             <!-- Background Environment Selection -->
@@ -2113,17 +2117,21 @@
                 <select class="form-input" id="petTheme">
         
                     <!-- same themes as sprite -->
-                    <option value="default">Default</option>
-                    <option value="candy">Candy</option>
-                    <option value="ocean">Ocean</option>
-                    <option value="ember">Ember</option>
-                    <option value="meadow">Meadow</option>
-                    <option value="neon">Neon</option>
-                    <option value="pastel">Pastel</option>
-                    <option value="gothic">Gothic</option>
-                    <option value="aurora">Aurora</option>
-                    <option value="fantasySprite">Fantasy</option>
-                    <option value="retroPixel">Retro</option>
+                    <option value="retro8bit">8-Bit</option>
+                    <option value="gameboyClassic">Gameboy</option>
+                    <option value="synthwave">Synthwave</option>
+                    <option value="earthTones">Earth Tones</option>
+                    <option value="crystalIce">Crystal Ice</option>
+                    <option value="moltenCore">Molten Core</option>
+                    <option value="enchantedForest">Enchanted Forest</option>
+                    <option value="nesClassic">Game Time</option>
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="desertSands">Desert Sands</option>
+                    <option value="deepOcean">Deep Ocean</option>
+                    <option value="cosmicVoid">Cosmic Void</option>
+                    <option value="inkWash">Ink Wash</option>
+                    <option value="autumnLeaves">Autumn Leaves</option>
+                    <option value="sakuraBloom">Sakura Bloom</option>
                 </select>
             </div>
 
@@ -2892,50 +2900,77 @@
 
         function getColorSets(isLightMode) {
             return {
-                default: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFF2E0', 2: '#FFE0B3', 3: '#FFD8A6',
-                        4: '#FFCB88', 5: '#E6B273', 6: '#C4945E',
-                        7: '#A9745B', 8: '#8B5E3C', 9: '#6B4226', 10: '#4A2B17'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#E0ECFA', 2: '#C2DAF7', 3: '#9CC7F0',
-                        4: '#6FA6E0', 5: '#4A90E2', 6: '#2B6FB2',
-                        7: '#1F5FBF', 8: '#173F80', 9: '#0D264D', 10: '#08162B'
-                    },
+                retro8bit: isLightMode
+                    ? {0: 'transparent', 1: '#F4F4F4', 2: '#E8E8E8', 3: '#BCBCBC', 4: '#7C7C7C', 5: '#A00000', 6: '#FF6A00', 7: '#FFD500', 8: '#00A844', 9: '#0047AB', 10: '#000000'}
+                    : {0: 'transparent', 1: '#FFFFFF', 2: '#E0E0E0', 3: '#A8A8A8', 4: '#606060', 5: '#C00000', 6: '#FF8533', 7: '#FFE033', 8: '#33B855', 9: '#3366CC', 10: '#000000'},
 
-                candy: isLightMode
-                    ? {0: 'transparent', 1: '#FF6B6B', 2: '#FFA94D', 3: '#FFD93D', 4: '#6BCB77', 5: '#4D96FF', 6: '#9D4EDD', 7: '#FF8FAB', 8: '#FFB5E8', 9: '#FFDEE9', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#FF8787', 2: '#FFB86B', 3: '#FFE066', 4: '#8CE99A', 5: '#74C0FC', 6: '#B197FC', 7: '#FF99C8', 8: '#FFB3DE', 9: '#FFC2E5', 10: '#F8F9FA'},
-                ocean: isLightMode
-                    ? {0: 'transparent', 1: '#A2D2FF', 2: '#80C0FF', 3: '#5AA9FA', 4: '#4682B4', 5: '#2E5984', 6: '#1B3B5F', 7: '#0F2A44', 8: '#082136', 9: '#041626', 10: '#000814'}
-                    : {0: 'transparent', 1: '#90C8F8', 2: '#66AEEF', 3: '#3D91E0', 4: '#2E6FA3', 5: '#1D4E72', 6: '#103552', 7: '#0A2438', 8: '#061C2B', 9: '#03111B', 10: '#000814'},
-                ember: isLightMode
-                    ? {0: 'transparent', 1: '#FFF3B0', 2: '#FFD93D', 3: '#FFA200', 4: '#FF6B35', 5: '#E63946', 6: '#B51709', 7: '#800F00', 8: '#4D0600', 9: '#260300', 10: '#0D0000'}
-                    : {0: 'transparent', 1: '#FFE066', 2: '#FFC300', 3: '#FF8C00', 4: '#FF5733', 5: '#C70039', 6: '#900C3F', 7: '#581845', 8: '#2C0B27', 9: '#160513', 10: '#0B0208'},
-                meadow: isLightMode
-                    ? {0: 'transparent', 1: '#E0F7E9', 2: '#B2F2BB', 3: '#8CE99A', 4: '#69DB7C', 5: '#38D9A9', 6: '#20C997', 7: '#12B886', 8: '#0CA678', 9: '#087F5B', 10: '#045040'}
-                    : {0: 'transparent', 1: '#C3F5D5', 2: '#96E6A8', 3: '#70D78B', 4: '#4CB372', 5: '#31A67F', 6: '#24916B', 7: '#1A7257', 8: '#115745', 9: '#0A3A2D', 10: '#041E16'},
-                neon: isLightMode
-                    ? {0: 'transparent', 1: '#FF00FF', 2: '#FF1493', 3: '#FF4500', 4: '#FFD700', 5: '#ADFF2F', 6: '#00FF7F', 7: '#00FFFF', 8: '#1E90FF', 9: '#8A2BE2', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#FF4DFF', 2: '#FF69B4', 3: '#FF6347', 4: '#FFE066', 5: '#C0FF66', 6: '#66FFB2', 7: '#66FFFF', 8: '#66A3FF', 9: '#B266FF', 10: '#F8F9FA'},
-                pastel: isLightMode
-                    ? {0: 'transparent', 1: '#FFB5E8', 2: '#FFDEB4', 3: '#FFF5BA', 4: '#B5EAD7', 5: '#C7CEEA', 6: '#E0BBE4', 7: '#FEC8D8', 8: '#D8E2DC', 9: '#F1F0C0', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#FF99CC', 2: '#FFCC99', 3: '#FFF2A8', 4: '#99E2C3', 5: '#A8B9E6', 6: '#C7A9D6', 7: '#F5A3C7', 8: '#CFCFCF', 9: '#EAE6B8', 10: '#F8F9FA'},
-                gothic: isLightMode
-                    ? {0: 'transparent', 1: '#1A1A1A', 2: '#2E2E2E', 3: '#444444', 4: '#5E2750', 5: '#87255B', 6: '#D90368', 7: '#FF6F61', 8: '#C9ADA7', 9: '#EAEAEA', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#000000', 2: '#1A1A1A', 3: '#333333', 4: '#5E2750', 5: '#7A1E48', 6: '#B30C5C', 7: '#FF4F5E', 8: '#A99A93', 9: '#D6D6D6', 10: '#F5F5F5'},
-                aurora: isLightMode
-                    ? {0: 'transparent', 1: '#A5FFD6', 2: '#82FFC7', 3: '#5DFDCB', 4: '#3EDBF0', 5: '#3B9AE1', 6: '#6F69AC', 7: '#9D4EDD', 8: '#FF5D8F', 9: '#FF87AB', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#7DFFBF', 2: '#5AF7B0', 3: '#32E1B5', 4: '#1EB7D8', 5: '#2070B0', 6: '#514080', 7: '#7A29C6', 8: '#FF4D7A', 9: '#FF6F9F', 10: '#F8F9FA'},
-                retroPixel: isLightMode
-                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#FFD800', 3: '#FF8C00', 4: '#FF0000', 5: '#C000C0', 6: '#0000FF', 7: '#008080', 8: '#00C000', 9: '#404040', 10: '#000000'}
-                    : {0: 'transparent', 1: '#E0E0E0', 2: '#E0C000', 3: '#D07000', 4: '#C00000', 5: '#A000A0', 6: '#0000A0', 7: '#006060', 8: '#00A000', 9: '#303030', 10: '#000000'},
-                fantasySprite: isLightMode
-                    ? {0: 'transparent', 1: '#F0EAD6', 2: '#C2B280', 3: '#8E735B', 4: '#5C4B3B', 5: '#3B2F2F', 6: '#6B8E23', 7: '#4682B4', 8: '#9370DB', 9: '#FFD700', 10: '#000000'}
-                    : {0: 'transparent', 1: '#D8D2BE', 2: '#A89C6E', 3: '#6E5B45', 4: '#44362C', 5: '#2C2222', 6: '#556B2F', 7: '#36648B', 8: '#7A5DC7', 9: '#E6C200', 10: '#000000'},
+                // Gameboy-inspired monochrome with subtle tints
+                gameboyClassic: isLightMode
+                    ? {0: 'transparent', 1: '#E0F8D0', 2: '#88C070', 3: '#346856', 4: '#081820', 5: '#9BBB0F', 6: '#8BAC0F', 7: '#306230', 8: '#0F380F', 9: '#155015', 10: '#071821'}
+                    : {0: 'transparent', 1: '#9BBB0F', 2: '#8BAC0F', 3: '#306230', 4: '#0F380F', 5: '#C4D82F', 6: '#A2B84F', 7: '#4F7F4F', 8: '#2F4F2F', 9: '#1F3F1F', 10: '#0F1F0F'},
+
+                // Vibrant synthwave/vaporwave aesthetic
+                synthwave: isLightMode
+                    ? {0: 'transparent', 1: '#FF00FF', 2: '#FF0080', 3: '#FF4080', 4: '#FF8000', 5: '#FFFF00', 6: '#80FF00', 7: '#00FFFF', 8: '#0080FF', 9: '#8000FF', 10: '#2D1B69'}
+                    : {0: 'transparent', 1: '#FF44FF', 2: '#FF4499', 3: '#FF6699', 4: '#FF9944', 5: '#FFFF44', 6: '#99FF44', 7: '#44FFFF', 8: '#4499FF', 9: '#9944FF', 10: '#1A1A2E'},
+                
+                // Earth tones perfect for adventure/RPG sprites
+                earthTones: isLightMode
+                    ? {0: 'transparent', 1: '#FFF8DC', 2: '#D2B48C', 3: '#CD853F', 4: '#A0522D', 5: '#8B4513', 6: '#654321', 7: '#556B2F', 8: '#8FBC8F', 9: '#2F4F4F', 10: '#191970'}
+                    : {0: 'transparent', 1: '#F5E6D3', 2: '#C8A882', 3: '#B8860B', 4: '#8B4513', 5: '#654321', 6: '#3E2723', 7: '#4A5D23', 8: '#6B8E5A', 9: '#2E3B2E', 10: '#1C1C3A'},
+                
+                // Ice and crystal theme
+                crystalIce: isLightMode
+                    ? {0: 'transparent', 1: '#F0F8FF', 2: '#E6F3FF', 3: '#B3D9FF', 4: '#80BFFF', 5: '#4DA6FF', 6: '#1A8CFF', 7: '#0066CC', 8: '#004C99', 9: '#003366', 10: '#001A33'}
+                    : {0: 'transparent', 1: '#E6F7FF', 2: '#CCF0FF', 3: '#99E0FF', 4: '#66D0FF', 5: '#33C0FF', 6: '#00B0FF', 7: '#0099CC', 8: '#007399', 9: '#004D66', 10: '#002633'},
+
+                // Fire and lava theme
+                moltenCore: isLightMode
+                    ? {0: 'transparent', 1: '#FFFACD', 2: '#FFE4B5', 3: '#FFA500', 4: '#FF6347', 5: '#FF4500', 6: '#DC143C', 7: '#B22222', 8: '#8B0000', 9: '#4B0000', 10: '#000000'}
+                    : {0: 'transparent', 1: '#FFF5E1', 2: '#FFCC80', 3: '#FF8F00', 4: '#FF5722', 5: '#D84315', 6: '#BF360C', 7: '#8D2635', 8: '#5D1A1D', 9: '#3E1317', 10: '#1A0A0B'},
+
+                // Forest and nature theme
+                enchantedForest: isLightMode
+                    ? {0: 'transparent', 1: '#F0FFF0', 2: '#E6FFE6', 3: '#CCFFCC', 4: '#99FF99', 5: '#66CC66', 6: '#339933', 7: '#228B22', 8: '#006400', 9: '#004400', 10: '#002200'}
+                    : {0: 'transparent', 1: '#E8F5E8', 2: '#C8E6C8', 3: '#A8D8A8', 4: '#88C488', 5: '#68B068', 6: '#489848', 7: '#387438', 8: '#285028', 9: '#183018', 10: '#081808'},
+
+                // Classic NES-inspired palette
+                nesClassic: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#FCFCFC', 3: '#F8F8F8', 4: '#BCBCBC', 5: '#7C7C7C', 6: '#A4E4FC', 7: '#3CBCFC', 8: '#0078F8', 9: '#0000FC', 10: '#000000'}
+                    : {0: 'transparent', 1: '#FCFCFC', 2: '#F8F8F8', 3: '#E4E4E4', 4: '#A8A8A8', 5: '#585858', 6: '#94D4E4', 7: '#28A8D8', 8: '#0060C4', 9: '#0000A8', 10: '#000000'},
+
+                // Cyberpunk/tech theme
+                cyberpunk: isLightMode
+                    ? {0: 'transparent', 1: '#00FFFF', 2: '#00E6E6', 3: '#00CCCC', 4: '#00B3B3', 5: '#FF00FF', 6: '#E600E6', 7: '#CC00CC', 8: '#B300B3', 9: '#4D0080', 10: '#0D001A'}
+                    : {0: 'transparent', 1: '#66FFFF', 2: '#33F0F0', 3: '#00E0E0', 4: '#00C8C8', 5: '#FF66FF', 6: '#E633E6', 7: '#CC00CC', 8: '#A800A8', 9: '#6600AA', 10: '#1A0033'},
+
+                // Desert/sand theme
+                desertSands: isLightMode
+                    ? {0: 'transparent', 1: '#FFF8DC', 2: '#F5DEB3', 3: '#DEB887', 4: '#D2B48C', 5: '#BC9A6A', 6: '#A0522D', 7: '#8B4513', 8: '#654321', 9: '#3E2723', 10: '#2E1A14'}
+                    : {0: 'transparent', 1: '#F0E68C', 2: '#E6D875', 3: '#DCC95E', 4: '#B8A248', 5: '#8B7A32', 6: '#6B5B28', 7: '#4A3C1D', 8: '#3A2F17', 9: '#2A2212', 10: '#1A150C'},
+   
+                // Ocean depths theme
+                deepOcean: isLightMode
+                    ? {0: 'transparent', 1: '#E0F6FF', 2: '#B3E5FC', 3: '#4FC3F7', 4: '#29B6F6', 5: '#03A9F4', 6: '#0288D1', 7: '#0277BD', 8: '#01579B', 9: '#01447A', 10: '#002F5A'}
+                    : {0: 'transparent', 1: '#B3E5FC', 2: '#81D4FA', 3: '#4FC3F7', 4: '#29B6F6', 5: '#0288D1', 6: '#0277BD', 7: '#01579B', 8: '#003C71', 9: '#002952', 10: '#001635'},
+
+                // Cosmic/space them
+                cosmicVoid: isLightMode
+                    ? {0: 'transparent', 1: '#E1BEE7', 2: '#CE93D8', 3: '#BA68C8', 4: '#AB47BC', 5: '#8E24AA', 6: '#7B1FA2', 7: '#6A1B9A', 8: '#4A148C', 9: '#38006B', 10: '#1A0033'}
+                    : {0: 'transparent', 1: '#E1BEE7', 2: '#CE93D8', 3: '#BA68C8', 4: '#9C27B0', 5: '#8E24AA', 6: '#7B1FA2', 7: '#6A1B9A', 8: '#4A148C', 9: '#38006B', 10: '#1A0033'},
+
+                // Monochrome with accent
+                inkWash: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#F5F5F5', 3: '#E0E0E0', 4: '#BDBDBD', 5: '#9E9E9E', 6: '#757575', 7: '#424242', 8: '#212121', 9: '#FF5722', 10: '#000000'}
+                    : {0: 'transparent', 1: '#F5F5F5', 2: '#E8E8E8', 3: '#D0D0D0', 4: '#A8A8A8', 5: '#808080', 6: '#585858', 7: '#383838', 8: '#181818', 9: '#FF6B3D', 10: '#000000'},
+                // Autumn/fall colors
+                autumnLeaves: isLightMode
+                    ? {0: 'transparent', 1: '#FFF8E7', 2: '#FFE0B3', 3: '#FFCC80', 4: '#FF8F65', 5: '#FF7043', 6: '#F4511E', 7: '#E65100', 8: '#BF360C', 9: '#8D2F00', 10: '#5D1F00'}
+                    : {0: 'transparent', 1: '#FFE8CC', 2: '#FFCC80', 3: '#FFB74D', 4: '#FF8A65', 5: '#FF7043', 6: '#F4511E', 7: '#E65100', 8: '#CC4400', 9: '#B33300', 10: '#802200'},
+                // Cherry blossom theme
+                sakuraBloom: isLightMode
+                    ? {0: 'transparent', 1: '#FFF0F5', 2: '#FFE4E1', 3: '#FFC0CB', 4: '#FFB6C1', 5: '#FF91A4', 6: '#FF69B4', 7: '#E91E63', 8: '#C2185B', 9: '#AD1457', 10: '#880E4F'}
+                    : {0: 'transparent', 1: '#FFEBEE', 2: '#FFCDD2', 3: '#F8BBD9', 4: '#F48FB1', 5: '#F06292', 6: '#EC407A', 7: '#E91E63', 8: '#C2185B', 9: '#AD1457', 10: '#880E4F'}
             };
         }
 
@@ -3567,50 +3602,77 @@
         function getPetThemeColors(themeName) {
             const isLightMode = isLightModeActive();
             const petThemes = {
-                default: isLightMode
-                    ? {
-                        0: 'transparent',
-                        1: '#FFF2E0', 2: '#FFE0B3', 3: '#FFD8A6',
-                        4: '#FFCB88', 5: '#E6B273', 6: '#C4945E',
-                        7: '#A9745B', 8: '#8B5E3C', 9: '#6B4226', 10: '#4A2B17'
-                    }
-                    : {
-                        0: 'transparent',
-                        1: '#E0ECFA', 2: '#C2DAF7', 3: '#9CC7F0',
-                        4: '#6FA6E0', 5: '#4A90E2', 6: '#2B6FB2',
-                        7: '#1F5FBF', 8: '#173F80', 9: '#0D264D', 10: '#08162B'
-                    },
+                retro8bit: isLightMode
+                    ? {0: 'transparent', 1: '#F4F4F4', 2: '#E8E8E8', 3: '#BCBCBC', 4: '#7C7C7C', 5: '#A00000', 6: '#FF6A00', 7: '#FFD500', 8: '#00A844', 9: '#0047AB', 10: '#000000'}
+                    : {0: 'transparent', 1: '#FFFFFF', 2: '#E0E0E0', 3: '#A8A8A8', 4: '#606060', 5: '#C00000', 6: '#FF8533', 7: '#FFE033', 8: '#33B855', 9: '#3366CC', 10: '#000000'},
 
-                candy: isLightMode
-                    ? {0: 'transparent', 1: '#FF6B6B', 2: '#FFA94D', 3: '#FFD93D', 4: '#6BCB77', 5: '#4D96FF', 6: '#9D4EDD', 7: '#FF8FAB', 8: '#FFB5E8', 9: '#FFDEE9', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#FF8787', 2: '#FFB86B', 3: '#FFE066', 4: '#8CE99A', 5: '#74C0FC', 6: '#B197FC', 7: '#FF99C8', 8: '#FFB3DE', 9: '#FFC2E5', 10: '#F8F9FA'},
-                ocean: isLightMode
-                    ? {0: 'transparent', 1: '#A2D2FF', 2: '#80C0FF', 3: '#5AA9FA', 4: '#4682B4', 5: '#2E5984', 6: '#1B3B5F', 7: '#0F2A44', 8: '#082136', 9: '#041626', 10: '#000814'}
-                    : {0: 'transparent', 1: '#90C8F8', 2: '#66AEEF', 3: '#3D91E0', 4: '#2E6FA3', 5: '#1D4E72', 6: '#103552', 7: '#0A2438', 8: '#061C2B', 9: '#03111B', 10: '#000814'},
-                ember: isLightMode
-                    ? {0: 'transparent', 1: '#FFF3B0', 2: '#FFD93D', 3: '#FFA200', 4: '#FF6B35', 5: '#E63946', 6: '#B51709', 7: '#800F00', 8: '#4D0600', 9: '#260300', 10: '#0D0000'}
-                    : {0: 'transparent', 1: '#FFE066', 2: '#FFC300', 3: '#FF8C00', 4: '#FF5733', 5: '#C70039', 6: '#900C3F', 7: '#581845', 8: '#2C0B27', 9: '#160513', 10: '#0B0208'},
-                meadow: isLightMode
-                    ? {0: 'transparent', 1: '#E0F7E9', 2: '#B2F2BB', 3: '#8CE99A', 4: '#69DB7C', 5: '#38D9A9', 6: '#20C997', 7: '#12B886', 8: '#0CA678', 9: '#087F5B', 10: '#045040'}
-                    : {0: 'transparent', 1: '#C3F5D5', 2: '#96E6A8', 3: '#70D78B', 4: '#4CB372', 5: '#31A67F', 6: '#24916B', 7: '#1A7257', 8: '#115745', 9: '#0A3A2D', 10: '#041E16'},
-                neon: isLightMode
-                    ? {0: 'transparent', 1: '#FF00FF', 2: '#FF1493', 3: '#FF4500', 4: '#FFD700', 5: '#ADFF2F', 6: '#00FF7F', 7: '#00FFFF', 8: '#1E90FF', 9: '#8A2BE2', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#FF4DFF', 2: '#FF69B4', 3: '#FF6347', 4: '#FFE066', 5: '#C0FF66', 6: '#66FFB2', 7: '#66FFFF', 8: '#66A3FF', 9: '#B266FF', 10: '#F8F9FA'},
-                pastel: isLightMode
-                    ? {0: 'transparent', 1: '#FFB5E8', 2: '#FFDEB4', 3: '#FFF5BA', 4: '#B5EAD7', 5: '#C7CEEA', 6: '#E0BBE4', 7: '#FEC8D8', 8: '#D8E2DC', 9: '#F1F0C0', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#FF99CC', 2: '#FFCC99', 3: '#FFF2A8', 4: '#99E2C3', 5: '#A8B9E6', 6: '#C7A9D6', 7: '#F5A3C7', 8: '#CFCFCF', 9: '#EAE6B8', 10: '#F8F9FA'},
-                gothic: isLightMode
-                    ? {0: 'transparent', 1: '#1A1A1A', 2: '#2E2E2E', 3: '#444444', 4: '#5E2750', 5: '#87255B', 6: '#D90368', 7: '#FF6F61', 8: '#C9ADA7', 9: '#EAEAEA', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#000000', 2: '#1A1A1A', 3: '#333333', 4: '#5E2750', 5: '#7A1E48', 6: '#B30C5C', 7: '#FF4F5E', 8: '#A99A93', 9: '#D6D6D6', 10: '#F5F5F5'},
-                aurora: isLightMode
-                    ? {0: 'transparent', 1: '#A5FFD6', 2: '#82FFC7', 3: '#5DFDCB', 4: '#3EDBF0', 5: '#3B9AE1', 6: '#6F69AC', 7: '#9D4EDD', 8: '#FF5D8F', 9: '#FF87AB', 10: '#FFFFFF'}
-                    : {0: 'transparent', 1: '#7DFFBF', 2: '#5AF7B0', 3: '#32E1B5', 4: '#1EB7D8', 5: '#2070B0', 6: '#514080', 7: '#7A29C6', 8: '#FF4D7A', 9: '#FF6F9F', 10: '#F8F9FA'},
-                retroPixel: isLightMode
-                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#FFD800', 3: '#FF8C00', 4: '#FF0000', 5: '#C000C0', 6: '#0000FF', 7: '#008080', 8: '#00C000', 9: '#404040', 10: '#000000'}
-                    : {0: 'transparent', 1: '#E0E0E0', 2: '#E0C000', 3: '#D07000', 4: '#C00000', 5: '#A000A0', 6: '#0000A0', 7: '#006060', 8: '#00A000', 9: '#303030', 10: '#000000'},
-                fantasySprite: isLightMode
-                    ? {0: 'transparent', 1: '#F0EAD6', 2: '#C2B280', 3: '#8E735B', 4: '#5C4B3B', 5: '#3B2F2F', 6: '#6B8E23', 7: '#4682B4', 8: '#9370DB', 9: '#FFD700', 10: '#000000'}
-                    : {0: 'transparent', 1: '#D8D2BE', 2: '#A89C6E', 3: '#6E5B45', 4: '#44362C', 5: '#2C2222', 6: '#556B2F', 7: '#36648B', 8: '#7A5DC7', 9: '#E6C200', 10: '#000000'},
+                // Gameboy-inspired monochrome with subtle tints
+                gameboyClassic: isLightMode
+                    ? {0: 'transparent', 1: '#E0F8D0', 2: '#88C070', 3: '#346856', 4: '#081820', 5: '#9BBB0F', 6: '#8BAC0F', 7: '#306230', 8: '#0F380F', 9: '#155015', 10: '#071821'}
+                    : {0: 'transparent', 1: '#9BBB0F', 2: '#8BAC0F', 3: '#306230', 4: '#0F380F', 5: '#C4D82F', 6: '#A2B84F', 7: '#4F7F4F', 8: '#2F4F2F', 9: '#1F3F1F', 10: '#0F1F0F'},
+
+                // Vibrant synthwave/vaporwave aesthetic
+                synthwave: isLightMode
+                    ? {0: 'transparent', 1: '#FF00FF', 2: '#FF0080', 3: '#FF4080', 4: '#FF8000', 5: '#FFFF00', 6: '#80FF00', 7: '#00FFFF', 8: '#0080FF', 9: '#8000FF', 10: '#2D1B69'}
+                    : {0: 'transparent', 1: '#FF44FF', 2: '#FF4499', 3: '#FF6699', 4: '#FF9944', 5: '#FFFF44', 6: '#99FF44', 7: '#44FFFF', 8: '#4499FF', 9: '#9944FF', 10: '#1A1A2E'},
+                
+                // Earth tones perfect for adventure/RPG sprites
+                earthTones: isLightMode
+                    ? {0: 'transparent', 1: '#FFF8DC', 2: '#D2B48C', 3: '#CD853F', 4: '#A0522D', 5: '#8B4513', 6: '#654321', 7: '#556B2F', 8: '#8FBC8F', 9: '#2F4F4F', 10: '#191970'}
+                    : {0: 'transparent', 1: '#F5E6D3', 2: '#C8A882', 3: '#B8860B', 4: '#8B4513', 5: '#654321', 6: '#3E2723', 7: '#4A5D23', 8: '#6B8E5A', 9: '#2E3B2E', 10: '#1C1C3A'},
+                
+                // Ice and crystal theme
+                crystalIce: isLightMode
+                    ? {0: 'transparent', 1: '#F0F8FF', 2: '#E6F3FF', 3: '#B3D9FF', 4: '#80BFFF', 5: '#4DA6FF', 6: '#1A8CFF', 7: '#0066CC', 8: '#004C99', 9: '#003366', 10: '#001A33'}
+                    : {0: 'transparent', 1: '#E6F7FF', 2: '#CCF0FF', 3: '#99E0FF', 4: '#66D0FF', 5: '#33C0FF', 6: '#00B0FF', 7: '#0099CC', 8: '#007399', 9: '#004D66', 10: '#002633'},
+
+                // Fire and lava theme
+                moltenCore: isLightMode
+                    ? {0: 'transparent', 1: '#FFFACD', 2: '#FFE4B5', 3: '#FFA500', 4: '#FF6347', 5: '#FF4500', 6: '#DC143C', 7: '#B22222', 8: '#8B0000', 9: '#4B0000', 10: '#000000'}
+                    : {0: 'transparent', 1: '#FFF5E1', 2: '#FFCC80', 3: '#FF8F00', 4: '#FF5722', 5: '#D84315', 6: '#BF360C', 7: '#8D2635', 8: '#5D1A1D', 9: '#3E1317', 10: '#1A0A0B'},
+
+                // Forest and nature theme
+                enchantedForest: isLightMode
+                    ? {0: 'transparent', 1: '#F0FFF0', 2: '#E6FFE6', 3: '#CCFFCC', 4: '#99FF99', 5: '#66CC66', 6: '#339933', 7: '#228B22', 8: '#006400', 9: '#004400', 10: '#002200'}
+                    : {0: 'transparent', 1: '#E8F5E8', 2: '#C8E6C8', 3: '#A8D8A8', 4: '#88C488', 5: '#68B068', 6: '#489848', 7: '#387438', 8: '#285028', 9: '#183018', 10: '#081808'},
+
+                // Classic NES-inspired palette
+                nesClassic: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#FCFCFC', 3: '#F8F8F8', 4: '#BCBCBC', 5: '#7C7C7C', 6: '#A4E4FC', 7: '#3CBCFC', 8: '#0078F8', 9: '#0000FC', 10: '#000000'}
+                    : {0: 'transparent', 1: '#FCFCFC', 2: '#F8F8F8', 3: '#E4E4E4', 4: '#A8A8A8', 5: '#585858', 6: '#94D4E4', 7: '#28A8D8', 8: '#0060C4', 9: '#0000A8', 10: '#000000'},
+
+                // Cyberpunk/tech theme
+                cyberpunk: isLightMode
+                    ? {0: 'transparent', 1: '#00FFFF', 2: '#00E6E6', 3: '#00CCCC', 4: '#00B3B3', 5: '#FF00FF', 6: '#E600E6', 7: '#CC00CC', 8: '#B300B3', 9: '#4D0080', 10: '#0D001A'}
+                    : {0: 'transparent', 1: '#66FFFF', 2: '#33F0F0', 3: '#00E0E0', 4: '#00C8C8', 5: '#FF66FF', 6: '#E633E6', 7: '#CC00CC', 8: '#A800A8', 9: '#6600AA', 10: '#1A0033'},
+
+                // Desert/sand theme
+                desertSands: isLightMode
+                    ? {0: 'transparent', 1: '#FFF8DC', 2: '#F5DEB3', 3: '#DEB887', 4: '#D2B48C', 5: '#BC9A6A', 6: '#A0522D', 7: '#8B4513', 8: '#654321', 9: '#3E2723', 10: '#2E1A14'}
+                    : {0: 'transparent', 1: '#F0E68C', 2: '#E6D875', 3: '#DCC95E', 4: '#B8A248', 5: '#8B7A32', 6: '#6B5B28', 7: '#4A3C1D', 8: '#3A2F17', 9: '#2A2212', 10: '#1A150C'},
+   
+                // Ocean depths theme
+                deepOcean: isLightMode
+                    ? {0: 'transparent', 1: '#E0F6FF', 2: '#B3E5FC', 3: '#4FC3F7', 4: '#29B6F6', 5: '#03A9F4', 6: '#0288D1', 7: '#0277BD', 8: '#01579B', 9: '#01447A', 10: '#002F5A'}
+                    : {0: 'transparent', 1: '#B3E5FC', 2: '#81D4FA', 3: '#4FC3F7', 4: '#29B6F6', 5: '#0288D1', 6: '#0277BD', 7: '#01579B', 8: '#003C71', 9: '#002952', 10: '#001635'},
+
+                // Cosmic/space them
+                cosmicVoid: isLightMode
+                    ? {0: 'transparent', 1: '#E1BEE7', 2: '#CE93D8', 3: '#BA68C8', 4: '#AB47BC', 5: '#8E24AA', 6: '#7B1FA2', 7: '#6A1B9A', 8: '#4A148C', 9: '#38006B', 10: '#1A0033'}
+                    : {0: 'transparent', 1: '#E1BEE7', 2: '#CE93D8', 3: '#BA68C8', 4: '#9C27B0', 5: '#8E24AA', 6: '#7B1FA2', 7: '#6A1B9A', 8: '#4A148C', 9: '#38006B', 10: '#1A0033'},
+
+                // Monochrome with accent
+                inkWash: isLightMode
+                    ? {0: 'transparent', 1: '#FFFFFF', 2: '#F5F5F5', 3: '#E0E0E0', 4: '#BDBDBD', 5: '#9E9E9E', 6: '#757575', 7: '#424242', 8: '#212121', 9: '#FF5722', 10: '#000000'}
+                    : {0: 'transparent', 1: '#F5F5F5', 2: '#E8E8E8', 3: '#D0D0D0', 4: '#A8A8A8', 5: '#808080', 6: '#585858', 7: '#383838', 8: '#181818', 9: '#FF6B3D', 10: '#000000'},
+                // Autumn/fall colors
+                autumnLeaves: isLightMode
+                    ? {0: 'transparent', 1: '#FFF8E7', 2: '#FFE0B3', 3: '#FFCC80', 4: '#FF8F65', 5: '#FF7043', 6: '#F4511E', 7: '#E65100', 8: '#BF360C', 9: '#8D2F00', 10: '#5D1F00'}
+                    : {0: 'transparent', 1: '#FFE8CC', 2: '#FFCC80', 3: '#FFB74D', 4: '#FF8A65', 5: '#FF7043', 6: '#F4511E', 7: '#E65100', 8: '#CC4400', 9: '#B33300', 10: '#802200'},
+                // Cherry blossom theme
+                sakuraBloom: isLightMode
+                    ? {0: 'transparent', 1: '#FFF0F5', 2: '#FFE4E1', 3: '#FFC0CB', 4: '#FFB6C1', 5: '#FF91A4', 6: '#FF69B4', 7: '#E91E63', 8: '#C2185B', 9: '#AD1457', 10: '#880E4F'}
+                    : {0: 'transparent', 1: '#FFEBEE', 2: '#FFCDD2', 3: '#F8BBD9', 4: '#F48FB1', 5: '#F06292', 6: '#EC407A', 7: '#E91E63', 8: '#C2185B', 9: '#AD1457', 10: '#880E4F'}
             };
 
             return petThemes[themeName] || petThemes.default;
