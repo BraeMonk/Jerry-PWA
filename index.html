@@ -3907,13 +3907,17 @@
                 // Load saved settings
                 // -----------------------------
                 const saved = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
-                const savedStyle = saved.style;
-                const savedTheme = saved.theme || 'default';
+                
+                // Only update appState if saved style exists in dropdown
+                if (saved.style && Array.from(spriteStyleSelect.options).some(opt => opt.value === saved.style)) {
+                    appState.sprite.currentSprite = saved.style;
+                } else {
+                    // fallback to first dropdown option
+                    appState.sprite.currentSprite = spriteStyleSelect.options[0]?.value || 'default';
+                }
 
-                // Ensure saved style exists in dropdown
-                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
-                appState.sprite.currentSprite = styleExists ? savedStyle : spriteStyleSelect.options[0]?.value || 'default';
-                appState.sprite.theme = savedTheme;
+                // Update theme
+                appState.sprite.theme = saved.theme || 'default';
 
                 // Set dropdown to reflect actual current sprite
                 spriteStyleSelect.value = appState.sprite.currentSprite;
