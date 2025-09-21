@@ -4034,27 +4034,30 @@
             spriteStyleSelect.addEventListener('change', () => {
                 const style = spriteStyleSelect.value;
                 appState.sprite.currentSprite = style;
+                
+                // Save to both locations for compatibility
                 localStorage.setItem('jerryCurrentSprite', style);
                 
-                // Direct rendering instead of calling updateJerrySprite()
-                const savedTheme = localStorage.getItem('spriteTheme') || 'default';
-                if (jerrySprites[style]) {
-                    baseSprite = JSON.parse(JSON.stringify(jerrySprites[style]));
-                    if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, savedTheme);
-                    if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, savedTheme);
-                }
+                // Also save to spriteSettings for consistency with populateSpriteDropdown
+                const currentSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+                currentSettings.style = style;
+                localStorage.setItem('spriteSettings', JSON.stringify(currentSettings));
+                
+                updateJerrySprite();
             });
             
             spriteThemeSelect.addEventListener('change', () => {
                 const theme = spriteThemeSelect.value;
                 appState.sprite.theme = theme;
+                
+                // Save to both locations
                 localStorage.setItem('spriteTheme', theme);
                 
-                // Direct rendering with current sprite
-                if (baseSprite) {
-                    if (typeof renderJerrySprite === 'function') renderJerrySprite(baseSprite, theme);
-                    if (typeof renderSpritePreview === 'function') renderSpritePreview(baseSprite, theme);
-                }
+                const currentSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
+                currentSettings.theme = theme;
+                localStorage.setItem('spriteSettings', JSON.stringify(currentSettings));
+                
+                updateJerrySprite();
             });
 
             // -----------------------------
