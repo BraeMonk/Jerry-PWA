@@ -3897,17 +3897,24 @@
                     spriteThemeSelect.appendChild(new Option(displayName, theme));
                 });
                 
-                // Load saved settings
+                // -----------------------------
+                // Determine actual current sprite and theme
+                // -----------------------------
                 const savedSpriteSettings = JSON.parse(localStorage.getItem('spriteSettings') || '{}');
                 const savedStyle = savedSpriteSettings.style || 'default';
                 const savedTheme = savedSpriteSettings.theme || 'default';
-                
-                // Validate saved style exists in either built-in or custom sprites
-                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === savedStyle);
-                
-                appState.sprite.currentSprite = styleExists ? savedStyle : 'default';
-                appState.sprite.theme = savedTheme;
-                
+
+                // Prefer appState sprite if it exists, fallback to saved settings
+                const currentSprite = appState.sprite.currentSprite || savedStyle;
+                const currentTheme = appState.sprite.theme || savedTheme;
+
+                // Validate current sprite exists in dropdown
+                const styleExists = Array.from(spriteStyleSelect.options).some(opt => opt.value === currentSprite);
+
+                // Assign final values
+                appState.sprite.currentSprite = styleExists ? currentSprite : 'default';
+                appState.sprite.theme = currentTheme;
+
                 spriteStyleSelect.value = appState.sprite.currentSprite;
                 spriteThemeSelect.value = appState.sprite.theme;
             }
