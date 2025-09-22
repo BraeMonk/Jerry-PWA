@@ -2906,12 +2906,6 @@
             }
         
             console.log(`Jerry sprite updated: ${currentSpriteStyle} (theme: ${spriteTheme})`);
-
-            // Ensure the sprite is scaled to fit the container
-            const container = document.getElementById('jerrySprite');
-            if (baseSprite && container) {
-                scaleSprite(container, baseSprite.length);
-            }
         }
 
 
@@ -3014,25 +3008,28 @@
             const isLightMode = document.body.classList.contains('light-theme');
             const colorSets = getColorSets(isLightMode);
             const colors = colorSets[spriteTheme] || colorSets['default'];
+            const rows = spriteData.length;
+            const cols = spriteData[0].length;
 
-            const originalSize = spriteData.length; // e.g., 16, 24, 32
+            const containerSize = 160; // fixed display area
+            const pixelSize = Math.floor(containerSize / Math.max(rows, cols)); // scale pixels
 
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
                     if (pixel > 0) {
                         const pixelDiv = document.createElement('div');
                         pixelDiv.className = 'pixel';
-                        pixelDiv.style.backgroundColor = colors[pixel];
+                        pixelDiv.style.width = `${pixelSize}px`;
+                        pixelDiv.style.height = `${pixelSize}px`;
                         pixelDiv.style.position = 'absolute';
-                        pixelDiv.style.left = `${x * 10}px`;
-                        pixelDiv.style.top = `${y * 10}px`;
+                        pixelDiv.style.left = `${x * pixelSize}px`;
+                        pixelDiv.style.top = `${y * pixelSize}px`;
+                        pixelDiv.style.backgroundColor = colors[pixel];
                         pixelDiv.style.pointerEvents = 'none';
                         container.appendChild(pixelDiv);
                     }
                 });
             });
-
-            scaleSprite(container, originalSize);
         }
 
         function renderSpritePreview(spriteData, spriteTheme) {
@@ -3114,23 +3111,28 @@
             const colorSets = getColorSets(isLightMode);
             const colors = colorSets[spriteTheme] || colorSets['default'];
 
+            const rows = spriteData.length;
+            const cols = spriteData[0].length;
+
+            const containerSize = 160; // fixed display area
+            const pixelSize = Math.floor(containerSize / Math.max(rows, cols)); // scale pixels
+            
             spriteData.forEach((row, y) => {
                 row.forEach((pixel, x) => {
                     if (pixel > 0) {
                         const pixelDiv = document.createElement('div');
                         pixelDiv.className = 'pixel';
+                        pixelDiv.style.width = `${pixelSize}px`;
+                        pixelDiv.style.height = `${pixelSize}px`;
                         pixelDiv.style.position = 'absolute';
-                        pixelDiv.style.width = '10px';
-                        pixelDiv.style.height = '10px';
+                        pixelDiv.style.left = `${x * pixelSize}px`;
+                        pixelDiv.style.top = `${y * pixelSize}px`;
                         pixelDiv.style.backgroundColor = colors[pixel];
-                        pixelDiv.style.left = `${x * 10}px`;
-                        pixelDiv.style.top = `${y * 10}px`;
+                        pixelDiv.style.pointerEvents = 'none';
                         container.appendChild(pixelDiv);
                     }
                 });
             });
-
-            scaleSprite(container, spriteData.length);
         }
 
         // === Animations ===
