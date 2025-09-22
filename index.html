@@ -2906,6 +2906,12 @@
             }
         
             console.log(`Jerry sprite updated: ${currentSpriteStyle} (theme: ${spriteTheme})`);
+
+            // Ensure the sprite is scaled to fit the container
+            const container = document.getElementById('jerrySprite');
+            if (baseSprite && container) {
+                scaleSprite(container, baseSprite.length);
+            }
         }
 
 
