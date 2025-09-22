@@ -297,6 +297,8 @@
             z-index: 3;
             margin: 0 auto;
             left: -5px;
+            transform: scale(1);        /* default scale */
+            transform-origin: top center;
         }
 
         .jerry-shadow {
@@ -327,14 +329,24 @@
 
         /* Ensure Jerry sprite pixels are full like the preview */
         .jerry-sprite .pixel {
-            width: calc(100% / 16);   /* always fits a 16x16 grid */
-            height: calc(100% / 16);
+            width: 10px;   /* always fits a 16x16 grid */
+            height: 10px;
             position: absolute;
             border-radius: 0;   
             margin: 0;
             padding: 0;
             z-index: 3;
             pointer-events: none;
+        }
+
+        /* Example: 24x24 pixels should be shrunk to fit 16x16 space */
+        .jerry-sprite.size-24 {
+            transform: scale(16 / 24);
+        }
+
+        /* Example: 32x32 pixels → shrink to 16x16 */
+        .jerry-sprite.size-32 {
+            transform: scale(16 / 32);
         }
         
         .jerry-stats {
