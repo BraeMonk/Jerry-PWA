@@ -2991,10 +2991,12 @@
         }
 
         function scaleSprite(container, originalSize) {
-            const targetSize = 16; // reference size for the containe
-            const scale = targetSize / originalSize;
+            const containerSize = 160;       // fixed size of .jerry-sprite
+            const pixelSize = 10;             // size of each pixel
+            const spriteSizePx = originalSize * pixelSize;  // total sprite pixel width
+            const scale = containerSize / spriteSizePx;     // shrink to fit container
             container.style.transform = `scale(${scale})`;
-            container.style.transformOrigin = 'top center'; // keeps sprite centered
+            container.style.transformOrigin = 'top center';
         }
 
         // Fixed rendering functions to accept and use parameters
