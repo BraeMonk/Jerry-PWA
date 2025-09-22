@@ -327,8 +327,8 @@
 
         /* Ensure Jerry sprite pixels are full like the preview */
         .jerry-sprite .pixel {
-            width: 10px;        
-            height: 10px;
+            width: calc(100% / 16);   /* always fits a 16x16 grid */
+            height: calc(100% / 16);
             position: absolute;
             border-radius: 0;   
             margin: 0;
